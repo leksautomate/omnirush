@@ -418,89 +418,77 @@ function getBestAvailableModel() {
       return getModel(custom)
     } catch {}
   }
-  if (process.env.ANTHROPIC_API_KEY) {
-    return getModel('anthropic:claude-sonnet-5')
+  if (process.env.AGENTROUTER_API_KEY) {
+    return getModel('agentrouter:claude-opus-4-8')
+  }
+  if (process.env.GROQ_API_KEY) {
+    return getModel('groq:deepseek-r1-distill-llama-70b')
+  }
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
+    return getModel('google:gemini-2.0-flash')
   }
   if (process.env.OPENAI_API_KEY) {
     return getModel('openai:gpt-4o')
   }
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    return getModel('google:gemini-2.5-flash')
-  }
-  return getModel('anthropic:claude-sonnet-5')
+  return getModel('google:gemini-2.0-flash')
 }
 
-/** Execute Blue Ocean Niche Bending analysis using Claude/AI model with robust fallback */
+/** Execute Blue Ocean Niche Bending analysis using AI model with robust fallback */
 export async function performNicheBending(channelData: ChannelDataPayload): Promise<BendingAnalysis> {
   const todayDate = new Date().toISOString().split('T')[0]
 
-  const prompt = `You are my YouTube ideation partner. Today’s date is: ${todayDate}.
+  const prompt = `You are an elite YouTube niche strategist and ideation partner. Today’s date is: ${todayDate}.
 
-I attached winning channel data (titles, transcripts, outlier/view notes). That data is the SOURCE OF TRUTH. Do not ignore it for vibes.
+CRITICAL PRINCIPLE:
+The attached channel data is a GUIDELINE and BLUEPRINT to understand audience psychology, hooks, and formula.
+DO NOT lock onto or copy the raw video titles from the input JSON. Instead, use that data as a spring-board to BRAINSTORM BRAND NEW, ADJACENT, UNSATURATED BLUE-OCEAN SEARCH ANGLES AND FRESH SUB-NICHES!
 
-SOURCE DATA JSON:
+REFERENCE DATA (Use as a guide to extract audience interest & winning format):
 ${JSON.stringify(channelData, null, 2)}
-
-Your job:
-1) Extract the ENGINE behind why these videos get rewarded
-2) Use live research to find what this SAME audience wants RIGHT NOW
-3) Invent ADJACENT ideas in unsaturated gaps
-4) Rank ideas by evidence, not creativity
 
 ========================
 PROCESS
 ========================
 
-STEP A — Put yourself in their head (as of today)
-Using the attached winners + live research, answer:
-- Who is this viewer in real life?
-- What do they fear, miss, obsess over, argue about?
-- What would make them click TODAY (not 2023)?
-- What are they tired of seeing already?
+STEP A — Viewer Persona (as of today)
+Using the attached reference data:
+- Who is this viewer in real life? What are their core curiosities, fears, and obsessions?
+- What would make them click TODAY?
+- What are they tired of seeing already in this space?
 
-STEP B — Reward ENGINE from my data (not topics)
-From the attached winners, extract reusable patterns:
-- title structures
-- hook patterns
-- format (mystery reveal, documentary, list, etc.)
-- proof style
-- emotional payoff
-Weight OUTLIERS 3x. Outliers = what this audience is starving for.
+STEP B — Reward Engine (from reference data)
+Extract the underlying winning formula:
+- Title structures (e.g. "The Dark Truth About...", "Why Nobody Talks About...")
+- Hook patterns & proof styles
+- Emotional payoff & pacing
 
-STEP C — Live hunger map (research)
-Build a list of current hungers for this audience:
-- recurring themes
-- questions people keep asking
-- rising topics / controversies / discoveries
-- gaps where demand is high but good YouTube supply is low
+STEP C — Live Hunger Map (adjacent demand)
+Identify rising adjacent sub-topics, controversies, unexplored questions, and gaps where YouTube supply is low but audience demand is high.
 
-STEP D — Adjacent gap ideas (engine + live hunger)
-Create ideas that are:
-- same audience
-- same ENGINE
-- NEW subject / lens / question
-- timed for TODAY’s date / current conversation
+STEP D — Adjacent Strategy
+Explain how a creator can take the proven retention formula of this channel and apply it to dominate NEW, adjacent sub-niches.
 
-STEP E — Idea slate (20 ideas)
+STEP E — Idea Slate (20 BRAND NEW Ideas)
+Create 20 GENUINELY NEW video concepts on fresh subjects and unexplored angles (DO NOT repeat the reference titles).
 For each idea include:
-1. Working title
+1. Working title (click-worthy, high-CTR)
 2. One-sentence angle
 3. Engine pattern used
-4. Live research support
-5. Why it’s adjacent, not a clone
+4. Research support
+5. Why it’s adjacent (targets the same audience via a fresh subject)
 6. Thumbnail concept (5–8 words)
 7. Freshness: Fresh / Semi-crowded / Crowded
 8. Confidence: High / Medium / Low
 
 STEP F — Top 5 to film first
-Pick 5 with the best combo of outlier alignment, live demand, low competition, and fit to the engine.
+Select 5 with the best combination of outlier alignment, high demand, and low competition.
 
-Format your output as valid JSON matching this exact schema:
+Return ONLY valid JSON matching this exact schema:
 {
-  "viewerPersona": "text description...",
-  "rewardEngine": "text description...",
-  "liveHungerMap": "text description...",
-  "adjacentStrategy": "text description...",
+  "viewerPersona": "...",
+  "rewardEngine": "...",
+  "liveHungerMap": "...",
+  "adjacentStrategy": "...",
   "ideas": [
     {
       "id": "idea-1",
@@ -542,32 +530,52 @@ Format your output as valid JSON matching this exact schema:
   } catch {
     const chName = channelData.metadata?.channel_name || 'Target Channel'
     const sampleTitles = (channelData.videos || []).map(v => v.title)
-    const topTitle = sampleTitles[0] || 'Top Video'
+
+    // Creative fallback generator covering 10 distinct sub-niche angles
+    const fallbackCategories = [
+      'Forgotten Mysteries & Lost Archives',
+      'The Hidden Economy Behind',
+      'Psychological Manipulations of',
+      'Unsolved Anomalies & Strange Phenomena',
+      'The Dark Side of',
+      'Modern Controversies & Cover-ups',
+      'Extreme Survival & High-Stakes Tests',
+      'The Untold Origin Story of',
+      'Secret Rules & Unwritten Laws of',
+      'What Industry Experts Hide About'
+    ]
 
     parsed = {
-      viewerPersona: `Viewers interested in content surrounding "${chName}" and topics like ${sampleTitles.slice(0, 3).join(', ')}.`,
-      rewardEngine: `High-retention structure using hook pattern, proof elements, and clear value delivery seen in top video "${topTitle}".`,
-      liveHungerMap: `Rising audience demand for fresh perspectives, modern angles, and sub-niche breakdowns in the ${chName} domain.`,
-      adjacentStrategy: `Take the proven retention framework of ${chName} and apply it to underserved adjacent sub-topics.`,
-      ideas: channelData.videos.map((v, i) => {
-        const words = v.title.split(' ').filter(w => w.length > 3)
-        const topicWord = words[0] || 'Uncovered Angle'
+      viewerPersona: `Viewers passionate about deep-dive storytelling, analytical breakdowns, and investigative content in the domain of "${chName}".`,
+      rewardEngine: `High-retention structure using curiosity loops, evidence reveals, and unexpected perspective shifts.`,
+      liveHungerMap: `High audience craving for unexplored sub-niches, historical anomalies, and behind-the-scenes breakdowns related to ${chName}.`,
+      adjacentStrategy: `Take the proven retention format of ${chName} and apply it to high-search, unsaturated adjacent topics.`,
+      ideas: Array.from({ length: 20 }).map((_, i) => {
+        const cat = fallbackCategories[i % fallbackCategories.length]
+        const refTitle = sampleTitles[i % sampleTitles.length] || chName
+        const keyword = refTitle.split(' ').filter(w => w.length > 3)[0] || 'Modern History'
+
         return {
           id: `idea-${i + 1}`,
-          title: `The Untold Story of ${topicWord}: What ${chName} Audience Hasn't Seen Yet`,
-          angle: `An adjacent deep-dive building on the core audience interest of "${v.title}".`,
-          enginePattern: `Curiosity Hook + Proof Breakdown + Unexpected Conclusion`,
-          researchSupport: `Strong search volume and active audience discussions around ${topicWord}.`,
-          whyAdjacent: `Applies ${chName}'s winning video format to an unexplored adjacent angle.`,
-          thumbnailConcept: `Bold high-contrast split visual featuring ${topicWord} with large text overlay`,
-          freshness: 'Fresh',
+          title: `${cat} ${keyword}: The Search Nobody Talks About`,
+          angle: `An adjacent deep-dive exploring how ${keyword} reshaped the surrounding landscape using the proven retention engine of ${chName}.`,
+          enginePattern: `Curiosity Hook + Evidence Reveal + Psychological Payoff`,
+          researchSupport: `Surging search queries and high audience engagement around ${keyword} adjacent topics.`,
+          whyAdjacent: `Targets ${chName}'s core audience with a completely new subject matter.`,
+          thumbnailConcept: `Dramatic split visual featuring ${keyword} with bold high-contrast text overlay`,
+          freshness: i % 3 === 0 ? 'Fresh' : 'Semi-crowded',
           confidence: 'High'
         }
       }),
-      top5First: channelData.videos.slice(0, 5).map(v => ({
-        title: `The Untold Story of ${v.title.split(' ')[0] || 'This Topic'}`,
-        reason: `Proven outlier multiplier on channel combined with high active audience interest.`
-      }))
+      top5First: Array.from({ length: 5 }).map((_, i) => {
+        const cat = fallbackCategories[i]
+        const refTitle = sampleTitles[i] || chName
+        const keyword = refTitle.split(' ').filter(w => w.length > 3)[0] || 'Uncovered Angle'
+        return {
+          title: `${cat} ${keyword}: The Search Nobody Talks About`,
+          reason: `High search momentum combined with low YouTube video competition in this adjacent sub-niche.`
+        }
+      })
     }
   }
 
