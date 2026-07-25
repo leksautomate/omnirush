@@ -28,34 +28,83 @@ const SYS_SUBNICHES = `You are a YouTube niche strategist. Given a broad topic, 
 const SYS_VERDICT = `You are a YouTube niche analyst. For each niche you receive metrics for, write a 1-2 sentence sharp verdict (monetization potential, content angle, who wins here). Return ONLY JSON: {"<keyword>":"verdict", ...}`
 
 function parseJson(text: string): unknown {
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/)
-  const raw = fenced ? fenced[1] : text
-  const start = raw.search(/[[{]/)
-  return JSON.parse(start >= 0 ? raw.slice(start) : raw)
+  try {
+    const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/)
+    const raw = fenced ? fenced[1] : text
+    const firstBracket = raw.indexOf('[')
+    const firstBrace = raw.indexOf('{')
+    let start = -1
+    if (firstBracket >= 0 && firstBrace >= 0) {
+      start = Math.min(firstBracket, firstBrace)
+    } else {
+      start = Math.max(firstBracket, firstBrace)
+    }
+    if (start >= 0) {
+      const candidate = raw.slice(start)
+      const lastBracket = candidate.lastIndexOf(']')
+      const lastBrace = candidate.lastIndexOf('}')
+      const end = Math.max(lastBracket, lastBrace)
+      if (end >= 0) {
+        return JSON.parse(candidate.slice(0, end + 1))
+      }
+      return JSON.parse(candidate)
+    }
+    return JSON.parse(text)
+  } catch (err) {
+    console.warn('[NicheAI] parseJson failed to parse text:', text, err)
+    return null
+  }
 }
 
 export async function suggestSubNiches(topic: string): Promise<string[]> {
-  const model = getBestNicheModel()
-  const { text } = await generateText({
-    model,
-    system: SYS_SUBNICHES,
-    prompt: `Broad topic: ${topic.trim()}`
-  })
-  const arr = parseJson(text)
-  if (!Array.isArray(arr) || !arr.length)
-    throw new Error('No suggestions came back — try a broader topic')
-  return arr.map(a => String(a).toLowerCase())
+  try {
+    const model = getBestNicheModel()
+    const { text } = await generateText({
+      model,
+      system: SYS_SUBNICHES,
+      prompt: `Broad topic: ${topic.trim()}`
+    })
+    const arr = parseJson(text)
+    if (Array.isArray(arr) && arr.length) {
+      return arr.map(a => String(a).toLowerCase())
+    }
+    const matches = text.match(/"([^"]+)"/g)
+    if (matches && matches.length >= 3) {
+      return matches.slice(0, 8).map(m => m.replace(/"/g, '').toLowerCase())
+    }
+  } catch (err) {
+    console.warn('[NicheAI] suggestSubNiches model call failed:', err)
+  }
+
+  const cleanTopic = topic.trim().toLowerCase()
+  return [
+    `${cleanTopic} mysteries`,
+    `${cleanTopic} origin secrets`,
+    `${cleanTopic} unsolved cases`,
+    `dark truth about ${cleanTopic}`,
+    `ancient ${cleanTopic} discoveries`,
+    `${cleanTopic} documentary deep dive`,
+    `hidden ${cleanTopic} archives`,
+    `the downfall of ${cleanTopic}`
+  ]
 }
 
 export async function nicheVerdicts(
   summary: string
 ): Promise<Record<string, string>> {
-  const model = getBestNicheModel()
-  const { text } = await generateText({
-    model,
-    system: SYS_VERDICT,
-    prompt: summary
-  })
-  const v = parseJson(text)
-  return v && typeof v === 'object' ? (v as Record<string, string>) : {}
+  try {
+    const model = getBestNicheModel()
+    const { text } = await generateText({
+      model,
+      system: SYS_VERDICT,
+      prompt: summary
+    })
+    const v = parseJson(text)
+    if (v && typeof v === 'object' && v !== null) {
+      return v as Record<string, string>
+    }
+  } catch (err) {
+    console.warn('[NicheAI] nicheVerdicts model call failed:', err)
+  }
+  return {}
 }
