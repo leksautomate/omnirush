@@ -238,7 +238,7 @@ The natural in-chat pipeline is Video Style Confirmation → writeScript → gen
     const agent = new ToolLoopAgent({
       model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-      tools: isAgentRouter ? {} : tools,
+      tools: isAgentRouter ? ({} as ResearcherTools) : tools,
       activeTools: isAgentRouter ? [] : activeToolsList,
       stopWhen: stepCountIs(maxSteps),
       ...(modelConfig?.providerOptions && {
