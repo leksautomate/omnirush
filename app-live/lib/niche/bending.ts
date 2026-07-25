@@ -238,12 +238,33 @@ export async function scrapeChannelDataWithoutKey(
   }
 }
 
-/** Fetch channel metadata & top videos from YouTube Data API or Fallback Scraper */
 export async function fetchChannelData(
   channelInput: string,
   maxVideos: number = 10
 ): Promise<ChannelDataPayload> {
   const limit = Math.min(20, Math.max(5, maxVideos))
+
+  // Allow pasting raw ChannelDataPayload JSON directly
+  const trimmed = (channelInput || '').trim()
+  if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+    try {
+      const parsedPayload = JSON.parse(trimmed)
+      if (parsedPayload.metadata && Array.isArray(parsedPayload.videos)) {
+        return {
+          metadata: {
+            channel_name: parsedPayload.metadata.channel_name || 'Target Channel',
+            channel_id: parsedPayload.metadata.channel_id || 'custom_id',
+            subscribers: Number(parsedPayload.metadata.subscribers) || 0,
+            total_views: Number(parsedPayload.metadata.total_views) || 0,
+            video_count: Number(parsedPayload.metadata.video_count) || parsedPayload.videos.length
+          },
+          videos: parsedPayload.videos.slice(0, limit),
+          transcripts: parsedPayload.transcripts || []
+        }
+      }
+    } catch {}
+  }
+
   const key = YOUTUBE_API_KEY()
 
   if (key) {
