@@ -24,6 +24,13 @@ const providers: Record<string, any> = {
   openai,
   anthropic,
   google,
+  agentrouter: createOpenAICompatible({
+    name: 'agentrouter',
+    apiKey: process.env.AGENTROUTER_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY,
+    baseURL: normalizeOpenAICompatibleBaseURL(
+      process.env.AGENTROUTER_BASE_URL || 'https://agentrouter.org/v1'
+    )
+  }),
   groq: createOpenAICompatible({
     name: 'groq',
     apiKey: process.env.GROQ_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY,
@@ -59,7 +66,9 @@ export function getModel(model: string): LanguageModel {
 
   // Ensure target model starts with a provider prefix if missing
   if (!targetModel.includes(':')) {
-    if (targetModel.startsWith('claude')) {
+    if (targetModel.includes('opus') || targetModel.startsWith('claude-opus')) {
+      targetModel = `agentrouter:${targetModel}`
+    } else if (targetModel.startsWith('claude')) {
       targetModel = `anthropic:${targetModel}`
     } else if (
       targetModel.startsWith('gpt') ||
@@ -74,7 +83,20 @@ export function getModel(model: string): LanguageModel {
       targetModel = `groq:${targetModel}`
     } else {
       // Default prefix
-      targetModel = `groq:${targetModel}`
+      targetModel = `agentrouter:${targetModel}`
+    }
+  }
+
+  // Normalize AgentRouter model aliases
+  if (targetModel.startsWith('agentrouter:')) {
+    const rawId = targetModel.slice('agentrouter:'.length)
+    if (
+      rawId === 'claude-opus-4-8' ||
+      rawId === 'opus' ||
+      rawId === 'claude-opus' ||
+      rawId === 'opus-4-8'
+    ) {
+      targetModel = 'agentrouter:claude-opus-4-8'
     }
   }
 
@@ -105,10 +127,12 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Provider fallback: prioritize active key (Groq -> Gemini -> OpenAI -> Anthropic)
+  // Provider fallback: prioritize active key (AgentRouter -> Groq -> Gemini -> OpenAI -> Anthropic)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (process.env.GROQ_API_KEY) {
+    if (process.env.AGENTROUTER_API_KEY) {
+      targetModel = 'agentrouter:claude-opus-4-8'
+    } else if (process.env.GROQ_API_KEY) {
       targetModel = 'groq:deepseek-r1-distill-llama-70b'
     } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
       targetModel = 'google:gemini-2.0-flash'
@@ -139,6 +163,14 @@ export function getModel(model: string): LanguageModel {
 
 export function isProviderEnabled(providerId: string): boolean {
   switch (providerId) {
+    case 'agentrouter':
+      return (
+        !!process.env.AGENTROUTER_API_KEY ||
+        (!!process.env.OPENAI_COMPATIBLE_API_KEY &&
+          (process.env.OPENAI_COMPATIBLE_API_BASE_URL || '').includes(
+            'agentrouter'
+          ))
+      )
     case 'groq':
       return !!process.env.GROQ_API_KEY
     case 'openai':
