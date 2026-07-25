@@ -230,23 +230,16 @@ The natural in-chat pipeline is Video Style Confirmation → writeScript → gen
       ...todoTools
     } as ResearcherTools
 
-    // AgentRouter's API proxy does not support tool function declarations.
-    // Use Gemini 2.0 Flash for tool loop execution when AgentRouter is requested so chat tool calls succeed instantly.
-    const agentModel =
-      model.startsWith('agentrouter') || model.includes('opus-4-8')
-        ? (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY
-            ? getModel('google:gemini-2.0-flash')
-            : process.env.GROQ_API_KEY
-              ? getModel('groq:deepseek-r1-distill-llama-70b')
-              : getModel(model))
-        : getModel(model)
+    const isAgentRouter = model.startsWith('agentrouter') || model.includes('opus-4-8')
 
     // Create ToolLoopAgent with all configuration
+    // AgentRouter OpenAI-compatible proxy rejects function declaration tools array.
+    // When using AgentRouter, stream text response directly without tool schemas.
     const agent = new ToolLoopAgent({
-      model: agentModel,
+      model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-      tools,
-      activeTools: activeToolsList,
+      tools: isAgentRouter ? {} : tools,
+      activeTools: isAgentRouter ? [] : activeToolsList,
       stopWhen: stepCountIs(maxSteps),
       ...(modelConfig?.providerOptions && {
         providerOptions: modelConfig.providerOptions
