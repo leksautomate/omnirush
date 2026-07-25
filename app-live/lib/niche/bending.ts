@@ -458,53 +458,103 @@ function getBestAvailableModel() {
 export async function performNicheBending(channelData: ChannelDataPayload): Promise<BendingAnalysis> {
   const todayDate = new Date().toISOString().split('T')[0]
 
-  const prompt = `You are an elite YouTube niche strategist and ideation partner. Today’s date is: ${todayDate}.
+  const prompt = `You are my YouTube ideation partner. Today’s date is: ${todayDate}.
 
-CRITICAL PRINCIPLE:
-The attached channel data is a GUIDELINE and BLUEPRINT to understand audience psychology, hooks, and formula.
-DO NOT lock onto or copy the raw video titles from the input JSON. Instead, use that data as a spring-board to BRAINSTORM BRAND NEW, ADJACENT, UNSATURATED BLUE-OCEAN SEARCH ANGLES AND FRESH SUB-NICHES!
+I attached winning channel data (titles, transcripts, outlier/view notes). That data is the SOURCE OF TRUTH. Do not ignore it for vibes.
 
-REFERENCE DATA (Use as a guide to extract audience interest & winning format):
+SOURCE DATA JSON:
 ${JSON.stringify(channelData, null, 2)}
+
+Your job:
+1) Extract the ENGINE behind why these videos get rewarded
+2) Use live research to find what this SAME audience wants RIGHT NOW
+3) Invent ADJACENT ideas in unsaturated gaps
+4) Rank ideas by evidence, not creativity
+
+You are NOT allowed to just make educated guesses.
+If you are unsure, RESEARCH before you ideate.
+
+========================
+RESEARCH RULES (MANDATORY)
+========================
+Search & Analyze:
+- Current competing videos + what’s ranking now
+- Subreddits & forums this audience actually uses for repeated questions, complaints, myths, debates
+- Current trends / news / cultural moments relevant to THIS audience as of today’s date
+- Recent comments under winning videos (what people ask for next)
+
+For every research claim, note:
+- where it came from (YouTube / Reddit / news / trend)
+- why it matters to this audience
+- how fresh it is (today / this week / this month)
 
 ========================
 PROCESS
 ========================
 
-STEP A — Viewer Persona (as of today)
-Using the attached reference data:
-- Who is this viewer in real life? What are their core curiosities, fears, and obsessions?
-- What would make them click TODAY?
-- What are they tired of seeing already in this space?
+STEP A — Put yourself in their head (as of today)
+Using the attached winners + live research, answer:
+- Who is this viewer in real life?
+- What do they fear, miss, obsess over, argue about?
+- What would make them click TODAY (not 2023)?
+- What are they tired of seeing already?
 
-STEP B — Reward Engine (from reference data)
-Extract the underlying winning formula:
-- Title structures (e.g. "The Dark Truth About...", "Why Nobody Talks About...")
-- Hook patterns & proof styles
-- Emotional payoff & pacing
+STEP B — Reward ENGINE from my data (not topics)
+From the attached winners, extract reusable patterns:
+- title structures
+- hook patterns
+- format (mystery reveal, documentary, list, etc.)
+- proof style
+- emotional payoff
+Weight OUTLIERS 3x. Outliers = what this audience is starving for.
 
-STEP C — Live Hunger Map (adjacent demand)
-Identify rising adjacent sub-topics, controversies, unexplored questions, and gaps where YouTube supply is low but audience demand is high.
+STEP C — Live hunger map (research)
+Build a list of current hungers for this audience:
+- recurring Reddit themes
+- questions people keep asking
+- rising topics / controversies / discoveries
+- gaps where demand is high but good YouTube supply is low
+Mark each: High demand / Medium / Low, and Crowded / Semi-crowded / Fresh
 
-STEP D — Adjacent Strategy
-Explain how a creator can take the proven retention formula of this channel and apply it to dominate NEW, adjacent sub-niches.
+STEP D — Adjacent gap ideas (engine + live hunger)
+Create ideas that are:
+- same audience
+- same ENGINE
+- NEW subject / lens / question
+- timed for TODAY’s date / current conversation
+NOT clones of attached titles with tiny wording changes.
+NOT random unrelated niches.
 
-STEP E — Idea Slate (20 BRAND NEW Ideas)
-Create 20 GENUINELY NEW video concepts on fresh subjects and unexplored angles (DO NOT repeat the reference titles).
+STEP E — Idea slate (20 ideas)
 For each idea include:
-1. Working title (click-worthy, high-CTR)
+1. Working title (winning STRUCTURE, not copied title)
 2. One-sentence angle
 3. Engine pattern used
-4. Research support
-5. Why it’s adjacent (targets the same audience via a fresh subject)
+4. Live research support (Reddit / YT / trend / news)
+5. Why it’s adjacent, not a clone
 6. Thumbnail concept (5–8 words)
 7. Freshness: Fresh / Semi-crowded / Crowded
 8. Confidence: High / Medium / Low
+   High = strong winner-data fit + strong live research
+   Medium = strong on one side only
+   Low = mostly guess (avoid these)
 
 STEP F — Top 5 to film first
-Select 5 with the best combination of outlier alignment, high demand, and low competition.
+Pick 5 with the best combo of:
+- outlier alignment
+- live demand
+- low competition
+- fit to the engine
+Explain why each one should go first.
 
-Return ONLY valid JSON matching this exact schema:
+========================
+HARD RULES
+========================
+- Attached reward data first. Research second. Guessing last.
+- Prefer familiar-to-audience + new-to-market.
+- Never invent fake sources.
+
+Format your entire response as valid JSON matching this exact structure:
 {
   "viewerPersona": "...",
   "rewardEngine": "...",
@@ -514,11 +564,11 @@ Return ONLY valid JSON matching this exact schema:
     {
       "id": "idea-1",
       "title": "Working title",
-      "angle": "One sentence angle",
-      "enginePattern": "Pattern used",
-      "researchSupport": "Research support",
-      "whyAdjacent": "Why adjacent not clone",
-      "thumbnailConcept": "5-8 word thumbnail concept",
+      "angle": "One-sentence angle",
+      "enginePattern": "Engine pattern used",
+      "researchSupport": "Live research support",
+      "whyAdjacent": "Why it's adjacent, not a clone",
+      "thumbnailConcept": "Thumbnail concept (5-8 words)",
       "freshness": "Fresh",
       "confidence": "High"
     }
@@ -526,7 +576,7 @@ Return ONLY valid JSON matching this exact schema:
   "top5First": [
     {
       "title": "Working title",
-      "reason": "Why to film first"
+      "reason": "Explanation of why to film first"
     }
   ]
 }`
