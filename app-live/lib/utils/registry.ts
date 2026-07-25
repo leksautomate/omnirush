@@ -94,15 +94,15 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Provider fallback: if the target provider is missing an API key, route to active Anthropic provider
+  // Provider fallback: if target provider is missing, prioritize available key (Gemini -> OpenAI -> Anthropic)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (process.env.ANTHROPIC_API_KEY) {
-      targetModel = 'anthropic:claude-sonnet-5'
-    } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
       targetModel = 'google:gemini-2.5-flash'
     } else if (process.env.OPENAI_API_KEY) {
       targetModel = 'openai:gpt-4o'
+    } else if (process.env.ANTHROPIC_API_KEY) {
+      targetModel = 'anthropic:claude-sonnet-5'
     }
   }
 
@@ -131,7 +131,10 @@ export function isProviderEnabled(providerId: string): boolean {
     case 'anthropic':
       return !!process.env.ANTHROPIC_API_KEY
     case 'google':
-      return !!process.env.GOOGLE_GENERATIVE_AI_API_KEY
+      return (
+        !!process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+        !!process.env.GEMINI_API_KEY
+      )
     case 'openai-compatible':
       return (
         !!process.env.OPENAI_COMPATIBLE_API_KEY &&

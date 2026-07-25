@@ -1,8 +1,18 @@
 import { Model } from '@/lib/types/models'
 
-export const DEFAULT_MODEL: Model = {
-  id: 'claude-sonnet-5',
-  name: 'Claude Sonnet 5',
-  provider: 'Anthropic',
-  providerId: 'anthropic'
-}
+const isGoogleEnabled =
+  !!process.env.GOOGLE_GENERATIVE_AI_API_KEY || !!process.env.GEMINI_API_KEY
+
+export const DEFAULT_MODEL: Model = isGoogleEnabled
+  ? {
+      id: 'gemini-2.5-flash',
+      name: 'Gemini 2.5 Flash',
+      provider: 'Google',
+      providerId: 'google'
+    }
+  : {
+      id: 'claude-sonnet-5',
+      name: 'Claude Sonnet 5',
+      provider: 'Anthropic',
+      providerId: 'anthropic'
+    }
