@@ -127,19 +127,17 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Provider fallback: prioritize active key (AgentRouter -> Groq -> Gemini -> OpenAI -> Anthropic)
+  // Provider fallback: prioritize available key (Gemini -> Groq -> AgentRouter -> OpenAI)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (process.env.AGENTROUTER_API_KEY) {
-      targetModel = 'agentrouter:claude-opus-4-8'
+    if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
+      targetModel = 'google:gemini-2.0-flash'
     } else if (process.env.GROQ_API_KEY) {
       targetModel = 'groq:deepseek-r1-distill-llama-70b'
-    } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
-      targetModel = 'google:gemini-2.0-flash'
+    } else if (process.env.AGENTROUTER_API_KEY) {
+      targetModel = 'agentrouter:claude-opus-4-8'
     } else if (process.env.OPENAI_API_KEY) {
       targetModel = 'openai:gpt-4o'
-    } else if (process.env.ANTHROPIC_API_KEY) {
-      targetModel = 'anthropic:claude-sonnet-5'
     }
   }
 
