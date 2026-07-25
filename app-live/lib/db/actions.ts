@@ -196,7 +196,11 @@ export async function loadChatWithMessages(
 
     // Permission check for backward compatibility
     if (chat.visibility === 'private' && (!userId || chat.userId !== userId)) {
-      return null
+      const isAuthDisabled = process.env.ENABLE_AUTH === 'false'
+      const isAnonymousChat = chat.userId === 'anonymous-user'
+      if (!isAuthDisabled && !isAnonymousChat) {
+        return null
+      }
     }
 
     // Build result

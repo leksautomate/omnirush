@@ -19,12 +19,12 @@ export async function generateMetadata(props: {
 
   const chat = await loadChat(id, userId)
 
-  if (!chat) {
+  if (!chat || !chat.title) {
     return { title: 'Chat' }
   }
 
   return {
-    title: chat.title.toString().slice(0, 50) || 'Chat'
+    title: typeof chat.title === 'string' ? chat.title.slice(0, 50) : 'Chat'
   }
 }
 
@@ -40,7 +40,7 @@ export default async function ChatPage(props: {
     notFound()
   }
 
-  if (chat.visibility === 'private' && !userId) {
+  if (chat.visibility === 'private' && !userId && process.env.ENABLE_AUTH === 'true') {
     redirect('/auth/login')
   }
 
