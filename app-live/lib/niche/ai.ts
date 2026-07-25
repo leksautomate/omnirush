@@ -1,12 +1,28 @@
-// AI helpers for the Niche Finder — sub-niche ideation and per-niche verdicts. Uses the
-// app's model registry (Anthropic by default), so keys come from the server environment.
+// AI helpers for the Niche Finder — sub-niche ideation and per-niche verdicts.
 import { generateText } from 'ai'
 
 import { getModel } from '@/lib/utils/registry'
 
 import 'server-only'
 
-const MODEL = process.env.NICHE_AI_MODEL || 'anthropic:claude-sonnet-5'
+function getBestNicheModel() {
+  const custom = process.env.NICHE_AI_MODEL
+  if (custom && !custom.includes('claude-sonnet-5')) {
+    try {
+      return getModel(custom)
+    } catch {}
+  }
+  if (process.env.AGENTROUTER_API_KEY) {
+    return getModel('agentrouter:claude-opus-4-8')
+  }
+  if (process.env.GROQ_API_KEY) {
+    return getModel('groq:deepseek-r1-distill-llama-70b')
+  }
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
+    return getModel('google:gemini-2.0-flash')
+  }
+  return getModel('agentrouter:claude-opus-4-8')
+}
 
 const SYS_SUBNICHES = `You are a YouTube niche strategist. Given a broad topic, return ONLY a JSON array of 8 specific, faceless-channel-friendly sub-niche search keywords (2-4 words each, English). Favor niches with strong search demand and story potential. Example: ["ancient rome mysteries","medieval castle secrets"]`
 const SYS_VERDICT = `You are a YouTube niche analyst. For each niche you receive metrics for, write a 1-2 sentence sharp verdict (monetization potential, content angle, who wins here). Return ONLY JSON: {"<keyword>":"verdict", ...}`
@@ -19,8 +35,9 @@ function parseJson(text: string): unknown {
 }
 
 export async function suggestSubNiches(topic: string): Promise<string[]> {
+  const model = getBestNicheModel()
   const { text } = await generateText({
-    model: getModel(MODEL),
+    model,
     system: SYS_SUBNICHES,
     prompt: `Broad topic: ${topic.trim()}`
   })
@@ -33,8 +50,9 @@ export async function suggestSubNiches(topic: string): Promise<string[]> {
 export async function nicheVerdicts(
   summary: string
 ): Promise<Record<string, string>> {
+  const model = getBestNicheModel()
   const { text } = await generateText({
-    model: getModel(MODEL),
+    model,
     system: SYS_VERDICT,
     prompt: summary
   })
