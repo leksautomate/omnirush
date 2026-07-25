@@ -83,11 +83,12 @@ async function analyzeWithWatchService(
   }
   if (!frames?.length) throw new Error('watch service returned no frames')
 
-  // Prefer Gemini Flash for free, fast video understanding
+  // Prefer AgentRouter / Gemini Flash for video understanding
   const modelName =
     process.env.LEARN_VIDEO_MODEL ||
-    process.env.LEARN_VIDEO_GEMINI_MODEL ||
-    'google:gemini-2.5-flash'
+    (process.env.AGENTROUTER_API_KEY
+      ? 'agentrouter:claude-opus-4-8'
+      : process.env.LEARN_VIDEO_GEMINI_MODEL || 'google:gemini-2.0-flash')
 
   const { text } = await generateText({
     model: getModel(modelName),
@@ -116,8 +117,9 @@ async function analyzeWithGeminiDirect(
 ): Promise<VideoAnalysis> {
   const modelName =
     process.env.LEARN_VIDEO_MODEL ||
-    process.env.LEARN_VIDEO_GEMINI_MODEL ||
-    'google:gemini-2.5-flash'
+    (process.env.AGENTROUTER_API_KEY
+      ? 'agentrouter:claude-opus-4-8'
+      : process.env.LEARN_VIDEO_GEMINI_MODEL || 'google:gemini-2.0-flash')
 
   const { text } = await generateText({
     model: getModel(modelName),
