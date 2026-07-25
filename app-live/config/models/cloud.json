@@ -2,16 +2,16 @@
   "version": 2,
   "models": {
     "quick": {
-      "id": "gemini-2.0-flash",
-      "name": "Gemini 2.0 Flash",
-      "provider": "Google",
-      "providerId": "google"
+      "id": "deepseek-r1-distill-llama-70b",
+      "name": "DeepSeek R1 (Groq)",
+      "provider": "Groq",
+      "providerId": "groq"
     },
     "adaptive": {
-      "id": "gemini-2.0-flash",
-      "name": "Gemini 2.0 Flash",
-      "provider": "Google",
-      "providerId": "google"
+      "id": "deepseek-r1-distill-llama-70b",
+      "name": "DeepSeek R1 (Groq)",
+      "provider": "Groq",
+      "providerId": "groq"
     }
   }
 }

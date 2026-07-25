@@ -24,6 +24,11 @@ const providers: Record<string, any> = {
   openai,
   anthropic,
   google,
+  groq: createOpenAICompatible({
+    name: 'groq',
+    apiKey: process.env.GROQ_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY,
+    baseURL: 'https://api.groq.com/openai/v1'
+  }),
   'openai-compatible': createOpenAICompatible({
     // Keep the SDK provider key stable. OPENAI_COMPATIBLE_PROVIDER_NAME is
     // only a UI label used by the model selector.
@@ -65,9 +70,11 @@ export function getModel(model: string): LanguageModel {
       targetModel = `openai:${targetModel}`
     } else if (targetModel.startsWith('gemini')) {
       targetModel = `google:${targetModel}`
+    } else if (targetModel.startsWith('deepseek')) {
+      targetModel = `groq:${targetModel}`
     } else {
       // Default prefix
-      targetModel = `google:${targetModel}`
+      targetModel = `groq:${targetModel}`
     }
   }
 
@@ -86,24 +93,25 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Normalize Google model aliases / unknown preview names
-  if (targetModel.startsWith('google:')) {
-    const rawId = targetModel.slice('google:'.length)
+  // Normalize DeepSeek model aliases on Groq
+  if (targetModel.startsWith('groq:')) {
+    const rawId = targetModel.slice('groq:'.length)
     if (
-      rawId.includes('3.1') ||
-      rawId.includes('preview') ||
-      rawId === 'gemini-3.1-flash-lite' ||
-      rawId === 'gemini-3-flash-preview'
+      rawId === 'deepseek' ||
+      rawId === 'deepseek-r1' ||
+      rawId === 'deepseek-70b'
     ) {
-      targetModel = 'google:gemini-2.5-flash'
+      targetModel = 'groq:deepseek-r1-distill-llama-70b'
     }
   }
 
-  // Provider fallback: if target provider is missing, prioritize available key (Gemini -> OpenAI -> Anthropic)
+  // Provider fallback: prioritize active key (Groq -> Gemini -> OpenAI -> Anthropic)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
-      targetModel = 'google:gemini-2.5-flash'
+    if (process.env.GROQ_API_KEY) {
+      targetModel = 'groq:deepseek-r1-distill-llama-70b'
+    } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
+      targetModel = 'google:gemini-2.0-flash'
     } else if (process.env.OPENAI_API_KEY) {
       targetModel = 'openai:gpt-4o'
     } else if (process.env.ANTHROPIC_API_KEY) {
@@ -131,6 +139,8 @@ export function getModel(model: string): LanguageModel {
 
 export function isProviderEnabled(providerId: string): boolean {
   switch (providerId) {
+    case 'groq':
+      return !!process.env.GROQ_API_KEY
     case 'openai':
       return !!process.env.OPENAI_API_KEY
     case 'anthropic':
