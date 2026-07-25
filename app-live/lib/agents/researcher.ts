@@ -233,30 +233,27 @@ The natural in-chat pipeline is Video Style Confirmation → writeScript → gen
     const isAgentRouter = model.startsWith('agentrouter') || model.includes('opus-4-8')
 
     // Create ToolLoopAgent with all configuration
-    // AgentRouter OpenAI-compatible proxy rejects function declaration tools array.
-    // When using AgentRouter, stream text response directly without tool schemas.
     const agent = new ToolLoopAgent({
       model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
       tools: isAgentRouter ? ({} as ResearcherTools) : tools,
       activeTools: isAgentRouter ? [] : activeToolsList,
-      stopWhen: stepCountIs(maxSteps),
-      ...(modelConfig?.providerOptions && {
-        providerOptions: modelConfig.providerOptions
-      }),
-      experimental_telemetry: {
-        isEnabled: isTracingEnabled(),
-        functionId: 'research-agent',
-        metadata: {
-          modelId: model,
-          agentType: 'researcher',
-          searchMode,
-          ...(parentTraceId && {
-            langfuseTraceId: parentTraceId,
-            langfuseUpdateParent: false
-          })
+      ...(!isAgentRouter && {
+        stopWhen: stepCountIs(maxSteps),
+        experimental_telemetry: {
+          isEnabled: isTracingEnabled(),
+          functionId: 'research-agent',
+          metadata: {
+            modelId: model,
+            agentType: 'researcher',
+            searchMode,
+            ...(parentTraceId && {
+              langfuseTraceId: parentTraceId,
+              langfuseUpdateParent: false
+            })
+          }
         }
-      }
+      })
     })
 
     return agent
