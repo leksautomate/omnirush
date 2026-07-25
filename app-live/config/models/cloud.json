@@ -2,16 +2,16 @@
   "version": 2,
   "models": {
     "quick": {
-      "id": "gemini-2.0-flash",
-      "name": "Gemini 2.0 Flash",
-      "provider": "Google",
-      "providerId": "google"
+      "id": "claude-opus-4-8",
+      "name": "Claude Opus 4.8 (AgentRouter)",
+      "provider": "AgentRouter",
+      "providerId": "agentrouter"
     },
     "adaptive": {
-      "id": "gemini-2.0-flash",
-      "name": "Gemini 2.0 Flash",
-      "provider": "Google",
-      "providerId": "google"
+      "id": "claude-opus-4-8",
+      "name": "Claude Opus 4.8 (AgentRouter)",
+      "provider": "AgentRouter",
+      "providerId": "agentrouter"
     }
   }
 }

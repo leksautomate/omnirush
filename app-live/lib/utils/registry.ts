@@ -66,10 +66,8 @@ export function getModel(model: string): LanguageModel {
 
   // Ensure target model starts with a provider prefix if missing
   if (!targetModel.includes(':')) {
-    if (targetModel.includes('opus') || targetModel.startsWith('claude-opus')) {
+    if (targetModel.includes('opus') || targetModel.startsWith('claude')) {
       targetModel = `agentrouter:${targetModel}`
-    } else if (targetModel.startsWith('claude')) {
-      targetModel = `anthropic:${targetModel}`
     } else if (
       targetModel.startsWith('gpt') ||
       targetModel.startsWith('o1') ||
@@ -94,7 +92,8 @@ export function getModel(model: string): LanguageModel {
       rawId === 'claude-opus-4-8' ||
       rawId === 'opus' ||
       rawId === 'claude-opus' ||
-      rawId === 'opus-4-8'
+      rawId === 'opus-4-8' ||
+      rawId.startsWith('claude')
     ) {
       targetModel = 'agentrouter:claude-opus-4-8'
     }
@@ -111,7 +110,7 @@ export function getModel(model: string): LanguageModel {
       rawId === 'claude-3-sonnet' ||
       rawId === 'claude-3-5-sonnet-latest'
     ) {
-      targetModel = 'anthropic:claude-sonnet-5'
+      targetModel = 'agentrouter:claude-opus-4-8'
     }
   }
 
@@ -127,15 +126,15 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Provider fallback: prioritize available key (Gemini -> Groq -> AgentRouter -> OpenAI)
+  // Provider fallback: prioritize active key (AgentRouter -> Gemini -> Groq -> OpenAI)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
+    if (process.env.AGENTROUTER_API_KEY) {
+      targetModel = 'agentrouter:claude-opus-4-8'
+    } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
       targetModel = 'google:gemini-2.0-flash'
     } else if (process.env.GROQ_API_KEY) {
       targetModel = 'groq:deepseek-r1-distill-llama-70b'
-    } else if (process.env.AGENTROUTER_API_KEY) {
-      targetModel = 'agentrouter:claude-opus-4-8'
     } else if (process.env.OPENAI_API_KEY) {
       targetModel = 'openai:gpt-4o'
     }
