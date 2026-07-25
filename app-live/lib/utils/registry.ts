@@ -1,10 +1,15 @@
 import { anthropic } from '@ai-sdk/anthropic'
 import { createGateway } from '@ai-sdk/gateway'
-import { google } from '@ai-sdk/google'
+import { createGoogleAI } from '@ai-sdk/google'
 import { openai } from '@ai-sdk/openai'
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import { createProviderRegistry, LanguageModel } from 'ai'
 import { createOllama } from 'ai-sdk-ollama'
+
+const googleProvider = createGoogleAI({
+  apiKey:
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY
+})
 
 // Strip a trailing /v1 from the configured base URL, then re-append it,
 // so both shapes work for OpenAI-compatible hosts:
@@ -18,7 +23,7 @@ function normalizeOpenAICompatibleBaseURL(raw: string): string {
 const providers: Record<string, any> = {
   openai,
   anthropic,
-  google,
+  google: googleProvider,
   'openai-compatible': createOpenAICompatible({
     // Keep the SDK provider key stable. OPENAI_COMPATIBLE_PROVIDER_NAME is
     // only a UI label used by the model selector.
