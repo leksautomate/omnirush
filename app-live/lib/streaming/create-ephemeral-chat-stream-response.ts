@@ -107,7 +107,6 @@ export async function createEphemeralChatStreamResponse(
     const result = await researchAgent.stream({
       messages: modelMessages,
       abortSignal,
-      experimental_transform: smoothStream({ chunking: 'word' }),
       ...(isUsageLogging() && {
         onStepFinish: step => {
           logUsage(
