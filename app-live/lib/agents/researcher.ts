@@ -232,28 +232,40 @@ The natural in-chat pipeline is Video Style Confirmation → writeScript → gen
 
     const isAgentRouter = model.startsWith('agentrouter') || model.includes('opus-4-8')
 
+    if (isAgentRouter) {
+      return {
+        tools: {} as ResearcherTools,
+        stream: async (opts: any) => {
+          return streamText({
+            model: getModel(model),
+            system: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
+            messages: opts.messages,
+            abortSignal: opts.abortSignal
+          })
+        }
+      } as any
+    }
+
     // Create ToolLoopAgent with all configuration
     const agent = new ToolLoopAgent({
       model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-      tools: isAgentRouter ? ({} as ResearcherTools) : tools,
-      activeTools: isAgentRouter ? [] : activeToolsList,
-      ...(!isAgentRouter && {
-        stopWhen: stepCountIs(maxSteps),
-        experimental_telemetry: {
-          isEnabled: isTracingEnabled(),
-          functionId: 'research-agent',
-          metadata: {
-            modelId: model,
-            agentType: 'researcher',
-            searchMode,
-            ...(parentTraceId && {
-              langfuseTraceId: parentTraceId,
-              langfuseUpdateParent: false
-            })
-          }
+      tools,
+      activeTools: activeToolsList,
+      stopWhen: stepCountIs(maxSteps),
+      experimental_telemetry: {
+        isEnabled: isTracingEnabled(),
+        functionId: 'research-agent',
+        metadata: {
+          modelId: model,
+          agentType: 'researcher',
+          searchMode,
+          ...(parentTraceId && {
+            langfuseTraceId: parentTraceId,
+            langfuseUpdateParent: false
+          })
         }
-      })
+      }
     })
 
     return agent
