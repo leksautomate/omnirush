@@ -29,6 +29,7 @@ export interface CreateResearcherOptions {
   parentTraceId?: string
   maxSteps?: number
   modelConfig?: Model
+  relatedEnabled?: boolean
 }
 
 export function createResearcher({
@@ -52,8 +53,8 @@ Core Philosophy:
 - Maintain high discipline: plain spoken text without raw markdown symbols in narration outputs.`
 
     // Individual tools
-    const searchTool = createSearchTool(searchMode, model)
-    const questionTool = createQuestionTool(model)
+    const searchTool = createSearchTool(searchMode)
+    const questionTool = createQuestionTool()
     const todoTools = createTodoTools()
     const writeScriptTool = createWriteScriptTool(model)
     const sourceFootageTool = createSourceFootageTool()
@@ -85,7 +86,7 @@ Core Philosophy:
       'generateAvatar',
       'composeRender',
       'todoWrite'
-    ]
+    ] as const
 
     const tools = {
       search: searchTool,
@@ -113,7 +114,7 @@ Core Philosophy:
       model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
       tools: isAgentRouter ? ({} as ResearcherTools) : tools,
-      activeTools: isAgentRouter ? [] : activeToolsList,
+      activeTools: isAgentRouter ? [] : (activeToolsList as any),
       stopWhen: stepCountIs(isAgentRouter ? 1 : maxSteps),
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),
