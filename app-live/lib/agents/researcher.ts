@@ -107,15 +107,19 @@ Core Philosophy:
       ...todoTools
     } as ResearcherTools
 
-    const isAgentRouter = model.startsWith('agentrouter') || model.includes('opus-4-8')
+    // Route chat tool loop execution to Gemini Flash for instant streaming & tool support
+    const agentModel =
+      model.startsWith('agentrouter') || model.includes('opus-4-8')
+        ? getModel('google:gemini-2.0-flash')
+        : getModel(model)
 
     // Create ToolLoopAgent with all configuration
     const agent = new ToolLoopAgent({
-      model: getModel(model),
+      model: agentModel,
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-      tools: isAgentRouter ? ({} as ResearcherTools) : tools,
-      activeTools: isAgentRouter ? [] : (activeToolsList as any),
-      stopWhen: stepCountIs(isAgentRouter ? 1 : maxSteps),
+      tools,
+      activeTools: activeToolsList as any,
+      stopWhen: stepCountIs(maxSteps),
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),
         functionId: 'research-agent',
