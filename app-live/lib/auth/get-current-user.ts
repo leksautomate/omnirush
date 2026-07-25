@@ -37,6 +37,11 @@ export async function getCurrentUserId() {
     return process.env.ANONYMOUS_USER_ID || 'anonymous-user'
   }
 
+  // If Supabase is not configured, fall back to anonymous mode
+  if (!hasSupabasePublicConfig()) {
+    return process.env.ANONYMOUS_USER_ID || 'anonymous-user'
+  }
+
   const user = await getCurrentUser()
   if (user?.id) {
     return user.id
