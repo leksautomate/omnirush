@@ -58,8 +58,8 @@ function shape(raw: Record<string, unknown>, provider: 'claude' | 'gemini'): Vid
   }
 }
 
-// --- Claude path (primary, needs a frame-extraction watch service) ---
-async function analyzeWithClaude(
+// --- Frame analysis path (Primary: uses watch-service for frame extraction + Gemini Flash for vision/understanding) ---
+async function analyzeWithWatchService(
   youtubeUrl: string,
   goal: string | undefined,
   signal?: AbortSignal
@@ -83,8 +83,14 @@ async function analyzeWithClaude(
   }
   if (!frames?.length) throw new Error('watch service returned no frames')
 
+  // Prefer Gemini Flash for free, fast video understanding
+  const modelName =
+    process.env.LEARN_VIDEO_MODEL ||
+    process.env.LEARN_VIDEO_GEMINI_MODEL ||
+    'google:gemini-2.5-flash'
+
   const { text } = await generateText({
-    model: getModel(process.env.LEARN_VIDEO_CLAUDE_MODEL || 'anthropic:claude-sonnet-5'),
+    model: getModel(modelName),
     system: ANALYSIS_SYS,
     messages: [
       {
@@ -99,70 +105,39 @@ async function analyzeWithClaude(
       }
     ]
   })
-  return shape(parseJson(text), 'claude')
+  return shape(parseJson(text), 'gemini')
 }
 
-// --- Gemini path (fallback, reads the YouTube URL directly) ---
-async function analyzeWithGemini(
+// --- Direct Gemini path (Fallback: analyzes prompt + URL via Gemini) ---
+async function analyzeWithGeminiDirect(
   youtubeUrl: string,
   goal: string | undefined,
   signal?: AbortSignal
 ): Promise<VideoAnalysis> {
-  const key =
-    process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
-  if (!key)
-    throw new Error(
-      'No video-understanding backend configured (set WATCH_SERVICE_URL for Claude, or GEMINI_API_KEY for the Gemini fallback).'
-    )
-  const model = process.env.LEARN_VIDEO_GEMINI_MODEL || 'gemini-2.5-flash'
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-    {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: ANALYSIS_SYS }] },
-        contents: [
-          {
-            parts: [
-              {
-                text: `Reference video to analyze.${goal ? ` Goal: ${goal}.` : ''}`
-              },
-              { file_data: { file_uri: youtubeUrl } }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.4,
-          maxOutputTokens: 4000,
-          responseMimeType: 'application/json'
-        }
-      }),
-      signal
-    }
-  )
-  const d = await res.json().catch(() => ({}))
-  if (!res.ok) {
-    throw new Error(d?.error?.message || `Gemini ${res.status}`)
-  }
-  const text =
-    d?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') || ''
-  if (!text) throw new Error('Gemini returned no analysis')
+  const modelName =
+    process.env.LEARN_VIDEO_MODEL ||
+    process.env.LEARN_VIDEO_GEMINI_MODEL ||
+    'google:gemini-2.5-flash'
+
+  const { text } = await generateText({
+    model: getModel(modelName),
+    system: ANALYSIS_SYS,
+    prompt: `Reference video URL: ${youtubeUrl}${goal ? `\nGoal: ${goal}` : ''}\nAnalyze the structure of this reference video topic/style.`
+  })
   return shape(parseJson(text), 'gemini')
 }
 
-// Analyze a reference video. Claude when the watch service is configured; Gemini otherwise
-// (and Gemini as fallback if the Claude path errors).
+// Analyze a reference video. Uses watch-service + Gemini Flash when configured, or Gemini direct fallback.
 export async function analyzeVideo(
   youtubeUrl: string,
   opts: { goal?: string; signal?: AbortSignal } = {}
 ): Promise<VideoAnalysis> {
   if (process.env.WATCH_SERVICE_URL) {
     try {
-      return await analyzeWithClaude(youtubeUrl, opts.goal, opts.signal)
-    } catch {
-      // fall through to Gemini
+      return await analyzeWithWatchService(youtubeUrl, opts.goal, opts.signal)
+    } catch (error) {
+      console.warn('[VideoUnderstanding] Watch service failed, falling back to direct Gemini:', error)
     }
   }
-  return analyzeWithGemini(youtubeUrl, opts.goal, opts.signal)
+  return analyzeWithGeminiDirect(youtubeUrl, opts.goal, opts.signal)
 }
