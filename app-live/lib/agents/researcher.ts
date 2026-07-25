@@ -54,7 +54,7 @@ Core Philosophy:
 
     // Individual tools
     const searchTool = createSearchTool(searchMode)
-    const questionTool = createQuestionTool()
+    const questionTool = createQuestionTool(model)
     const todoTools = createTodoTools()
     const writeScriptTool = createWriteScriptTool(model)
     const sourceFootageTool = createSourceFootageTool()
