@@ -41,10 +41,10 @@ const providers: Record<string, any> = {
     },
     fetch: async (url, init) => {
       const response = await fetch(url, init)
-      if (response.status !== 200) {
-        console.error('[AgentRouter Error Status]:', response.status, response.statusText)
-      }
+      console.error('[AgentRouter Raw Status]:', response.status, response.statusText, 'content-type:', response.headers.get('content-type'))
       if (!response.body || !response.headers.get('content-type')?.includes('text/event-stream')) {
+        const cloned = response.clone()
+        cloned.text().then(t => console.error('[AgentRouter Non-stream body]:', t)).catch(() => {})
         return response
       }
       const reader = response.body.getReader()
