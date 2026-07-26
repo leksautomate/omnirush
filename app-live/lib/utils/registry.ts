@@ -49,7 +49,7 @@ const providers: Record<string, any> = {
         if (!trimmed || trimmed === 'data: null' || trimmed === 'data:null') {
           return
         }
-        controller.enqueue(encoder.encode(line + '\n'))
+        controller.enqueue(encoder.encode(line + '\n\n'))
       }
 
       const stream = new ReadableStream({
