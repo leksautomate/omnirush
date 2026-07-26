@@ -109,26 +109,17 @@ Core Philosophy:
 
     const isAgentRouter = model.startsWith('agentrouter') || model.includes('opus')
 
-    if (isAgentRouter) {
-      return {
-        tools: {} as ResearcherTools,
-        stream: async (opts: any) => {
-          return streamText({
-            model: getModel(model),
-            messages: opts.messages,
-            abortSignal: opts.abortSignal
-          })
-        }
-      } as any
-    }
-
-    // Create ToolLoopAgent for standard providers
+    // AgentRouter's gateway blocks system prompts with content-blocked errors
+    // and rejects tool function schemas. Use ToolLoopAgent with no tools and
+    // no instructions so text streams cleanly through the UI message protocol.
     const agent = new ToolLoopAgent({
       model: getModel(model),
-      instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-      tools,
-      activeTools: activeToolsList as any,
-      stopWhen: stepCountIs(maxSteps),
+      instructions: isAgentRouter
+        ? `Current date and time: ${currentDate}`
+        : `${systemPrompt}\nCurrent date and time: ${currentDate}`,
+      tools: isAgentRouter ? ({} as ResearcherTools) : tools,
+      activeTools: isAgentRouter ? [] : (activeToolsList as any),
+      stopWhen: stepCountIs(isAgentRouter ? 1 : maxSteps),
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),
         functionId: 'research-agent',
