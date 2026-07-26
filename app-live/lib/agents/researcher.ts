@@ -115,7 +115,6 @@ Core Philosophy:
         stream: async (opts: any) => {
           return streamText({
             model: getModel(model),
-            system: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
             messages: opts.messages,
             abortSignal: opts.abortSignal
           })
