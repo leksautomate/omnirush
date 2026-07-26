@@ -115,7 +115,7 @@ Core Philosophy:
     const agent = new ToolLoopAgent({
       model: getModel(model),
       instructions: isAgentRouter
-        ? `Current date and time: ${currentDate}`
+        ? undefined
         : `${systemPrompt}\nCurrent date and time: ${currentDate}`,
       tools: isAgentRouter ? ({} as ResearcherTools) : tools,
       activeTools: isAgentRouter ? [] : (activeToolsList as any),
