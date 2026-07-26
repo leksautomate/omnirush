@@ -29,7 +29,11 @@ const providers: Record<string, any> = {
     apiKey: process.env.AGENTROUTER_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY,
     baseURL: normalizeOpenAICompatibleBaseURL(
       process.env.AGENTROUTER_BASE_URL || 'https://agentrouter.org/v1'
-    )
+    ),
+    headers: {
+      'User-Agent': 'claude-cli/1.0.108 (external, cli)',
+      'anthropic-version': '2023-06-01'
+    }
   }),
   groq: createOpenAICompatible({
     name: 'groq',
