@@ -33,6 +33,45 @@ const providers: Record<string, any> = {
     headers: {
       'User-Agent': 'claude-cli/1.0.108 (external, cli)',
       'anthropic-version': '2023-06-01'
+    },
+    fetch: async (url, init) => {
+      const response = await fetch(url, init)
+      if (!response.body || !response.headers.get('content-type')?.includes('text/event-stream')) {
+        return response
+      }
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      const encoder = new TextEncoder()
+
+      let buffer = ''
+      const stream = new ReadableStream({
+        async start(controller) {
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) {
+              if (buffer && buffer.trim() !== 'data: null') {
+                controller.enqueue(encoder.encode(buffer))
+              }
+              controller.close()
+              break
+            }
+            buffer += decoder.decode(value, { stream: true })
+            const lines = buffer.split('\n')
+            buffer = lines.pop() || ''
+            for (const line of lines) {
+              if (line.trim() === 'data: null') {
+                continue
+              }
+              controller.enqueue(encoder.encode(line + '\n'))
+            }
+          }
+        }
+      })
+      return new Response(stream, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers
+      })
     }
   }),
   groq: createOpenAICompatible({
