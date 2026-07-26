@@ -244,8 +244,7 @@ export async function createChatStreamResponse(
       onError: (error: unknown) => {
         console.error('Stream response error:', error)
         return serializePublicError(error)
-      },
-      consumeSseStream: consumeStream
+      }
     })
   } catch (error) {
     if (langfuse) {

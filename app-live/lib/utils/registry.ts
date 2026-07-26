@@ -36,6 +36,9 @@ const providers: Record<string, any> = {
     },
     fetch: async (url, init) => {
       const response = await fetch(url, init)
+      if (response.status !== 200) {
+        console.error('[AgentRouter Error Status]:', response.status, response.statusText)
+      }
       if (!response.body || !response.headers.get('content-type')?.includes('text/event-stream')) {
         return response
       }

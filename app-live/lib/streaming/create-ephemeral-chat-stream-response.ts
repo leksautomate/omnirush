@@ -143,8 +143,7 @@ export async function createEphemeralChatStreamResponse(
       onError: (error: unknown) => {
         console.error('Ephemeral stream response error:', error)
         return serializePublicError(error)
-      },
-      consumeSseStream: consumeStream
+      }
     })
   } catch (error) {
     if (langfuse) {
