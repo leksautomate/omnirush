@@ -109,15 +109,27 @@ Core Philosophy:
 
     const isAgentRouter = model.startsWith('agentrouter') || model.includes('opus')
 
-    // Create ToolLoopAgent with AgentRouter model
-    // AgentRouter OpenAI-compatible proxy rejects function declaration tools array.
-    // Omit tools for AgentRouter so chat response streams text cleanly.
+    if (isAgentRouter) {
+      return {
+        tools: {} as ResearcherTools,
+        stream: async (opts: any) => {
+          return streamText({
+            model: getModel(model),
+            system: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
+            messages: opts.messages,
+            abortSignal: opts.abortSignal
+          })
+        }
+      } as any
+    }
+
+    // Create ToolLoopAgent for standard providers
     const agent = new ToolLoopAgent({
       model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-      tools: isAgentRouter ? ({} as ResearcherTools) : tools,
-      activeTools: isAgentRouter ? [] : (activeToolsList as any),
-      stopWhen: stepCountIs(isAgentRouter ? 1 : maxSteps),
+      tools,
+      activeTools: activeToolsList as any,
+      stopWhen: stepCountIs(maxSteps),
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),
         functionId: 'research-agent',
