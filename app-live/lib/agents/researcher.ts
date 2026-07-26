@@ -107,15 +107,9 @@ Core Philosophy:
       ...todoTools
     } as ResearcherTools
 
-    // Route chat tool loop execution to Gemini Flash for instant streaming & tool support
-    const agentModel =
-      model.startsWith('agentrouter') || model.includes('opus-4-8')
-        ? getModel('google:gemini-2.0-flash')
-        : getModel(model)
-
-    // Create ToolLoopAgent with all configuration
+    // Create ToolLoopAgent with AgentRouter model
     const agent = new ToolLoopAgent({
-      model: agentModel,
+      model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
       tools,
       activeTools: activeToolsList as any,
