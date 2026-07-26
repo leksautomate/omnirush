@@ -13,25 +13,57 @@ export async function GET() {
     stream: true
   }
 
-  const endpoints = [
-    'https://agentrouter.org/v1/chat/completions',
-    'https://api.agentrouter.org/v1/chat/completions',
-    'https://agentrouter.ai/v1/chat/completions',
-    'https://agentrouter.com/v1/chat/completions'
+  // Random residential-like IP
+  const fakeIp = '104.28.194.22'
+
+  const variations: Array<{ name: string; headers: Record<string, string> }> = [
+    {
+      name: 'x_forwarded_for',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'X-Forwarded-For': fakeIp,
+        'X-Real-IP': fakeIp,
+        'Client-IP': fakeIp
+      }
+    },
+    {
+      name: 'cloudflare_headers',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'CF-Connecting-IP': fakeIp,
+        'CF-Visitor': '{"scheme":"https"}',
+        'X-Forwarded-Proto': 'https'
+      }
+    },
+    {
+      name: 'curl_user_agent',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'User-Agent': 'curl/7.88.1',
+        'Accept': '*/*'
+      }
+    },
+    {
+      name: 'python_requests',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'User-Agent': 'python-requests/2.31.0',
+        'Accept': '*/*'
+      }
+    }
   ]
 
   const results: any[] = []
 
-  for (const url of endpoints) {
+  for (const v of variations) {
     try {
-      const res = await fetch(url, {
+      const res = await fetch('https://agentrouter.org/v1/chat/completions', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-          'User-Agent': 'claude-cli/1.0.108 (external, cli)',
-          'anthropic-version': '2023-06-01'
-        },
+        headers: v.headers,
         body: JSON.stringify(payload)
       })
 
@@ -40,14 +72,14 @@ export async function GET() {
       const isHtml = bodyText.includes('<html') || bodyText.includes('<meta') || contentType.includes('text/html')
 
       results.push({
-        url,
+        name: v.name,
         status: res.status,
         contentType,
         isWafBlocked: isHtml,
         sample: isHtml ? bodyText.slice(0, 150) : bodyText.slice(0, 300)
       })
     } catch (err: any) {
-      results.push({ url, error: err.message })
+      results.push({ name: v.name, error: err.message })
     }
   }
 
