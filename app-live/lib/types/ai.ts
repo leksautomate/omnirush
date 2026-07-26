@@ -48,9 +48,9 @@ export type UIDataTypes = {
 
 // Create tool instances for type inference
 const todoTools = createTodoTools()
-const writeScriptTool = createWriteScriptTool('agentrouter:claude-opus-4-8')
+const writeScriptTool = createWriteScriptTool('agentrouter:claude-opus-4-6')
 const sourceFootageTool = createSourceFootageTool()
-const cutBeatsTool = createCutBeatsTool('agentrouter:claude-opus-4-8')
+const cutBeatsTool = createCutBeatsTool('agentrouter:claude-opus-4-6')
 const composeRenderTool = createComposeRenderTool()
 const generateVoiceoverTool = createGenerateVoiceoverTool()
 const listVoicesTool = createListVoicesTool()

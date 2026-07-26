@@ -89,29 +89,21 @@ export function getModel(model: string): LanguageModel {
   if (targetModel.startsWith('agentrouter:')) {
     const rawId = targetModel.slice('agentrouter:'.length)
     if (
+      rawId === 'claude-opus-4-6' ||
       rawId === 'claude-opus-4-8' ||
       rawId === 'opus' ||
       rawId === 'claude-opus' ||
+      rawId === 'opus-4-6' ||
       rawId === 'opus-4-8' ||
       rawId.startsWith('claude')
     ) {
-      targetModel = 'agentrouter:claude-opus-4-8'
+      targetModel = 'agentrouter:claude-opus-4-6'
     }
   }
 
-  // Normalize Anthropic model aliases to claude-sonnet-5
+  // Normalize Anthropic model aliases to AgentRouter
   if (targetModel.startsWith('anthropic:')) {
-    const rawId = targetModel.slice('anthropic:'.length)
-    if (
-      rawId === 'claude-sonnet-5' ||
-      rawId === 'claude-5' ||
-      rawId === 'claude-sonnet' ||
-      rawId === 'claude-3-5-sonnet' ||
-      rawId === 'claude-3-sonnet' ||
-      rawId === 'claude-3-5-sonnet-latest'
-    ) {
-      targetModel = 'agentrouter:claude-opus-4-8'
-    }
+    targetModel = 'agentrouter:claude-opus-4-6'
   }
 
   // Normalize DeepSeek model aliases on Groq
@@ -130,7 +122,7 @@ export function getModel(model: string): LanguageModel {
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
     if (process.env.AGENTROUTER_API_KEY) {
-      targetModel = 'agentrouter:claude-opus-4-8'
+      targetModel = 'agentrouter:claude-opus-4-6'
     } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
       targetModel = 'google:gemini-2.0-flash'
     } else if (process.env.GROQ_API_KEY) {

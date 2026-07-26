@@ -2,14 +2,14 @@
   "version": 2,
   "models": {
     "quick": {
-      "id": "claude-opus-4-8",
-      "name": "Claude Opus 4.8 (AgentRouter)",
+      "id": "claude-opus-4-6",
+      "name": "Claude Opus 4.6 (AgentRouter)",
       "provider": "AgentRouter",
       "providerId": "agentrouter"
     },
     "adaptive": {
-      "id": "claude-opus-4-8",
-      "name": "Claude Opus 4.8 (AgentRouter)",
+      "id": "claude-opus-4-6",
+      "name": "Claude Opus 4.6 (AgentRouter)",
       "provider": "AgentRouter",
       "providerId": "agentrouter"
     }
