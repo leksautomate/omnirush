@@ -17,39 +17,14 @@ export async function getCurrentUserId() {
   const count = incrementAuthCallCount()
   perfLog(`getCurrentUserId called - count: ${count}`)
 
-  // Skip authentication mode (for personal Docker deployments)
-  if (process.env.ENABLE_AUTH === 'false') {
-    // Guard: Prevent disabling auth in Kakkao Cloud deployments
-    if (process.env.KAKKAO_CLOUD_DEPLOYMENT === 'true') {
-      throw new Error(
-        'ENABLE_AUTH=false is not allowed in KAKKAO_CLOUD_DEPLOYMENT'
-      )
-    }
-
-    // Always warn when authentication is disabled (except in tests)
-    if (process.env.NODE_ENV !== 'test') {
-      console.warn(
-        '⚠️  Authentication disabled. Running in anonymous mode.\n' +
-          '   All users share the same user ID. For personal use only.'
-      )
-    }
-
-    return process.env.ANONYMOUS_USER_ID || 'anonymous-user'
-  }
-
-  // If Supabase is not configured, fall back to anonymous mode
-  if (!hasSupabasePublicConfig()) {
+  // Skip authentication mode ONLY if explicitly disabled (e.g. local single-user Docker)
+  if (process.env.ENABLE_AUTH === 'false' && process.env.KAKKAO_CLOUD_DEPLOYMENT !== 'true') {
     return process.env.ANONYMOUS_USER_ID || 'anonymous-user'
   }
 
   const user = await getCurrentUser()
   if (user?.id) {
     return user.id
-  }
-
-  // If user is not logged in via Supabase Auth and auth is not strictly enforced:
-  if (process.env.ENABLE_AUTH !== 'true') {
-    return process.env.ANONYMOUS_USER_ID || 'anonymous-user'
   }
 
   return undefined

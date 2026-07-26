@@ -48,20 +48,28 @@ export async function updateSession(request: NextRequest) {
 
   // Define public paths that don't require authentication
   const publicPaths = [
-    '/', // Root path
-    '/auth', // Auth-related pages
-    '/share', // Share pages
-    '/api' // API routes
-    // Add other public paths here if needed
+    '/auth', // Auth pages (login, sign-up, etc.)
+    '/share', // Public share pages
+    '/api/auth' // Auth callback endpoints
   ]
 
   const pathname = request.nextUrl.pathname
+  const isPublicPath = publicPaths.some(path => pathname === path || pathname.startsWith(path + '/'))
 
-  // Redirect to login if the user is not authenticated and the path is not public
-  if (!user && !publicPaths.some(path => pathname.startsWith(path))) {
-    // no user, potentially respond by redirecting the user to the login page
+  // Redirect unauthenticated users trying to access protected pages/APIs
+  if (!user && !isPublicPath) {
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+    }
     const url = request.nextUrl.clone()
     url.pathname = '/auth/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect authenticated users away from login/sign-up pages to the main app
+  if (user && (pathname === '/auth/login' || pathname === '/auth/sign-up')) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/'
     return NextResponse.redirect(url)
   }
 

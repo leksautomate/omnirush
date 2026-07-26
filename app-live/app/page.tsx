@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { getCurrentUserId } from '@/lib/auth/get-current-user'
 import { getModelSelectorData } from '@/lib/model-selector/get-model-selector-data'
 
@@ -7,6 +8,11 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const userId = await getCurrentUserId()
+
+  if (!userId) {
+    redirect('/auth/login')
+  }
+
   const isCloudDeployment = process.env.KAKKAO_CLOUD_DEPLOYMENT === 'true'
   const libraryAvailable = process.env.ENABLE_AUTH !== 'false'
   const modelSelectorData = await getModelSelectorData()
