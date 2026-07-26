@@ -13,7 +13,7 @@ export async function GET() {
     stream: true
   }
 
-  const variations = [
+  const variations: Array<{ name: string; headers: Record<string, string> }> = [
     {
       name: 'browser_user_agent',
       headers: {
