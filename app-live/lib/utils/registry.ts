@@ -199,6 +199,7 @@ export function getModel(model: string): LanguageModel {
     return lm
   }
 
+  console.error('[getModel resolved]:', targetModel)
   return registry.languageModel(
     targetModel as Parameters<typeof registry.languageModel>[0]
   )
