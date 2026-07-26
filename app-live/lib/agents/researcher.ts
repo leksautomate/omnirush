@@ -1,4 +1,4 @@
-import { stepCountIs, tool, ToolLoopAgent } from 'ai'
+import { stepCountIs, streamText, tool, ToolLoopAgent } from 'ai'
 
 import type { ResearcherTools } from '@/lib/types/agent'
 import { type Model } from '@/lib/types/models'
