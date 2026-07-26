@@ -28,10 +28,12 @@ export async function generateChatTitle({
   try {
     const systemPrompt = `System: You are an AI assistant specialized in creating very short, concise, and informative titles for chat conversations based on the user's first message. The title should ideally be 3-5 words long, and no more than 10 words. Only output the title itself, with no prefixes, labels, or quotation marks.`
 
+    const isAgentRouter = modelId.startsWith('agentrouter') || modelId.includes('opus')
+
     const { text: generatedTitle } = await generateText({
       model: getModel(modelId),
-      system: systemPrompt,
-      prompt: userMessageContent,
+      system: isAgentRouter ? undefined : systemPrompt,
+      prompt: isAgentRouter ? `Create a short title (3-5 words) for this chat conversation: ${userMessageContent}` : userMessageContent,
       abortSignal,
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),
