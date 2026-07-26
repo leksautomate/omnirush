@@ -114,12 +114,14 @@ Core Philosophy:
     // no instructions so text streams cleanly through the UI message protocol.
     const agent = new ToolLoopAgent({
       model: getModel(model),
-      instructions: isAgentRouter
-        ? undefined
-        : `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-      tools: isAgentRouter ? ({} as ResearcherTools) : tools,
-      activeTools: isAgentRouter ? [] : (activeToolsList as any),
-      stopWhen: stepCountIs(isAgentRouter ? 1 : maxSteps),
+      ...(isAgentRouter
+        ? {}
+        : {
+            instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
+            tools,
+            activeTools: activeToolsList as any,
+            stopWhen: stepCountIs(maxSteps)
+          }),
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),
         functionId: 'research-agent',
