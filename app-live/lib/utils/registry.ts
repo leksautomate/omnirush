@@ -35,8 +35,19 @@ const providers: Record<string, any> = {
       'anthropic-version': '2023-06-01'
     },
     fetch: async (url, init) => {
+      // Debug: log the outgoing request details
+      const reqBody = init?.body ? JSON.parse(String(init.body)) : {}
+      console.error('[AgentRouter] POST', url, 'model:', reqBody.model, 'msgs:', reqBody.messages?.length, 'stream:', reqBody.stream)
+      console.error('[AgentRouter] Headers:', JSON.stringify(Object.fromEntries(Object.entries(init?.headers || {}).filter(([k]) => k.toLowerCase() !== 'authorization'))))
+
       const response = await fetch(url, init)
+
+      console.error('[AgentRouter] Response status:', response.status, 'content-type:', response.headers.get('content-type'))
+
       if (!response.body || !response.headers.get('content-type')?.includes('text/event-stream')) {
+        // Debug: log non-streaming response body
+        const cloned = response.clone()
+        cloned.text().then(t => console.error('[AgentRouter] Non-stream body:', t.slice(0, 500))).catch(() => {})
         return response
       }
       const reader = response.body.getReader()
@@ -60,7 +71,11 @@ const providers: Record<string, any> = {
             buffer = lines.pop() || ''
             for (const line of lines) {
               if (line.trim() === 'data: null') {
+                console.error('[AgentRouter SSE] Skipped null heartbeat')
                 continue
+              }
+              if (line.trim().startsWith('data:')) {
+                console.error('[AgentRouter SSE]', line.trim().slice(0, 200))
               }
               controller.enqueue(encoder.encode(line + '\n'))
             }
