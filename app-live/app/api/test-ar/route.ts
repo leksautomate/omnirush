@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET(req: Request) {
+export async function GET() {
   const apiKey = (process.env.AGENTROUTER_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY || '').replace(/^["']|["']$/g, '').trim()
   
   const payload = {
