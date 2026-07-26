@@ -19,6 +19,11 @@ function normalizeOpenAICompatibleBaseURL(raw: string): string {
   return raw.replace(/\/+$/, '').replace(/\/v1$/, '') + '/v1'
 }
 
+function getAgentRouterApiKey(): string {
+  const raw = process.env.AGENTROUTER_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY || ''
+  return raw.replace(/^["']|["']$/g, '').trim()
+}
+
 // Build providers object conditionally
 const providers: Record<string, any> = {
   openai,
@@ -26,7 +31,7 @@ const providers: Record<string, any> = {
   google,
   agentrouter: createOpenAICompatible({
     name: 'agentrouter',
-    apiKey: process.env.AGENTROUTER_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY,
+    apiKey: getAgentRouterApiKey(),
     baseURL: normalizeOpenAICompatibleBaseURL(
       process.env.AGENTROUTER_BASE_URL || 'https://agentrouter.org/v1'
     ),
@@ -202,13 +207,7 @@ export function getModel(model: string): LanguageModel {
 export function isProviderEnabled(providerId: string): boolean {
   switch (providerId) {
     case 'agentrouter':
-      return (
-        !!process.env.AGENTROUTER_API_KEY ||
-        (!!process.env.OPENAI_COMPATIBLE_API_KEY &&
-          (process.env.OPENAI_COMPATIBLE_API_BASE_URL || '').includes(
-            'agentrouter'
-          ))
-      )
+      return !!getAgentRouterApiKey()
     case 'groq':
       return !!process.env.GROQ_API_KEY
     case 'openai':
