@@ -60,7 +60,7 @@ export function sanitizeMessagesForModel(
           : [{ type: 'text', text }]
       sanitized.push({
         ...msg,
-        parts
+        parts: parts as any
       })
       continue
     }
