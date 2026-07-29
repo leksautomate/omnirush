@@ -462,6 +462,27 @@ export async function fetchGatewayModels(): Promise<Model[]> {
   }
 }
 
+export async function fetchAgentRouterModels(): Promise<Model[]> {
+  if (!isProviderEnabled('agentrouter')) {
+    return []
+  }
+
+  return [
+    {
+      id: 'claude-opus-5',
+      name: 'Claude Opus 5',
+      provider: 'AgentRouter',
+      providerId: 'agentrouter'
+    },
+    {
+      id: 'claude-opus-4-6',
+      name: 'Claude Opus 4.6',
+      provider: 'AgentRouter',
+      providerId: 'agentrouter'
+    }
+  ]
+}
+
 export async function fetchAvailableModels(options?: {
   forceRefresh?: boolean
 }): Promise<ModelsByProvider> {
@@ -472,11 +493,12 @@ export async function fetchAvailableModels(options?: {
     return modelsCache.value
   }
 
-  const [openai, anthropic, google, openaiCompatible, ollama, gateway] =
+  const [openai, anthropic, google, agentrouter, openaiCompatible, ollama, gateway] =
     await Promise.all([
       fetchOpenAIModels(),
       fetchAnthropicModels(),
       fetchGoogleModels(),
+      fetchAgentRouterModels(),
       fetchOpenAICompatibleModels(),
       fetchOllamaModels(),
       fetchGatewayModels()
@@ -487,6 +509,7 @@ export async function fetchAvailableModels(options?: {
       ...openai,
       ...anthropic,
       ...google,
+      ...agentrouter,
       ...openaiCompatible,
       ...ollama,
       ...gateway

@@ -36,8 +36,14 @@ const providers: Record<string, any> = {
       process.env.AGENTROUTER_BASE_URL || 'https://agentrouter.org/v1'
     ),
     headers: {
-      'User-Agent': 'claude-cli/1.0.108 (external, cli)',
-      'anthropic-version': '2023-06-01'
+      'X-Stainless-OS': 'Linux',
+      'X-Stainless-Arch': 'x64',
+      'X-Stainless-Lang': 'js',
+      'X-Stainless-Runtime': 'node',
+      'X-Stainless-Runtime-Version': 'v22.22.1',
+      'HTTP-Referer': 'https://github.com/RooVetGit/Roo-Cline',
+      'X-Title': 'Roo Code',
+      'User-Agent': 'RooCode/3.53.0'
     },
     fetch: async (url, init) => {
       const response = await fetch(url, init)
@@ -143,6 +149,12 @@ export function getModel(model: string): LanguageModel {
   if (targetModel.startsWith('agentrouter:')) {
     const rawId = targetModel.slice('agentrouter:'.length)
     if (
+      rawId === 'claude-opus-5' ||
+      rawId === 'opus-5' ||
+      rawId === 'opus5'
+    ) {
+      targetModel = 'agentrouter:claude-opus-5'
+    } else if (
       rawId === 'claude-opus-4-6' ||
       rawId === 'claude-opus-4-8' ||
       rawId === 'opus' ||
