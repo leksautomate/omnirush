@@ -144,12 +144,14 @@ export async function createChatStreamResponse(
     })
 
     // Prune messages to reduce token usage while keeping recent context
-    modelMessages = pruneMessages({
-      messages: modelMessages,
-      reasoning: 'before-last-message',
-      toolCalls: 'before-last-2-messages',
-      emptyMessages: 'remove'
-    })
+    if (modelMessages.length > 1) {
+      modelMessages = pruneMessages({
+        messages: modelMessages,
+        reasoning: 'before-last-message',
+        toolCalls: 'before-last-2-messages',
+        emptyMessages: 'keep'
+      })
+    }
 
     if (shouldTruncateMessages(modelMessages, model)) {
       const maxTokens = getMaxAllowedTokens(model)
