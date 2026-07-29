@@ -189,9 +189,14 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Normalize AgentRouter model aliases to live claude-opus-5
+  // Normalize AgentRouter model aliases (default to ultra-fast gpt-5.6-sol for instant real-time streaming)
   if (targetModel.startsWith('agentrouter:')) {
-    targetModel = 'agentrouter:claude-opus-5'
+    const rawId = targetModel.slice('agentrouter:'.length)
+    if (rawId === 'opus' || rawId === 'claude-opus-5' || rawId === 'opus-5') {
+      targetModel = 'agentrouter:claude-opus-5'
+    } else {
+      targetModel = 'agentrouter:gpt-5.6-sol'
+    }
   }
 
   // Normalize Anthropic model aliases to AgentRouter
