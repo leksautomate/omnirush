@@ -55,8 +55,9 @@ const providers: Record<string, any> = {
       reqHeaders.set('HTTP-Referer', 'https://github.com/RooVetGit/Roo-Cline')
       reqHeaders.set('X-Title', 'Roo Code')
       reqHeaders.set('User-Agent', 'RooCode/3.53.0')
+      const urlStr = String(url)
       let reqInit = init
-      if (typeof init?.body === 'string' && url.includes('/chat/completions')) {
+      if (typeof init?.body === 'string' && urlStr.includes('/chat/completions')) {
         try {
           const bodyJson = JSON.parse(init.body)
           if (Array.isArray(bodyJson.messages)) {
