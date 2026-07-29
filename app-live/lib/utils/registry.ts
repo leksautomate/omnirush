@@ -55,7 +55,27 @@ const providers: Record<string, any> = {
       reqHeaders.set('HTTP-Referer', 'https://github.com/RooVetGit/Roo-Cline')
       reqHeaders.set('X-Title', 'Roo Code')
       reqHeaders.set('User-Agent', 'RooCode/3.53.0')
-      const response = await fetch(url, { ...init, headers: reqHeaders })
+      let reqInit = init
+      if (typeof init?.body === 'string' && url.includes('/chat/completions')) {
+        try {
+          const bodyJson = JSON.parse(init.body)
+          if (Array.isArray(bodyJson.messages)) {
+            bodyJson.messages = bodyJson.messages.map((m: any) => {
+              if (Array.isArray(m.content)) {
+                const str = m.content
+                  .filter((part: any) => part && (part.type === 'text' || typeof part.text === 'string'))
+                  .map((part: any) => part.text || '')
+                  .join('')
+                return { ...m, content: str }
+              }
+              return m
+            })
+            reqInit = { ...init, body: JSON.stringify(bodyJson) }
+          }
+        } catch (e) {}
+      }
+
+      const response = await fetch(url, { ...reqInit, headers: reqHeaders })
 
       const isStreamReq = typeof init?.body === 'string' && init.body.includes('"stream":true')
       if (isStreamReq && response.ok && response.body) {
