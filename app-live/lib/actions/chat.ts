@@ -16,7 +16,11 @@ const DEFAULT_CHAT_TITLE = 'Untitled'
 
 function safeRevalidateTag(tag: string, profile?: 'max') {
   try {
-    revalidateTag(tag, profile)
+    if (profile) {
+      revalidateTag(tag, profile)
+    } else {
+      revalidateTag(tag)
+    }
   } catch {
     // Ignore revalidateTag errors when running outside Next.js request context
   }
