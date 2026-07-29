@@ -1,7 +1,7 @@
 import { generateText } from 'ai'
 import { getModel } from '@/lib/utils/registry'
 
-import 'server-only'
+
 
 export interface ChannelMetadata {
   channel_name: string

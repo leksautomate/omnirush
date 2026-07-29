@@ -2,7 +2,7 @@
 // recent top videos → channel stats → demand / opportunity / velocity / competition metrics
 // → 0-100 score + breakout channels + outliers. Server-only: the YouTube Data API key comes
 // from the environment (YOUTUBE_API_KEY), never the browser.
-import 'server-only'
+
 
 const YT = 'https://www.googleapis.com/youtube/v3'
 

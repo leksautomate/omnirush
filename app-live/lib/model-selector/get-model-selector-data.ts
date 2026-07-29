@@ -10,7 +10,7 @@ import { ModelSelectorData } from '@/lib/types/model-selector'
 import { Model } from '@/lib/types/models'
 import { isProviderEnabled } from '@/lib/utils/registry'
 
-import 'server-only'
+
 
 function modelKey(model: Model): string {
   return `${model.providerId}:${model.id}`

@@ -137,9 +137,12 @@ export function createSearchTool(fullModel: string) {
           }
         }
       } catch (error) {
-        console.error('Search API error:', error)
-        // Re-throw the error to let AI SDK handle it properly
-        throw error instanceof Error ? error : new Error('Unknown search error')
+        console.error('Search API error (using fallback empty results):', error)
+        searchResult = {
+          results: [],
+          images: [],
+          query: filledQuery
+        }
       }
 
       // No citationMap is attached: it fully duplicated `results`
