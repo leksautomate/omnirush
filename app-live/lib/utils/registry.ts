@@ -20,8 +20,9 @@ function normalizeOpenAICompatibleBaseURL(raw: string): string {
 }
 
 function getAgentRouterApiKey(): string {
-  const raw = process.env.AGENTROUTER_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY || ''
-  return raw.replace(/^["']|["']$/g, '').trim()
+  const raw = process.env.AGENTROUTER_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY || 'sk-GRKoBCGsQlCqVWG028It7QqaBuVPGD10DpvBdN13nhLGGyu4'
+  const cleaned = raw.replace(/^["']|["']$/g, '').trim()
+  return cleaned || 'sk-GRKoBCGsQlCqVWG028It7QqaBuVPGD10DpvBdN13nhLGGyu4'
 }
 
 // Build providers object conditionally
