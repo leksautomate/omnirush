@@ -472,6 +472,7 @@ export function createPublicErrorResponse(
   error: unknown,
   init: ResponseInit & PublicErrorOptions = {}
 ): Response {
+  console.error('[createPublicErrorResponse raw error]:', error)
   const { fallbackMessage, status = 500, ...responseInit } = init
   return new Response(
     serializePublicError(error, { fallbackMessage, status }),
