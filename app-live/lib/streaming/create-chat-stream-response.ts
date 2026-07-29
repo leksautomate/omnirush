@@ -196,7 +196,6 @@ export async function createChatStreamResponse(
         }
       })
     })
-    result.consumeStream()
 
     // Log the session-total usage once the stream settles (does not block the
     // response; consumeStream above already drives it to completion).
