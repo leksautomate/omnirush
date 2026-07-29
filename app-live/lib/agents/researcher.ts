@@ -114,10 +114,10 @@ Core Philosophy:
     // no instructions so text streams cleanly through the UI message protocol.
     const agent = new ToolLoopAgent({
       model: getModel(model),
+      instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
       ...(isAgentRouter
         ? {}
         : {
-            instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
             tools,
             activeTools: activeToolsList as any,
             stopWhen: stepCountIs(maxSteps)
