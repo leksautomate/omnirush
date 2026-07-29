@@ -190,31 +190,14 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Normalize AgentRouter model aliases
+  // Normalize AgentRouter model aliases to live claude-opus-5
   if (targetModel.startsWith('agentrouter:')) {
-    const rawId = targetModel.slice('agentrouter:'.length)
-    if (
-      rawId === 'claude-opus-5' ||
-      rawId === 'opus-5' ||
-      rawId === 'opus5'
-    ) {
-      targetModel = 'agentrouter:claude-opus-5'
-    } else if (
-      rawId === 'claude-opus-4-6' ||
-      rawId === 'claude-opus-4-8' ||
-      rawId === 'opus' ||
-      rawId === 'claude-opus' ||
-      rawId === 'opus-4-6' ||
-      rawId === 'opus-4-8' ||
-      rawId.startsWith('claude')
-    ) {
-      targetModel = 'agentrouter:claude-opus-4-6'
-    }
+    targetModel = 'agentrouter:claude-opus-5'
   }
 
   // Normalize Anthropic model aliases to AgentRouter
   if (targetModel.startsWith('anthropic:')) {
-    targetModel = 'agentrouter:claude-opus-4-6'
+    targetModel = 'agentrouter:claude-opus-5'
   }
 
   // Normalize DeepSeek model aliases on Groq
@@ -267,7 +250,7 @@ export function isProviderEnabled(providerId: string): boolean {
     case 'agentrouter':
       return !!getAgentRouterApiKey()
     case 'groq':
-      return !!process.env.GROQ_API_KEY
+      return !!(process.env.GROQ_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY)
     case 'openai':
       return !!process.env.OPENAI_API_KEY
     case 'anthropic':
