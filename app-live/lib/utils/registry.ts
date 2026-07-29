@@ -56,10 +56,20 @@ const providers: Record<string, any> = {
       reqHeaders.set('X-Title', 'Roo Code')
       reqHeaders.set('User-Agent', 'RooCode/3.53.0')
       const response = await fetch(url, { ...init, headers: reqHeaders })
-      console.error('[AgentRouter Raw Status]:', response.status, response.statusText, 'content-type:', response.headers.get('content-type'))
+
+      const isStreamReq = typeof init?.body === 'string' && init.body.includes('"stream":true')
+      if (isStreamReq && response.ok && response.body) {
+        const resHeaders = new Headers(response.headers)
+        resHeaders.set('content-type', 'text/event-stream')
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: resHeaders
+        })
+      }
+
       if (!response.body || !response.headers.get('content-type')?.includes('text/event-stream')) {
         const text = await response.text()
-        console.error('[AgentRouter Non-stream body]:', text)
         const resHeaders = new Headers(response.headers)
         if (!resHeaders.get('content-type')?.includes('application/json')) {
           resHeaders.set('content-type', 'application/json')
@@ -70,13 +80,6 @@ const providers: Record<string, any> = {
           headers: resHeaders
         })
       }
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-      const encoder = new TextEncoder()
-
-      let buffer = ''
-      const processLine = (line: string, controller: ReadableStreamDefaultController) => {
-        const trimmed = line.trim()
         if (!trimmed || trimmed === 'data: null' || trimmed === 'data:null') {
           return
         }
