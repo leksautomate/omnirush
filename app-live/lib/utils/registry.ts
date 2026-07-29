@@ -80,35 +80,7 @@ const providers: Record<string, any> = {
           headers: resHeaders
         })
       }
-        if (!trimmed || trimmed === 'data: null' || trimmed === 'data:null') {
-          return
-        }
-        controller.enqueue(encoder.encode(line + '\n\n'))
-      }
-
-      const stream = new ReadableStream({
-        async start(controller) {
-          while (true) {
-            const { done, value } = await reader.read()
-            if (done) {
-              if (buffer) {
-                buffer.split('\n').forEach(line => processLine(line, controller))
-              }
-              controller.close()
-              break
-            }
-            buffer += decoder.decode(value, { stream: true })
-            const lines = buffer.split('\n')
-            buffer = lines.pop() || ''
-            lines.forEach(line => processLine(line, controller))
-          }
-        }
-      })
-      return new Response(stream, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers
-      })
+      return response
     }
   }),
   groq: createOpenAICompatible({
