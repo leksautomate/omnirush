@@ -89,7 +89,7 @@ export async function prepareMessages(
 
     const messageWithId = {
       ...message,
-      id: message.id || generateId(),
+      id: generateId(),
       parts: await signFilePartUrls(message.parts, {
         allowedKeyPrefix: getUserFileObjectKeyPrefix(userId)
       })

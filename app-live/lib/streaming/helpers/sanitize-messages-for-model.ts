@@ -52,8 +52,16 @@ export function sanitizeMessagesForModel(
   const sanitized: UIMessage[] = []
 
   for (const msg of messages) {
-    if (msg.role !== 'assistant' || !msg.parts) {
-      sanitized.push(msg)
+    if (msg.role !== 'assistant') {
+      const text = typeof (msg as any).content === 'string' ? (msg as any).content : ''
+      const parts =
+        msg.parts && msg.parts.length > 0
+          ? msg.parts
+          : [{ type: 'text', text }]
+      sanitized.push({
+        ...msg,
+        parts
+      })
       continue
     }
 
