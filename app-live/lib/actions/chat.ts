@@ -14,6 +14,14 @@ import { getTextFromParts } from '@/lib/utils/message-utils'
 // Constants
 const DEFAULT_CHAT_TITLE = 'Untitled'
 
+function safeRevalidateTag(tag: string, profile?: 'max') {
+  try {
+    revalidateTag(tag, profile)
+  } catch {
+    // Ignore revalidateTag errors when running outside Next.js request context
+  }
+}
+
 // Create cached version of loadChatWithMessages with dynamic tags per chat
 const getCachedChatWithMessages = (
   chatId: string,
@@ -96,7 +104,7 @@ export async function createChat(
   })
 
   // Revalidate cache
-  revalidateTag(`chat-${chatId}`, 'max')
+  safeRevalidateTag(`chat-${chatId}`, 'max')
 
   return chat
 }
@@ -136,7 +144,7 @@ export async function createChatAndSaveMessage(
   })
 
   // Revalidate cache
-  revalidateTag(`chat-${chatId}`, 'max')
+  safeRevalidateTag(`chat-${chatId}`, 'max')
 
   return { chat, message: dbMessage }
 }
@@ -166,7 +174,7 @@ export async function createChatWithFirstMessage(
   })
 
   // Revalidate cache
-  revalidateTag(`chat-${chatId}`, 'max')
+  safeRevalidateTag(`chat-${chatId}`, 'max')
 
   return result
 }
@@ -201,7 +209,7 @@ export async function upsertMessage(
   )
 
   // Revalidate cache
-  revalidateTag(`chat-${chatId}`, 'max')
+  safeRevalidateTag(`chat-${chatId}`, 'max')
 
   return dbMessage
 }
@@ -218,7 +226,7 @@ export async function deleteChat(chatId: string) {
   const result = await dbActions.deleteChat(chatId, userId)
 
   if (result.success) {
-    revalidateTag(`chat-${chatId}`, 'max')
+    safeRevalidateTag(`chat-${chatId}`, 'max')
   }
 
   return result
@@ -240,7 +248,7 @@ export async function clearChats() {
   }
 
   // Clear all chat caches since we deleted all chats
-  revalidateTag('chat', 'max')
+  safeRevalidateTag('chat', 'max')
   return { success: true }
 }
 
@@ -261,7 +269,7 @@ export async function deleteMessagesAfter(chatId: string, messageId: string) {
 
   const result = await dbActions.deleteMessagesAfter(chatId, messageId)
 
-  revalidateTag(`chat-${chatId}`, 'max')
+  safeRevalidateTag(`chat-${chatId}`, 'max')
 
   return { success: true, count: result.count }
 }
@@ -282,7 +290,7 @@ export async function shareChat(chatId: string) {
   )
 
   if (updatedChat) {
-    revalidateTag(`chat-${chatId}`, 'max')
+    safeRevalidateTag(`chat-${chatId}`, 'max')
   }
 
   return updatedChat
@@ -313,7 +321,7 @@ export async function deleteMessagesFromIndex(
     userId
   )
 
-  revalidateTag(`chat-${chatId}`, 'max')
+  safeRevalidateTag(`chat-${chatId}`, 'max')
 
   return { success: true, count: result.count }
 }
@@ -340,6 +348,6 @@ export async function saveChatTitle(
       parentTraceId
     })
     await dbActions.updateChatTitle(chatId, title)
-    revalidateTag(`chat-${chatId}`, 'max')
+    safeRevalidateTag(`chat-${chatId}`, 'max')
   }
 }
