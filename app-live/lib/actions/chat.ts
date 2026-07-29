@@ -14,13 +14,9 @@ import { getTextFromParts } from '@/lib/utils/message-utils'
 // Constants
 const DEFAULT_CHAT_TITLE = 'Untitled'
 
-function safeRevalidateTag(tag: string, profile?: 'max') {
+function safeRevalidateTag(tag: string, profile: string = 'max') {
   try {
-    if (profile) {
-      revalidateTag(tag, profile)
-    } else {
-      revalidateTag(tag)
-    }
+    revalidateTag(tag, profile as any)
   } catch {
     // Ignore revalidateTag errors when running outside Next.js request context
   }
