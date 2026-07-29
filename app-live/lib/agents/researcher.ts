@@ -115,13 +115,9 @@ Core Philosophy:
     const agent = new ToolLoopAgent({
       model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-      ...(isAgentRouter
-        ? {}
-        : {
-            tools,
-            activeTools: activeToolsList as any,
-            stopWhen: stepCountIs(maxSteps)
-          }),
+      tools,
+      activeTools: activeToolsList as any,
+      stopWhen: stepCountIs(maxSteps),
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),
         functionId: 'research-agent',
