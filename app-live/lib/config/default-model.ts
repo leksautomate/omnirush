@@ -1,8 +1,8 @@
 import { Model } from '@/lib/types/models'
 
 export const DEFAULT_MODEL: Model = {
-  id: 'claude-opus-4-6',
-  name: 'Claude Opus 4.6',
-  provider: 'AgentRouter',
-  providerId: 'agentrouter'
+  id: 'deepseek-r1-distill-llama-70b',
+  name: 'DeepSeek R1 (Groq)',
+  provider: 'Groq',
+  providerId: 'groq'
 }

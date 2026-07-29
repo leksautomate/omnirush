@@ -229,15 +229,15 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Provider fallback: prioritize active key (AgentRouter -> Gemini -> Groq -> OpenAI)
+  // Provider fallback: prioritize active key (Groq -> AgentRouter -> Gemini -> OpenAI)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (process.env.AGENTROUTER_API_KEY) {
+    if (process.env.GROQ_API_KEY) {
+      targetModel = 'groq:deepseek-r1-distill-llama-70b'
+    } else if (getAgentRouterApiKey()) {
       targetModel = 'agentrouter:claude-opus-4-6'
     } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
       targetModel = 'google:gemini-2.0-flash'
-    } else if (process.env.GROQ_API_KEY) {
-      targetModel = 'groq:deepseek-r1-distill-llama-70b'
     } else if (process.env.OPENAI_API_KEY) {
       targetModel = 'openai:gpt-4o'
     }
