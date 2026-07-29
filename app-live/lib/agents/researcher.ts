@@ -103,9 +103,9 @@ Core Philosophy:
       generateThumbnail: generateThumbnailTool,
       learnFromVideo: learnFromVideoTool,
       generateAvatar: generateAvatarTool,
-      composeRender: composeRenderTool,
-      ...todoTools
     } as ResearcherTools
+
+    const isAgentRouter = model.startsWith('agentrouter') || model.includes('opus')
 
     if (isAgentRouter) {
       return {
