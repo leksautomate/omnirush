@@ -105,21 +105,7 @@ Core Philosophy:
       generateAvatar: generateAvatarTool,
     } as ResearcherTools
 
-    const isAgentRouter = model.startsWith('agentrouter') || model.includes('opus')
 
-    if (isAgentRouter) {
-      return {
-        stream: (options: { messages: Array<any>; abortSignal?: AbortSignal }) => {
-          return streamText({
-            model: getModel(model),
-            system: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
-            messages: options.messages,
-            abortSignal: options.abortSignal,
-            experimental_transform: smoothStream()
-          })
-        }
-      } as any
-    }
 
     const agent = new ToolLoopAgent({
       model: getModel(model),
