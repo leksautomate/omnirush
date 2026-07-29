@@ -100,11 +100,12 @@ const providers: Record<string, any> = {
               buffer = lines.pop() || ''
 
               for (const line of lines) {
-                const trimmed = line.trim()
+                const cleanedLine = line.replace(/\r$/, '')
+                const trimmed = cleanedLine.trim()
                 if (trimmed === 'data: null' || trimmed === 'data:null') {
                   continue
                 }
-                controller.enqueue(encoder.encode(line + '\n'))
+                controller.enqueue(encoder.encode(cleanedLine + '\n'))
               }
             }
           }
