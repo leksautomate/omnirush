@@ -171,25 +171,7 @@ export async function createChatStreamResponse(
 
     console.error('[DEBUG modelMessages]:', JSON.stringify(modelMessages))
 
-    // Normalize all message contents to plain strings for OpenAI-compatible providers
-    const isAgentRouter = context.modelId.startsWith('agentrouter')
-    modelMessages = modelMessages.map((msg: any) => {
-      let textContent = ''
-      if (typeof msg.content === 'string') {
-        textContent = msg.content
-      } else if (Array.isArray(msg.content)) {
-        textContent = msg.content
-          .filter((c: any) => c && (c.type === 'text' || typeof c.text === 'string'))
-          .map((c: any) => c.text || '')
-          .join('\n')
-      } else if (msg.content) {
-        textContent = String(msg.content)
-      }
-      return {
-        role: msg.role || 'user',
-        content: textContent || ' '
-      }
-    }) as any
+
 
     // Start title generation in parallel if it's a new chat
     if (!initialChat && message) {

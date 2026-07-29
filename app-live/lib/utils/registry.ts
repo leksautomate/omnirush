@@ -222,7 +222,7 @@ export function getModel(model: string): LanguageModel {
     if (process.env.GROQ_API_KEY) {
       targetModel = 'groq:deepseek-r1-distill-llama-70b'
     } else if (getAgentRouterApiKey()) {
-      targetModel = 'agentrouter:claude-opus-4-6'
+      targetModel = 'agentrouter:gpt-5.6-sol'
     } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
       targetModel = 'google:gemini-2.0-flash'
     } else if (process.env.OPENAI_API_KEY) {
