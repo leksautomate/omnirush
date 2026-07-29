@@ -125,7 +125,7 @@ Core Philosophy:
             stopWhen: stepCountIs(maxSteps)
           }),
       experimental_telemetry: {
-        isEnabled: isTracingEnabled(),
+        isEnabled: isTracingEnabled() && !isAgentRouter,
         functionId: 'research-agent',
         metadata: {
           modelId: model,

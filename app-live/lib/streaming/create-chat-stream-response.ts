@@ -85,20 +85,24 @@ export async function createChatStreamResponse(
   let langfuse: Langfuse | undefined
 
   if (isTracingEnabled()) {
-    parentTraceId = randomUUID()
-    langfuse = new Langfuse()
+    try {
+      parentTraceId = randomUUID()
+      langfuse = new Langfuse()
 
-    // Create parent trace with name "research"
-    langfuse.trace({
-      id: parentTraceId,
-      name: 'research',
-      metadata: {
-        chatId,
-        userId,
-        modelId: `${model.providerId}:${model.id}`,
-        trigger
-      }
-    })
+      // Create parent trace with name "research"
+      langfuse.trace({
+        id: parentTraceId,
+        name: 'research',
+        metadata: {
+          chatId,
+          userId,
+          modelId: `${model.providerId}:${model.id}`,
+          trigger
+        }
+      })
+    } catch (e) {
+      console.error('Langfuse tracing error:', e)
+    }
   }
 
   // Create stream context with trace ID
