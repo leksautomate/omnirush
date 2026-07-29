@@ -16,7 +16,10 @@ export function createClient() {
           'To enable authentication, set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY at build time.'
       )
     }
-    throw new Error('Supabase not configured')
+    return createBrowserClient(
+      url || 'https://placeholder.supabase.co',
+      key || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder'
+    )
   }
 
   return createBrowserClient(url, key)

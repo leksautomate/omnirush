@@ -48,9 +48,16 @@ export async function updateSession(request: NextRequest) {
 
   // Define public paths that don't require authentication
   const publicPaths = [
-    '/auth', // Auth pages (login, sign-up, etc.)
-    '/share', // Public share pages
-    '/api/auth' // Auth callback endpoints
+    '/',
+    '/auth',
+    '/share',
+    '/chat',
+    '/niche',
+    '/niche-bender',
+    '/search',
+    '/studio',
+    '/avatars',
+    '/api'
   ]
 
   const pathname = request.nextUrl.pathname
