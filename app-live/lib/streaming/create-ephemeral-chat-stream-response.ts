@@ -117,15 +117,7 @@ export async function createEphemeralChatStreamResponse(
         }
       })
     })
-    result.consumeStream()
-
-    if (isUsageLogging()) {
-      Promise.resolve(result.totalUsage)
-        .then(usage => logUsage({ scope: 'total', modelId }, usage))
-        .catch(() => {})
-    }
-
-    return result.toUIMessageStreamResponse({
+    const response = result.toUIMessageStreamResponse({
       messageMetadata: ({ part }) => {
         if (part.type === 'start') {
           return {
@@ -145,6 +137,13 @@ export async function createEphemeralChatStreamResponse(
         return serializePublicError(error)
       }
     })
+
+    response.headers.set('Content-Type', 'text/event-stream; charset=utf-8')
+    response.headers.set('Cache-Control', 'no-cache, no-transform, private')
+    response.headers.set('X-Accel-Buffering', 'no')
+    response.headers.set('Connection', 'keep-alive')
+
+    return response
   } catch (error) {
     if (langfuse) {
       await langfuse.flushAsync()

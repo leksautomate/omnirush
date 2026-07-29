@@ -1,4 +1,4 @@
-import { stepCountIs, streamText, tool, ToolLoopAgent } from 'ai'
+import { smoothStream, stepCountIs, streamText, tool, ToolLoopAgent } from 'ai'
 
 import type { ResearcherTools } from '@/lib/types/agent'
 import { type Model } from '@/lib/types/models'
@@ -114,7 +114,8 @@ Core Philosophy:
             model: getModel(model),
             system: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
             messages: options.messages,
-            abortSignal: options.abortSignal
+            abortSignal: options.abortSignal,
+            experimental_transform: smoothStream()
           })
         }
       } as any
