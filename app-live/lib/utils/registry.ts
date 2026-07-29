@@ -46,12 +46,29 @@ const providers: Record<string, any> = {
       'User-Agent': 'RooCode/3.53.0'
     },
     fetch: async (url, init) => {
-      const response = await fetch(url, init)
+      const reqHeaders = new Headers(init?.headers || {})
+      reqHeaders.set('X-Stainless-OS', 'Linux')
+      reqHeaders.set('X-Stainless-Arch', 'x64')
+      reqHeaders.set('X-Stainless-Lang', 'js')
+      reqHeaders.set('X-Stainless-Runtime', 'node')
+      reqHeaders.set('X-Stainless-Runtime-Version', 'v22.22.1')
+      reqHeaders.set('HTTP-Referer', 'https://github.com/RooVetGit/Roo-Cline')
+      reqHeaders.set('X-Title', 'Roo Code')
+      reqHeaders.set('User-Agent', 'RooCode/3.53.0')
+      const response = await fetch(url, { ...init, headers: reqHeaders })
       console.error('[AgentRouter Raw Status]:', response.status, response.statusText, 'content-type:', response.headers.get('content-type'))
       if (!response.body || !response.headers.get('content-type')?.includes('text/event-stream')) {
-        const cloned = response.clone()
-        cloned.text().then(t => console.error('[AgentRouter Non-stream body]:', t)).catch(() => {})
-        return response
+        const text = await response.text()
+        console.error('[AgentRouter Non-stream body]:', text)
+        const resHeaders = new Headers(response.headers)
+        if (!resHeaders.get('content-type')?.includes('application/json')) {
+          resHeaders.set('content-type', 'application/json')
+        }
+        return new Response(text, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: resHeaders
+        })
       }
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
