@@ -123,8 +123,11 @@ export function ChatMessages({
 
   // Keep the assistant logo visible for the latest section after generation
   const latestSection = sections.at(-1)
+  const hasContent = latestSection?.assistantMessages.some(m => 
+    (m.parts && m.parts.length > 0) || (typeof m.content === 'string' && m.content.trim().length > 0)
+  )
   const showAssistantLogo = Boolean(
-    latestSection && (isLoading || latestSection.assistantMessages.length > 0)
+    latestSection && (isLoading || hasContent)
   )
 
   // Helper function to get tool count with caching

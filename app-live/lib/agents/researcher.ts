@@ -1,4 +1,4 @@
-import { smoothStream, stepCountIs, streamText, tool, ToolLoopAgent } from 'ai'
+import { stepCountIs, ToolLoopAgent } from 'ai'
 
 import type { ResearcherTools } from '@/lib/types/agent'
 import { type Model } from '@/lib/types/models'
@@ -69,26 +69,11 @@ Core Philosophy:
     const learnFromVideoTool = createLearnFromVideoTool()
     const generateAvatarTool = createGenerateAvatarTool()
 
-    const activeToolsList = [
-      'search',
-      'fetch',
-      'askQuestion',
-      'writeScript',
-      'sourceFootage',
-      'cutBeats',
-      'listVoices',
-      'generateVoiceover',
-      'cloneVoice',
-      'generateMusic',
-      'generateImage',
-      'generateThumbnail',
-      'learnFromVideo',
-      'generateAvatar',
-      'composeRender',
-      'todoWrite'
-    ] as const
-
-    const tools = {
+    // The tool map must always carry every key of ResearcherTools: `activeTools`
+    // is only a whitelist over those keys, so gating happens there and the map's
+    // shape stays stable. Advertising a name in activeTools that is missing from
+    // the map produces a malformed request (HTTP 400).
+    const tools: ResearcherTools = {
       search: searchTool,
       fetch: fetchTool,
       askQuestion: questionTool,
@@ -103,15 +88,23 @@ Core Philosophy:
       generateThumbnail: generateThumbnailTool,
       learnFromVideo: learnFromVideoTool,
       generateAvatar: generateAvatarTool,
-    } as ResearcherTools
+      composeRender: composeRenderTool,
+      ...todoTools
+    }
 
+    // DeepSeek R1 on Groq returns 400 when tools are provided, so it runs
+    // tool-free. Every other model keeps the full tool set.
+    const isToolSupportedModel = !model.includes('deepseek')
 
+    const activeToolsList = isToolSupportedModel
+      ? (Object.keys(tools) as (keyof ResearcherTools)[])
+      : []
 
     const agent = new ToolLoopAgent({
       model: getModel(model),
       instructions: `${systemPrompt}\nCurrent date and time: ${currentDate}`,
       tools,
-      activeTools: activeToolsList as any,
+      activeTools: activeToolsList,
       stopWhen: stepCountIs(maxSteps),
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),

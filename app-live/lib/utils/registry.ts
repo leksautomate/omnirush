@@ -61,14 +61,17 @@ const providers: Record<string, any> = {
           const bodyJson = JSON.parse(init.body)
           if (Array.isArray(bodyJson.messages)) {
             bodyJson.messages = bodyJson.messages.map((m: any) => {
-              if (Array.isArray(m.content)) {
-                const str = m.content
-                  .filter((part: any) => part && (part.type === 'text' || typeof part.text === 'string'))
-                  .map((part: any) => part.text || '')
-                  .join('')
-                return { ...m, content: str }
-              }
-              return m
+              if (!Array.isArray(m.content)) return m
+              // Only flatten when every part is text. Content arrays holding
+              // images, files or tool payloads must be passed through untouched —
+              // dropping those parts produces malformed requests (HTTP 400).
+              const isAllText = m.content.every(
+                (part: any) =>
+                  part && (part.type === 'text' || typeof part.text === 'string')
+              )
+              if (!isAllText) return m
+              const str = m.content.map((part: any) => part.text || '').join('')
+              return { ...m, content: str }
             })
             reqInit = { ...init, body: JSON.stringify(bodyJson) }
           }
@@ -189,13 +192,16 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Normalize AgentRouter model aliases (default to ultra-fast gpt-5.6-sol for instant real-time streaming)
+  // Normalize AgentRouter model aliases. claude-opus-5 is the default: the
+  // researcher runs a multi-step loop over 16 tools, and reliable tool calling
+  // matters more here than time-to-first-token. gpt-5.6-sol stays reachable by
+  // asking for it explicitly when raw latency is what you want.
   if (targetModel.startsWith('agentrouter:')) {
     const rawId = targetModel.slice('agentrouter:'.length)
-    if (rawId === 'opus' || rawId === 'claude-opus-5' || rawId === 'opus-5') {
-      targetModel = 'agentrouter:claude-opus-5'
-    } else {
+    if (rawId === 'sol' || rawId === 'gpt-5.6-sol') {
       targetModel = 'agentrouter:gpt-5.6-sol'
+    } else {
+      targetModel = 'agentrouter:claude-opus-5'
     }
   }
 
@@ -219,10 +225,10 @@ export function getModel(model: string): LanguageModel {
   // Provider fallback: prioritize active key (Groq -> AgentRouter -> Gemini -> OpenAI)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (process.env.GROQ_API_KEY) {
+    if (process.env.GROQ_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY) {
       targetModel = 'groq:deepseek-r1-distill-llama-70b'
     } else if (getAgentRouterApiKey()) {
-      targetModel = 'agentrouter:gpt-5.6-sol'
+      targetModel = 'agentrouter:claude-opus-5'
     } else if (process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY) {
       targetModel = 'google:gemini-2.0-flash'
     } else if (process.env.OPENAI_API_KEY) {
