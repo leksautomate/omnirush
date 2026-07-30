@@ -32,15 +32,7 @@ function getSearchModeSnapshot(): SearchMode {
   return savedMode === 'adaptive' ? 'adaptive' : 'quick'
 }
 
-interface SearchModeSelectorProps {
-  isAdaptiveAuthRequired?: boolean
-  onAdaptiveAuthRequired?: () => void
-}
-
-export function SearchModeSelector({
-  isAdaptiveAuthRequired = false,
-  onAdaptiveAuthRequired
-}: SearchModeSelectorProps) {
+export function SearchModeSelector() {
   const value = useSyncExternalStore(
     subscribeToCookieChange,
     getSearchModeSnapshot,
@@ -55,13 +47,8 @@ export function SearchModeSelector({
     if (savedMode && !VALID_SEARCH_MODES.has(savedMode)) {
       // Clean up invalid cookie value (e.g., old 'planning' mode)
       setCookie('searchMode', 'quick')
-      return
     }
-
-    if (isAdaptiveAuthRequired && savedMode === 'adaptive') {
-      setCookie('searchMode', 'quick')
-    }
-  }, [isAdaptiveAuthRequired])
+  }, [])
 
   const closeModeSelectControls = () => {
     setOpenHoverCard(null) // Close hover card on selection
@@ -75,13 +62,6 @@ export function SearchModeSelector({
   }
 
   const handleModeSelect = (mode: SearchMode) => {
-    if (mode === 'adaptive' && isAdaptiveAuthRequired) {
-      setCookie('searchMode', 'quick')
-      closeModeSelectControls()
-      onAdaptiveAuthRequired?.()
-      return
-    }
-
     setCookie('searchMode', mode)
     closeModeSelectControls()
   }

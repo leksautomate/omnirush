@@ -34,28 +34,26 @@ export default async function ChatPage(props: {
   const { id } = await props.params
   const userId = await getCurrentUserId()
 
+  if (!userId) {
+    redirect('/auth/login')
+  }
+
   const chat = await loadChat(id, userId)
 
   if (!chat) {
     notFound()
   }
 
-  if (chat.visibility === 'private' && !userId && process.env.ENABLE_AUTH === 'true') {
-    redirect('/auth/login')
-  }
-
   const messages: UIMessage[] = chat.messages
   const isCloudDeployment = process.env.KAKKAO_CLOUD_DEPLOYMENT === 'true'
-  const libraryAvailable = process.env.ENABLE_AUTH !== 'false'
   const modelSelectorData = await getModelSelectorData()
 
   return (
     <Chat
       id={id}
       savedMessages={messages}
-      isGuest={!userId}
       isCloudDeployment={isCloudDeployment}
-      libraryAvailable={libraryAvailable}
+      libraryAvailable
       modelSelectorData={modelSelectorData}
     />
   )

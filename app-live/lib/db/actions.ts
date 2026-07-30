@@ -194,11 +194,11 @@ export async function loadChatWithMessages(
       return null
     }
 
-    // Permission check for backward compatibility
-    if (chat.visibility === 'private' && (!userId || chat.userId !== userId)) {
-      const isAuthDisabled = process.env.ENABLE_AUTH === 'false'
-      const isAnonymousChat = chat.userId === 'anonymous-user'
-      if (!isAuthDisabled && !isAnonymousChat) {
+    // Private chats are readable only by their owner. Legacy chats stored
+    // under 'anonymous-user' predate mandatory auth; let the signed-in user
+    // through so the chat can be claimed on first write.
+    if (chat.visibility === 'private' && chat.userId !== userId) {
+      if (chat.userId !== 'anonymous-user') {
         return null
       }
     }
@@ -729,6 +729,33 @@ export async function updateChatTitle(
       .returning()
 
     return updatedChat || null
+  })
+}
+
+/**
+ * Transfer ownership of a legacy chat to a real user.
+ *
+ * Before authentication was mandatory, chats were persisted under the literal
+ * 'anonymous-user' id. Those rows are unreachable once auth is required, so
+ * claim them for the signed-in user on first access. Scoped to the legacy id
+ * so it can never move a chat between two real accounts.
+ */
+export async function claimAnonymousChat(
+  chatId: string,
+  userId: string
+): Promise<Chat | null> {
+  // Deliberately runs without RLS context: the row is owned by
+  // 'anonymous-user', so under the claiming user's context the policy's
+  // USING clause hides it and the UPDATE would match zero rows. The WHERE
+  // clause is the guard here — it can only ever touch legacy rows.
+  return withOptionalRLS(null, async tx => {
+    const [claimedChat] = await tx
+      .update(chats)
+      .set({ userId })
+      .where(and(eq(chats.id, chatId), eq(chats.userId, 'anonymous-user')))
+      .returning()
+
+    return claimedChat || null
   })
 }
 

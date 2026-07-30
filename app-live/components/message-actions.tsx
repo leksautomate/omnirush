@@ -41,7 +41,6 @@ interface MessageActionsProps {
   reload?: () => Promise<void | string | null | undefined>
   chatId?: string
   enableShare?: boolean
-  isGuest?: boolean
   isCloudDeployment?: boolean
   libraryAvailable?: boolean
   className?: string
@@ -58,7 +57,6 @@ export function MessageActions({
   reload,
   chatId,
   enableShare,
-  isGuest = false,
   isCloudDeployment = false,
   libraryAvailable = true,
   className,
@@ -70,7 +68,6 @@ export function MessageActions({
     initialFeedbackScore ?? null
   )
   const [isSavingNote, setIsSavingNote] = useState(false)
-  const [authPromptOpen, setAuthPromptOpen] = useState(false)
   const { openLibrary, upsertCachedNote } = useLibrary()
   const mappedMessage = useMemo(() => {
     if (!message) return ''
@@ -79,7 +76,7 @@ export function MessageActions({
 
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false)
   const isLoading = status === 'submitted' || status === 'streaming'
-  const showSaveButton = libraryAvailable && (!isGuest || isCloudDeployment)
+  const showSaveButton = libraryAvailable
 
   // Keep the element mounted during loading to preserve layout; otherwise skip rendering.
   if (!visible && !isLoading) {
@@ -99,18 +96,8 @@ export function MessageActions({
       source: 'button',
       chatId,
       chars: content.length,
-      isGuest,
       isCloudDeployment
     })
-
-    if (isGuest) {
-      setAuthPromptOpen(true)
-      captureClient('library_auth_prompt_opened', {
-        source: 'save_button',
-        chatId
-      })
-      return
-    }
 
     setIsSavingNote(true)
     try {
@@ -264,53 +251,6 @@ export function MessageActions({
           <div />
         )}
       </div>
-
-      <Dialog open={authPromptOpen} onOpenChange={setAuthPromptOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-muted">
-              <Bookmark className="size-6 text-muted-foreground" />
-            </div>
-            <DialogTitle className="text-center text-xl font-semibold">
-              Save notes to your library
-            </DialogTitle>
-            <DialogDescription className="text-center text-muted-foreground">
-              Sign in or create an account to save answers and selected text to
-              your Library.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex-col gap-2">
-            <Button asChild className="w-full">
-              <Link
-                href="/auth/sign-up"
-                onClick={() =>
-                  captureClient('library_auth_prompt_cta_clicked', {
-                    source: 'save_button',
-                    target: 'sign_up',
-                    chatId
-                  })
-                }
-              >
-                Sign Up
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="w-full">
-              <Link
-                href="/auth/login"
-                onClick={() =>
-                  captureClient('library_auth_prompt_cta_clicked', {
-                    source: 'save_button',
-                    target: 'sign_in',
-                    chatId
-                  })
-                }
-              >
-                Sign In
-              </Link>
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   )
 }

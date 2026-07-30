@@ -92,17 +92,4 @@ describe('File Actions', () => {
     expect(result).toEqual({ success: true })
     expect(dbActions.deleteLibraryFile).toHaveBeenCalledWith('file-1', 'user-1')
   })
-
-  it('rejects anonymous mode', async () => {
-    process.env.ENABLE_AUTH = 'false'
-
-    const result = await listFiles()
-
-    expect(result).toEqual({
-      success: false,
-      files: [],
-      error: 'Library is unavailable in anonymous mode.'
-    })
-    expect(dbActions.getLibraryFiles).not.toHaveBeenCalled()
-  })
 })

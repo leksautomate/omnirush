@@ -64,9 +64,6 @@ export async function POST(req: NextRequest) {
       )
     }
     const result = await uploadFileToR2(file, userId, chatId)
-    if (process.env.ENABLE_AUTH === 'false') {
-      return NextResponse.json({ success: true, file: result }, { status: 200 })
-    }
 
     let libraryFile = null
     try {

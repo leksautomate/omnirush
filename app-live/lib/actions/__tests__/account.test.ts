@@ -50,19 +50,6 @@ describe('Account Actions', () => {
     process.env.ENABLE_AUTH = originalEnableAuth
   })
 
-  it('returns an error in anonymous mode', async () => {
-    process.env.ENABLE_AUTH = 'false'
-
-    const result = await deleteAccount()
-
-    expect(result).toEqual({
-      success: false,
-      error: 'Account deletion is unavailable in anonymous mode.'
-    })
-    expect(getCurrentUser).not.toHaveBeenCalled()
-    expect(dbActions.deleteUserChats).not.toHaveBeenCalled()
-  })
-
   it('returns an error when the user is not authenticated', async () => {
     vi.mocked(getCurrentUser).mockResolvedValue(null)
 

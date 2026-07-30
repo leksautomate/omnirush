@@ -49,7 +49,6 @@ export type AnswerSectionProps = {
     options?: ChatRequestOptions
   ) => Promise<void | string | null | undefined>
   citationMaps?: Record<string, Record<number, SearchResultItem>>
-  isGuest?: boolean
   isCloudDeployment?: boolean
   libraryAvailable?: boolean
   onQuoteContext?: (text: string) => void
@@ -66,7 +65,6 @@ export function AnswerSection({
   status,
   reload,
   citationMaps,
-  isGuest = false,
   isCloudDeployment = false,
   libraryAvailable = true,
   onQuoteContext
@@ -78,13 +76,10 @@ export function AnswerSection({
     left: number
   } | null>(null)
   const [isSavingSelection, setIsSavingSelection] = useState(false)
-  const [authPromptOpen, setAuthPromptOpen] = useState(false)
   const lastTrackedSelectionKeyRef = useRef<string | null>(null)
   const { openLibrary, upsertCachedNote } = useLibrary()
-  const enableShare =
-    process.env.NEXT_PUBLIC_SUPABASE_URL !== undefined && !isGuest
-  const showSelectionSaveButton =
-    libraryAvailable && (!isGuest || isCloudDeployment)
+  const enableShare = process.env.NEXT_PUBLIC_SUPABASE_URL !== undefined
+  const showSelectionSaveButton = libraryAvailable
   const showSelectionDeepDiveButton = Boolean(onQuoteContext)
 
   useEffect(() => {
@@ -163,7 +158,6 @@ export function AnswerSection({
       captureClient('selection_note_actions_shown', {
         chatId,
         chars: text.length,
-        isGuest,
         isCloudDeployment
       })
     }
@@ -182,18 +176,8 @@ export function AnswerSection({
       source: 'selection',
       chatId,
       chars: selection.text.length,
-      isGuest,
       isCloudDeployment
     })
-
-    if (isGuest) {
-      setAuthPromptOpen(true)
-      captureClient('library_auth_prompt_opened', {
-        source: 'selection_save',
-        chatId
-      })
-      return
-    }
 
     setIsSavingSelection(true)
     try {
@@ -317,7 +301,6 @@ export function AnswerSection({
             feedbackScore={metadata?.feedbackScore}
             chatId={chatId}
             enableShare={enableShare}
-            isGuest={isGuest}
             isCloudDeployment={isCloudDeployment}
             libraryAvailable={libraryAvailable}
             reload={handleReload}
@@ -327,52 +310,6 @@ export function AnswerSection({
           />
         </div>
       )}
-      <Dialog open={authPromptOpen} onOpenChange={setAuthPromptOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-muted">
-              <Bookmark className="size-6 text-muted-foreground" />
-            </div>
-            <DialogTitle className="text-center text-xl font-semibold">
-              Save notes to your library
-            </DialogTitle>
-            <DialogDescription className="text-center text-muted-foreground">
-              Sign in or create an account to save selected text to your
-              Library.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex-col gap-2">
-            <Button asChild className="w-full">
-              <Link
-                href="/auth/sign-up"
-                onClick={() =>
-                  captureClient('library_auth_prompt_cta_clicked', {
-                    source: 'selection_save',
-                    target: 'sign_up',
-                    chatId
-                  })
-                }
-              >
-                Sign Up
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="w-full">
-              <Link
-                href="/auth/login"
-                onClick={() =>
-                  captureClient('library_auth_prompt_cta_clicked', {
-                    source: 'selection_save',
-                    target: 'sign_in',
-                    chatId
-                  })
-                }
-              >
-                Sign In
-              </Link>
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </CollapsibleMessage>
   )
 }

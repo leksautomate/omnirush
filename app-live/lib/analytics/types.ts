@@ -33,11 +33,11 @@ export interface ChatEventData {
   trigger: 'submit-message' | 'regenerate-message'
   /** Chat session ID (CUID2 - safe for tracking) */
   chatId: string
-  /** PostHog distinct id to attribute the event to (user id or guest id) */
+  /** PostHog distinct id to attribute the event to (user id) */
   distinctId: string
-  /** Whether the sender is a guest (unauthenticated) */
+  /** Retained for schema stability in existing dashboards; always false. */
   isGuest: boolean
-  /** User ID (Supabase UUID) - present only for authenticated users */
+  /** User ID (Supabase UUID) */
   userId?: string
   /** Provider identifier used for the chat */
   providerId: string

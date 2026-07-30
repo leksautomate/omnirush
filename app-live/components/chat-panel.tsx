@@ -27,10 +27,6 @@ import { toast } from 'sonner'
 
 import { captureClient } from '@/lib/analytics/posthog-client'
 import { SHORTCUT_EVENTS } from '@/lib/keyboard-shortcuts'
-import {
-  isAdaptiveModeAuthBlocked,
-  requiresAdaptiveModeAuth
-} from '@/lib/search-mode-availability'
 import { NoteContext, UploadedFile } from '@/lib/types'
 import type { UIDataTypes, UIMessage, UITools } from '@/lib/types/ai'
 import type { ModelSelectorData } from '@/lib/types/model-selector'
@@ -99,11 +95,8 @@ interface ChatPanelProps {
   setNoteContexts: React.Dispatch<React.SetStateAction<NoteContext[]>>
   /** Callback to reset chatId when starting a new chat */
   onNewChat?: () => void
-  /** Whether the current session is guest */
-  isGuest?: boolean
   /** Whether the deployment is cloud mode */
   isCloudDeployment?: boolean
-  onAdaptiveModeAuthRequired?: () => void
   modelSelectorData?: ModelSelectorData
   /** Chat sections for message navigation dots */
   sections?: { id: string; userMessage: UIMessage }[]
@@ -129,9 +122,7 @@ export function ChatPanel({
   setNoteContexts,
   scrollContainerRef,
   onNewChat,
-  isGuest = false,
   isCloudDeployment = false,
-  onAdaptiveModeAuthRequired,
   modelSelectorData,
   sections = []
 }: ChatPanelProps) {
@@ -169,15 +160,6 @@ export function ChatPanel({
     getSearchModeSnapshot,
     () => 'quick' as SearchMode
   )
-  const isAdaptiveAuthRequired = requiresAdaptiveModeAuth({
-    isGuest,
-    isCloudDeployment
-  })
-  const adaptiveModeSubmitBlocked = isAdaptiveModeAuthBlocked({
-    mode: searchMode,
-    isGuest,
-    isCloudDeployment
-  })
 
   const handleCompositionStart = () => setIsComposing(true)
 
@@ -254,18 +236,13 @@ export function ChatPanel({
   // if query is not empty, submit the query
   useEffect(() => {
     if (isFirstRender.current && query && query.trim().length > 0) {
-      if (adaptiveModeSubmitBlocked) {
-        setCookie('searchMode', 'quick')
-        return
-      }
-
       append({
         role: 'user',
         parts: [{ type: 'text', text: query }]
       })
       isFirstRender.current = false
     }
-  }, [adaptiveModeSubmitBlocked, append, query])
+  }, [append, query])
 
   const handleFileRemove = useCallback(
     (index: number) => {
@@ -461,10 +438,6 @@ export function ChatPanel({
             uploadedFiles.some(file => file.status === 'uploaded')
           ) {
             e.preventDefault()
-            if (adaptiveModeSubmitBlocked) {
-              onAdaptiveModeAuthRequired?.()
-              return
-            }
             if (!hasAvailableModels) {
               toast.error('No enabled model is available')
               return
@@ -537,12 +510,6 @@ export function ChatPanel({
             inputRef.current?.blur()
             return
           }
-          if (adaptiveModeSubmitBlocked) {
-            e.preventDefault()
-            onAdaptiveModeAuthRequired?.()
-            return
-          }
-
           if (!hasAvailableModels) {
             e.preventDefault()
             toast.error('No enabled model is available')
@@ -835,7 +802,7 @@ export function ChatPanel({
           {/* Bottom menu area */}
           <div className="flex items-center justify-between p-2 md:p-3">
             <div className="flex items-center gap-2">
-              {!isGuest && (
+              {(
                 <div ref={attachmentMenuRef} className="relative">
                   <input
                     ref={fileInputRef}
@@ -896,10 +863,7 @@ export function ChatPanel({
                   )}
                 </div>
               )}
-              <SearchModeSelector
-                isAdaptiveAuthRequired={isAdaptiveAuthRequired}
-                onAdaptiveAuthRequired={onAdaptiveModeAuthRequired}
-              />
+              <SearchModeSelector />
             </div>
             <div className="flex items-center gap-2">
               {!isCloudDeployment && modelSelectorData && (

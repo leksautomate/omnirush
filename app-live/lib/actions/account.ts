@@ -20,13 +20,6 @@ export async function deleteAccount(): Promise<{
   success: boolean
   error?: string
 }> {
-  if (process.env.ENABLE_AUTH === 'false') {
-    return {
-      success: false,
-      error: 'Account deletion is unavailable in anonymous mode.'
-    }
-  }
-
   const user = await getCurrentUser()
   if (!user) {
     return { success: false, error: 'User not authenticated' }

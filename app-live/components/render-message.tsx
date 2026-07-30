@@ -21,7 +21,6 @@ interface RenderMessageProps {
   getIsOpen: (id: string, partType?: string, hasNextPart?: boolean) => boolean
   onOpenChange: (id: string, open: boolean) => void
   chatId?: string
-  isGuest?: boolean
   isCloudDeployment?: boolean
   libraryAvailable?: boolean
   status?: UseChatHelpers<UIMessage<unknown, UIDataTypes, UITools>>['status']
@@ -39,7 +38,6 @@ export function RenderMessage({
   getIsOpen,
   onOpenChange,
   chatId,
-  isGuest = false,
   isCloudDeployment = false,
   libraryAvailable = true,
   status,
@@ -176,7 +174,6 @@ export function RenderMessage({
           )}
           onOpenChange={open => onOpenChange(messageId, open)}
           chatId={chatId}
-          isGuest={isGuest}
           isCloudDeployment={isCloudDeployment}
           libraryAvailable={libraryAvailable}
           showActions={shouldShowActions}

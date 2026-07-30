@@ -19,17 +19,20 @@ export default async function ChatQueryPage(props: {
 
   const id = generateUUID()
   const userId = await getCurrentUserId()
+
+  if (!userId) {
+    redirect('/auth/login')
+  }
+
   const isCloudDeployment = process.env.KAKKAO_CLOUD_DEPLOYMENT === 'true'
-  const libraryAvailable = process.env.ENABLE_AUTH !== 'false'
   const modelSelectorData = await getModelSelectorData()
 
   return (
     <Chat
       id={id}
       query={q}
-      isGuest={!userId}
       isCloudDeployment={isCloudDeployment}
-      libraryAvailable={libraryAvailable}
+      libraryAvailable
       modelSelectorData={modelSelectorData}
     />
   )

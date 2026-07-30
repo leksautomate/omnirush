@@ -14,13 +14,7 @@ import { getCurrentUserId } from '@/lib/auth/get-current-user'
 import { generateId } from '@/lib/db/schema'
 import { checkAndEnforceAdaptiveLimit } from '@/lib/rate-limit/adaptive-limit'
 import { checkAndEnforceOverallChatLimit } from '@/lib/rate-limit/chat-limits'
-import { checkAndEnforceGuestLimit } from '@/lib/rate-limit/guest-limit'
-import {
-  ADAPTIVE_MODE_AUTH_REQUIRED_MESSAGE,
-  isAdaptiveModeAuthBlocked
-} from '@/lib/search-mode-availability'
 import { createChatStreamResponse } from '@/lib/streaming/create-chat-stream-response'
-import { createEphemeralChatStreamResponse } from '@/lib/streaming/create-ephemeral-chat-stream-response'
 import { SearchMode } from '@/lib/types/search'
 import { getTextFromParts } from '@/lib/utils/message-utils'
 import { selectModel } from '@/lib/utils/model-selection'
@@ -84,23 +78,12 @@ export async function POST(req: Request) {
       })
     }
 
-    const guestChatEnabled = process.env.ENABLE_GUEST_CHAT === 'true'
-    const isGuest = !userId
-    if (isGuest && !guestChatEnabled) {
+    // Authentication is required for every chat request. There is no guest path.
+    if (!userId) {
       return new Response('Authentication required', {
         status: 401,
         statusText: 'Unauthorized'
       })
-    }
-
-    if (isGuest) {
-      const forwardedFor = req.headers.get('x-forwarded-for') || ''
-      const ip =
-        forwardedFor.split(',')[0]?.trim() ||
-        req.headers.get('x-real-ip') ||
-        null
-      const guestLimitResponse = await checkAndEnforceGuestLimit(ip)
-      if (guestLimitResponse) return guestLimitResponse
     }
 
     const cookieStore = await cookies()
@@ -112,28 +95,7 @@ export async function POST(req: Request) {
         ? (searchModeCookie as SearchMode)
         : 'quick'
 
-    // Adaptive mode is gated to authenticated users on cloud deployments.
-    // Check before model/provider selection so guests always get the
-    // intentional auth payload instead of lower-level configuration errors.
-    if (
-      isAdaptiveModeAuthBlocked({
-        mode: searchMode,
-        isGuest,
-        isCloudDeployment: process.env.KAKKAO_CLOUD_DEPLOYMENT === 'true'
-      })
-    ) {
-      return new Response(
-        JSON.stringify({
-          error: ADAPTIVE_MODE_AUTH_REQUIRED_MESSAGE,
-          mode: 'adaptive',
-          authRequired: true
-        }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      )
-    }
+    // Adaptive mode is available to every signed-in user.
 
     const selectedModel = await selectModel({ searchMode, cookieStore })
 
@@ -154,20 +116,18 @@ export async function POST(req: Request) {
       )
     }
 
-    if (!isGuest) {
-      const overallLimitResponse = await checkAndEnforceOverallChatLimit(userId)
-      if (overallLimitResponse) return overallLimitResponse
+    const overallLimitResponse = await checkAndEnforceOverallChatLimit(userId)
+    if (overallLimitResponse) return overallLimitResponse
 
-      if (searchMode === 'adaptive') {
-        const adaptiveLimitResponse = await checkAndEnforceAdaptiveLimit(userId)
-        if (adaptiveLimitResponse) return adaptiveLimitResponse
-      }
+    if (searchMode === 'adaptive') {
+      const adaptiveLimitResponse = await checkAndEnforceAdaptiveLimit(userId)
+      if (adaptiveLimitResponse) return adaptiveLimitResponse
     }
 
     // Distinct id used for BOTH flag evaluation and analytics attribution, so
     // the stamped relatedFlag matches the arm the user was actually bucketed to.
-    const analyticsDistinctId =
-      userId ?? (typeof analyticsId === 'string' ? analyticsId : undefined)
+    void analyticsId
+    const analyticsDistinctId = userId
 
     // related_questions_enabled flag. Prefer the client-evaluated value (no
     // round-trip); fall back to server evaluation against the same distinct id
@@ -189,27 +149,18 @@ export async function POST(req: Request) {
       `createChatStreamResponse - Start: model=${selectedModel.providerId}:${selectedModel.id}, searchMode=${searchMode}`
     )
 
-    const response = isGuest
-      ? await createEphemeralChatStreamResponse({
-          messages: Array.isArray(messages) ? messages : [],
-          model: selectedModel,
-          abortSignal,
-          searchMode,
-          chatId,
-          relatedEnabled
-        })
-      : await createChatStreamResponse({
-          message,
-          model: selectedModel,
-          chatId,
-          userId: userId, // userId is guaranteed to be non-null after authentication check above
-          trigger,
-          messageId,
-          abortSignal,
-          isNewChat,
-          searchMode,
-          relatedEnabled
-        })
+    const response = await createChatStreamResponse({
+      message,
+      model: selectedModel,
+      chatId,
+      userId,
+      trigger,
+      messageId,
+      abortSignal,
+      isNewChat,
+      searchMode,
+      relatedEnabled
+    })
 
     perfTime('createChatStreamResponse resolved', streamStart)
 
@@ -224,16 +175,12 @@ export async function POST(req: Request) {
 
         let conversationTurn = 1 // Default for new chats
         if (!isNewChat) {
-          if (!isGuest && userId) {
-            const chat = await loadChat(chatId, userId)
-            if (chat?.messages) {
-              conversationTurn = calculateConversationTurn(
-                chat.messages,
-                message?.id
-              )
-            }
-          } else if (isGuest && Array.isArray(messages)) {
-            conversationTurn = calculateConversationTurn(messages, message?.id)
+          const chat = await loadChat(chatId, userId)
+          if (chat?.messages) {
+            conversationTurn = calculateConversationTurn(
+              chat.messages,
+              message?.id
+            )
           }
         }
 
@@ -252,8 +199,8 @@ export async function POST(req: Request) {
           trigger: resolvedTrigger,
           chatId,
           distinctId,
-          isGuest,
-          userId: userId ?? undefined,
+          isGuest: false,
+          userId,
           providerId: selectedModel.providerId,
           modelId: selectedModel.id,
           relatedFlag: relatedEnabled,
@@ -267,7 +214,7 @@ export async function POST(req: Request) {
 
     // Invalidate the cache for this specific chat after creating the response
     // This ensures the next load will get fresh data
-    if (chatId && !isGuest) {
+    if (chatId) {
       revalidateTag(`chat-${chatId}`, 'max')
     }
 

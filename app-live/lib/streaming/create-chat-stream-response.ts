@@ -16,6 +16,7 @@ import { isTracingEnabled } from '@/lib/utils/telemetry'
 
 import { loadChat } from '../actions/chat'
 import { generateChatTitle } from '../agents/title-generator'
+import { claimAnonymousChat } from '../db/actions'
 import {
   getMaxAllowedTokens,
   shouldTruncateMessages,
@@ -69,12 +70,20 @@ export async function createChatStreamResponse(
     initialChat = await loadChat(chatId, userId)
     perfTime('loadChat completed', loadChatStart)
 
-    // Authorization check: if chat exists, it must belong to the user
+    // Authorization check: the chat must belong to the user. Chats created
+    // before authentication was mandatory are owned by the legacy
+    // 'anonymous-user' id; claim those for the current user instead of
+    // locking them out of their own history.
     if (initialChat && initialChat.userId !== userId) {
-      return new Response('You are not allowed to access this chat', {
-        status: 403,
-        statusText: 'Forbidden'
-      })
+      if (initialChat.userId === 'anonymous-user') {
+        await claimAnonymousChat(chatId, userId)
+        initialChat = { ...initialChat, userId }
+      } else {
+        return new Response('You are not allowed to access this chat', {
+          status: 403,
+          statusText: 'Forbidden'
+        })
+      }
     }
   } else {
     perfLog('loadChat skipped for new chat')

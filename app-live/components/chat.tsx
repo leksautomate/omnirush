@@ -21,10 +21,6 @@ import {
 } from '@/lib/errors/public-error'
 import { SHORTCUT_EVENTS } from '@/lib/keyboard-shortcuts'
 import { stripSpecBlocks } from '@/lib/render/strip-spec-blocks'
-import {
-  ADAPTIVE_MODE_AUTH_REQUIRED_MESSAGE,
-  isAdaptiveModeAuthBlocked
-} from '@/lib/search-mode-availability'
 import { NoteContext, UploadedFile } from '@/lib/types'
 import type { UIMessage } from '@/lib/types/ai'
 import {
@@ -55,7 +51,6 @@ export function Chat({
   id: providedId,
   savedMessages = [],
   query,
-  isGuest = false,
   isCloudDeployment = false,
   libraryAvailable = true,
   modelSelectorData
@@ -63,7 +58,6 @@ export function Chat({
   id?: string
   savedMessages?: UIMessage[]
   query?: string
-  isGuest?: boolean
   isCloudDeployment?: boolean
   libraryAvailable?: boolean
   modelSelectorData?: ModelSelectorData
@@ -115,23 +109,6 @@ export function Chat({
   // its `handlers` prop via useState(initialHandlers)) can still see
   // the freshest value through `.current`. See lib/contexts/chat-context.tsx.
   const isStreamingRef = useRef(false)
-  const showAdaptiveModeAuthModal = useCallback(() => {
-    setErrorModal({
-      open: true,
-      type: 'auth',
-      message: ADAPTIVE_MODE_AUTH_REQUIRED_MESSAGE
-    })
-  }, [setErrorModal])
-
-  const isCurrentAdaptiveModeAuthBlocked = useCallback(
-    () =>
-      isAdaptiveModeAuthBlocked({
-        mode: getCookie('searchMode') === 'adaptive' ? 'adaptive' : 'quick',
-        isGuest,
-        isCloudDeployment
-      }),
-    [isGuest, isCloudDeployment]
-  )
 
   const {
     messages,
@@ -165,7 +142,6 @@ export function Chat({
             messageId,
             analyticsId: getDistinctId(),
             ...(relatedEnabled === undefined ? {} : { relatedEnabled }),
-            ...(isGuest ? { messages } : {}),
             message:
               trigger === 'regenerate-message' &&
               messageToRegenerate?.role === 'user'
@@ -226,11 +202,6 @@ export function Chat({
   // action handlers can reliably reject overlapping sends.
   const safeSendMessage = useCallback<typeof sendMessage>(
     (...args) => {
-      if (isCurrentAdaptiveModeAuthBlocked()) {
-        showAdaptiveModeAuthModal()
-        return Promise.resolve()
-      }
-
       isStreamingRef.current = true
       try {
         return sendMessage(...args)
@@ -239,16 +210,11 @@ export function Chat({
         throw error
       }
     },
-    [sendMessage, isCurrentAdaptiveModeAuthBlocked, showAdaptiveModeAuthModal]
+    [sendMessage]
   )
 
   const safeRegenerate = useCallback(
     async (...args: Parameters<typeof regenerate>) => {
-      if (isCurrentAdaptiveModeAuthBlocked()) {
-        showAdaptiveModeAuthModal()
-        return
-      }
-
       isStreamingRef.current = true
       try {
         return await regenerate(...args)
@@ -257,7 +223,7 @@ export function Chat({
         throw error
       }
     },
-    [regenerate, isCurrentAdaptiveModeAuthBlocked, showAdaptiveModeAuthModal]
+    [regenerate]
   )
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -511,33 +477,17 @@ export function Chat({
 
       // Push URL state immediately after sending message (for new chats)
       // Check if we're on the root path (new chat)
-      if (!isGuest && window.location.pathname === '/') {
+      if (window.location.pathname === '/') {
         window.history.pushState({}, '', `/chat/${chatId}`)
       }
     }
   }
 
-  const { isDragging, handleDragOver, handleDragLeave, handleDrop } =
-    useFileDropzone({
-      uploadedFiles,
-      setUploadedFiles,
-      chatId: chatId
-    })
-  const guestDragHandlers = {
-    isDragging: false,
-    handleDragOver: (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault()
-    },
-    handleDragLeave: (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault()
-    },
-    handleDrop: (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault()
-    }
-  }
-  const dragHandlers = isGuest
-    ? guestDragHandlers
-    : { isDragging, handleDragOver, handleDragLeave, handleDrop }
+  const dragHandlers = useFileDropzone({
+    uploadedFiles,
+    setUploadedFiles,
+    chatId: chatId
+  })
 
   return (
     <ChatProvider sendMessage={safeSendMessage} isStreamingRef={isStreamingRef}>
@@ -555,7 +505,6 @@ export function Chat({
           sections={sections}
           status={status}
           chatId={chatId}
-          isGuest={isGuest}
           isCloudDeployment={isCloudDeployment}
           libraryAvailable={libraryAvailable}
           addToolResult={({
@@ -622,9 +571,7 @@ export function Chat({
           setNoteContexts={setNoteContexts}
           scrollContainerRef={scrollContainerRef}
           onNewChat={handleNewChat}
-          isGuest={isGuest}
           isCloudDeployment={isCloudDeployment}
-          onAdaptiveModeAuthRequired={showAdaptiveModeAuthModal}
           modelSelectorData={modelSelectorData}
           sections={sections}
         />

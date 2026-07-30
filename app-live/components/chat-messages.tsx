@@ -25,7 +25,6 @@ interface ChatMessagesProps {
   sections: ChatSection[] // Changed from messages to sections
   status: UseChatHelpers<UIMessage<unknown, UIDataTypes, UITools>>['status']
   chatId?: string
-  isGuest?: boolean
   isCloudDeployment?: boolean
   libraryAvailable?: boolean
   addToolResult?: (params: { toolCallId: string; result: any }) => void
@@ -45,7 +44,6 @@ export function ChatMessages({
   sections,
   status,
   chatId,
-  isGuest = false,
   isCloudDeployment = false,
   libraryAvailable = true,
   addToolResult,
@@ -234,7 +232,6 @@ export function ChatMessages({
                 }
                 onOpenChange={handleOpenChange}
                 chatId={chatId}
-                isGuest={isGuest}
                 isCloudDeployment={isCloudDeployment}
                 libraryAvailable={libraryAvailable}
                 status={status}
@@ -266,7 +263,6 @@ export function ChatMessages({
                     }
                     onOpenChange={handleOpenChange}
                     chatId={chatId}
-                    isGuest={isGuest}
                     isCloudDeployment={isCloudDeployment}
                     libraryAvailable={libraryAvailable}
                     status={status}

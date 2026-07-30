@@ -33,13 +33,6 @@ function deriveTitle(content: string, title?: string) {
 }
 
 async function requireNoteUserId() {
-  if (process.env.ENABLE_AUTH === 'false') {
-    return {
-      userId: null,
-      error: 'Library is unavailable in anonymous mode.'
-    }
-  }
-
   const userId = await getCurrentUserId()
   if (!userId) {
     return { userId: null, error: 'Sign in to save notes.' }

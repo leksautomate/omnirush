@@ -54,9 +54,8 @@ describe('ChatPanel', () => {
     deleteCookie('searchMode')
   })
 
-  test('preserves and submits the initial query after resetting a stale adaptive cookie', async () => {
+  test('submits the initial query on first render', async () => {
     const append = vi.fn()
-    const onAdaptiveModeAuthRequired = vi.fn()
     setCookie('searchMode', 'adaptive')
 
     render(
@@ -79,21 +78,19 @@ describe('ChatPanel', () => {
         setQuotedContexts={vi.fn()}
         noteContexts={[]}
         setNoteContexts={vi.fn()}
-        isGuest
         isCloudDeployment
-        onAdaptiveModeAuthRequired={onAdaptiveModeAuthRequired}
       />
     )
 
-    await waitFor(() => {
-      expect(getCookie('searchMode')).toBe('quick')
-    })
     await waitFor(() => {
       expect(append).toHaveBeenCalledWith({
         role: 'user',
         parts: [{ type: 'text', text: 'latest news' }]
       })
     })
-    expect(onAdaptiveModeAuthRequired).not.toHaveBeenCalled()
+
+    // Adaptive mode is available to every signed-in user, so the cookie
+    // must survive the first render untouched.
+    expect(getCookie('searchMode')).toBe('adaptive')
   })
 })

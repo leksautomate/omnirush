@@ -64,18 +64,6 @@ describe('Note Actions', () => {
     expect(dbActions.createNote).not.toHaveBeenCalled()
   })
 
-  it('rejects anonymous mode', async () => {
-    process.env.ENABLE_AUTH = 'false'
-
-    const result = await saveNote({ content: 'Saved answer' })
-
-    expect(result).toEqual({
-      success: false,
-      error: 'Library is unavailable in anonymous mode.'
-    })
-    expect(dbActions.createNote).not.toHaveBeenCalled()
-  })
-
   it('lists current user notes', async () => {
     const result = await listNotes()
 
