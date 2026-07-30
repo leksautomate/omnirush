@@ -123,8 +123,12 @@ export function ChatMessages({
 
   // Keep the assistant logo visible for the latest section after generation
   const latestSection = sections.at(-1)
-  const hasContent = latestSection?.assistantMessages.some(m => 
-    (m.parts && m.parts.length > 0) || (typeof m.content === 'string' && m.content.trim().length > 0)
+  // UIMessage carries content in `parts`; a text part with only whitespace
+  // still counts as nothing worth showing the logo for.
+  const hasContent = latestSection?.assistantMessages.some(m =>
+    m.parts?.some(part =>
+      part.type === 'text' ? part.text.trim().length > 0 : true
+    )
   )
   const showAssistantLogo = Boolean(
     latestSection && (isLoading || hasContent)
