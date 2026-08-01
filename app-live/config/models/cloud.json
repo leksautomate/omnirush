@@ -2,16 +2,16 @@
   "version": 2,
   "models": {
     "quick": {
-      "id": "deepseek-r1-distill-llama-70b",
-      "name": "DeepSeek R1 (Groq)",
-      "provider": "Groq",
-      "providerId": "groq"
+      "id": "deepseek-v4-flash",
+      "name": "DeepSeek V4 Flash",
+      "provider": "DeepSeek",
+      "providerId": "openai-compatible"
     },
     "adaptive": {
-      "id": "deepseek-r1-distill-llama-70b",
-      "name": "DeepSeek R1 (Groq)",
-      "provider": "Groq",
-      "providerId": "groq"
+      "id": "deepseek-v4-pro",
+      "name": "DeepSeek V4 Pro",
+      "provider": "DeepSeek",
+      "providerId": "openai-compatible"
     }
   }
 }

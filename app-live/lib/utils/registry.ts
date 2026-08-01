@@ -140,7 +140,7 @@ const providers: Record<string, any> = {
   }),
   groq: createOpenAICompatible({
     name: 'groq',
-    apiKey: process.env.GROQ_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY,
+    apiKey: process.env.GROQ_API_KEY,
     baseURL: 'https://api.groq.com/openai/v1'
   }),
   'openai-compatible': createOpenAICompatible({
@@ -185,7 +185,11 @@ export function getModel(model: string): LanguageModel {
     } else if (targetModel.startsWith('gemini')) {
       targetModel = `google:${targetModel}`
     } else if (targetModel.startsWith('deepseek')) {
-      targetModel = `groq:${targetModel}`
+      // The R1 distill is served by Groq; DeepSeek's own V4 models come from
+      // the DeepSeek API via the openai-compatible provider.
+      targetModel = targetModel.includes('deepseek-r1')
+        ? `groq:${targetModel}`
+        : `openai-compatible:${targetModel}`
     } else {
       // Default prefix
       targetModel = `agentrouter:${targetModel}`
@@ -222,10 +226,16 @@ export function getModel(model: string): LanguageModel {
     }
   }
 
-  // Provider fallback: prioritize active key (Groq -> AgentRouter -> Gemini -> OpenAI)
+  // Provider fallback: prioritize active key
+  // (DeepSeek -> Groq -> AgentRouter -> Gemini -> OpenAI)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (process.env.GROQ_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY) {
+    if (
+      process.env.OPENAI_COMPATIBLE_API_KEY &&
+      process.env.OPENAI_COMPATIBLE_API_BASE_URL
+    ) {
+      targetModel = 'openai-compatible:deepseek-v4-flash'
+    } else if (process.env.GROQ_API_KEY) {
       targetModel = 'groq:deepseek-r1-distill-llama-70b'
     } else if (getAgentRouterApiKey()) {
       targetModel = 'agentrouter:claude-opus-5'
@@ -249,7 +259,6 @@ export function getModel(model: string): LanguageModel {
     return lm
   }
 
-  console.error('[getModel resolved]:', targetModel)
   return registry.languageModel(
     targetModel as Parameters<typeof registry.languageModel>[0]
   )
@@ -260,7 +269,7 @@ export function isProviderEnabled(providerId: string): boolean {
     case 'agentrouter':
       return !!getAgentRouterApiKey()
     case 'groq':
-      return !!(process.env.GROQ_API_KEY || process.env.OPENAI_COMPATIBLE_API_KEY)
+      return !!process.env.GROQ_API_KEY
     case 'openai':
       return !!process.env.OPENAI_API_KEY
     case 'anthropic':

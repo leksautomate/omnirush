@@ -93,8 +93,9 @@ Core Philosophy:
     }
 
     // DeepSeek R1 on Groq returns 400 when tools are provided, so it runs
-    // tool-free. Every other model keeps the full tool set.
-    const isToolSupportedModel = !model.includes('deepseek')
+    // tool-free. This is specific to the R1 distill — DeepSeek's own V4 models
+    // handle streaming tool calls fine and must keep the full tool set.
+    const isToolSupportedModel = !model.includes('deepseek-r1')
 
     const activeToolsList = isToolSupportedModel
       ? (Object.keys(tools) as (keyof ResearcherTools)[])
