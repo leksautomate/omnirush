@@ -4,7 +4,7 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## Repository shape
 
-This is a monorepo of loosely-coupled services that together make up **Kakkao Live** ("agentic
+This is a monorepo of loosely-coupled services that together make up **Omnirush** ("agentic
 video studio" — chat interface + AI video pipeline). They deploy independently and are developed
 independently; there is no shared build system.
 

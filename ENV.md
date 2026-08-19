@@ -1,4 +1,4 @@
-# Kakkao — environment variables
+# Omnirush — Environment Variables
 
 Everything you need to set, grouped by **where** it goes. Three targets:
 
