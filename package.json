@@ -1,8 +1,8 @@
 {
-  "name": "kakkao-live",
+  "name": "omnirush",
   "private": true,
   "type": "module",
-  "description": "Kakkao Live — agentic video studio (Kakkao-style chat + Remotion: in-chat Player preview and Remotion Lambda render).",
+  "description": "Omnirush — agentic video studio (chat interface + Remotion: in-chat Player preview and Remotion Lambda render).",
   "scripts": {
     "build": "cd app-live && npm run build",
     "start": "cd app-live && npm run start",

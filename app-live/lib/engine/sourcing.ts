@@ -6,7 +6,7 @@ import type { AssetRights } from './documentary/schema'
 import { parseTimestampSeconds } from './video-segments'
 
 const UA = {
-  'User-Agent': 'KakkaoLive/1.0 (+https://github.com/macthedonald/kakkao-live)'
+  'User-Agent': 'Omnirush/1.0 (+https://github.com/leksautomate/omnirush)'
 }
 
 export interface FootageAsset {
