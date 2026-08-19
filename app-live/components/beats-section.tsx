@@ -26,7 +26,7 @@ interface BeatsSectionProps {
 
 type Shot = {
   narration: string
-  kind: 'photo' | 'video'
+  kind: 'photo' | 'video' | 'comparison' | 'avatar' | 'a-roll'
   visualQuery: string
   visualIntent: string
   start: number
@@ -104,7 +104,10 @@ export function BeatsSection({
         </>
       )}
       <div
-        className={cn('rounded-lg', !borderless && 'border border-border bg-card')}
+        className={cn(
+          'rounded-lg',
+          !borderless && 'border border-border bg-card'
+        )}
       >
         <div
           className="flex cursor-pointer select-none items-center gap-2 p-3"

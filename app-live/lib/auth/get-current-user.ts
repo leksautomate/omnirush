@@ -36,6 +36,12 @@ export async function getCurrentUserId() {
   const count = incrementAuthCallCount()
   perfLog(`getCurrentUserId called - count: ${count}`)
 
+  // Anonymous single-user mode: no Supabase project configured (or auth
+  // explicitly disabled), so every request is the same local user.
+  if (process.env.ENABLE_AUTH === 'false' || !hasSupabasePublicConfig()) {
+    return process.env.ANONYMOUS_USER_ID || 'anonymous-user'
+  }
+
   const user = await getCurrentUser()
   return user?.id
 }

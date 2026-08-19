@@ -2,7 +2,12 @@
 // Pools candidates from Wikimedia Commons + Internet Archive (+ NARA with a key), ranks by
 // term relevance, and optionally vision-verifies with Gemini so the pick actually depicts
 // the subject. Server-side fetch: no CORS, and we can send a proper User-Agent.
-const UA = { 'User-Agent': 'KakkaoLive/1.0 (+https://github.com/macthedonald/kakkao-live)' }
+import type { AssetRights } from './documentary/schema'
+import { parseTimestampSeconds } from './video-segments'
+
+const UA = {
+  'User-Agent': 'KakkaoLive/1.0 (+https://github.com/macthedonald/kakkao-live)'
+}
 
 export interface FootageAsset {
   kind: 'video' | 'photo'
@@ -12,13 +17,31 @@ export interface FootageAsset {
   credit: string
   url: string
   source: string
+  mimeType?: string
   score?: number
   needsResolve?: boolean
   identifier?: string
+  licenseText?: string
+  creator?: string
+  institution?: string
+  rights?: AssetRights
+  /** Known playable source length in seconds, when supplied by the archive. */
+  sourceDuration?: number
+  /** Non-destructive source window selected for this storyboard shot. */
+  mediaStart?: number
+  mediaEnd?: number
+  mediaMuted?: boolean
+  segmentReason?: string
+  providerMetadata?: {
+    youtubeLicense?: 'creativeCommon' | 'youtube'
+    userConfirmedRights?: boolean
+  }
 }
 
 const STOP = new Set(
-  'the a an and or of in on at to for with from into over under this that these those is are was were be being real actual footage clip video photo image shot scene view close up wide angle shows showing depicting depicts'.split(' ')
+  'the a an and or of in on at to for with from into over under this that these those is are was were be being real actual footage clip video photo image shot scene view close up wide angle shows showing depicting depicts'.split(
+    ' '
+  )
 )
 export function queryTerms(s: string): Set<string> {
   return new Set(
@@ -28,7 +51,11 @@ export function queryTerms(s: string): Set<string> {
       .filter(w => w.length > 2 && !STOP.has(w))
   )
 }
-const REAL_SOURCES = new Set(['Wikimedia Commons', 'Internet Archive', 'U.S. National Archives'])
+const REAL_SOURCES = new Set([
+  'Wikimedia Commons',
+  'Internet Archive',
+  'U.S. National Archives'
+])
 export function scoreAsset(qterms: Set<string>, a: FootageAsset): number {
   const at = queryTerms([a.title, a.credit].join(' '))
   let hit = 0
@@ -39,7 +66,10 @@ export function scoreAsset(qterms: Set<string>, a: FootageAsset): number {
   return s
 }
 
-export async function wikimediaMedia(query: string, limit = 8): Promise<FootageAsset[]> {
+export async function wikimediaMedia(
+  query: string,
+  limit = 8
+): Promise<FootageAsset[]> {
   const u = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(query)}&gsrnamespace=6&gsrlimit=${limit}&prop=imageinfo&iiprop=url|mime|extmetadata&iiurlwidth=1280&format=json&origin=*`
   const r = await fetch(u, { headers: UA })
   if (!r.ok) throw new Error(`Wikimedia ${r.status}`)
@@ -50,46 +80,92 @@ export async function wikimediaMedia(query: string, limit = 8): Promise<FootageA
       const ii = p.imageinfo?.[0]
       if (!ii) return null
       const mime = ii.mime || ''
-      const isVid = /^video\//.test(mime) || /\.(webm|ogv|ogg|mp4)$/i.test(ii.url || '')
+      const isVid =
+        /^video\//.test(mime) || /\.(webm|ogv|ogg|mp4)$/i.test(ii.url || '')
       const isImg = /^image\//.test(mime) && !/svg/.test(mime)
       if (!isVid && !isImg) return null
-      const title = (p.title || '').replace(/^File:/, '').replace(/\.\w+$/, '').replace(/_/g, ' ')
-      const artist = (ii.extmetadata?.Artist?.value || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
+      const title = (p.title || '')
+        .replace(/^File:/, '')
+        .replace(/\.\w+$/, '')
+        .replace(/_/g, ' ')
+      const artist = (ii.extmetadata?.Artist?.value || '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
       const license = ii.extmetadata?.LicenseShortName?.value || ''
       return {
         kind: isVid ? 'video' : 'photo',
-        src: isVid ? ii.url : ii.thumburl || ii.url,
+        // The resized URL is only for fast candidate previews. Final compositions
+        // must keep the original Wikimedia file so selected photos are not silently
+        // downgraded to search thumbnails.
+        src: ii.url,
         thumb: ii.thumburl || ii.url,
         title,
         credit: `${title}${artist ? ' — ' + artist : ''}${license ? ' (' + license + ')' : ''}, via Wikimedia Commons`,
-        url: ii.descriptionurl || `https://commons.wikimedia.org/wiki/${encodeURIComponent(p.title || '')}`,
-        source: 'Wikimedia Commons'
+        url:
+          ii.descriptionurl ||
+          `https://commons.wikimedia.org/wiki/${encodeURIComponent(p.title || '')}`,
+        source: 'Wikimedia Commons',
+        mimeType: mime,
+        licenseText: license,
+        creator: artist || undefined,
+        institution: 'Wikimedia Commons',
+        sourceDuration: (() => {
+          try {
+            const duration = ii.extmetadata?.Duration?.value
+            return duration == null
+              ? undefined
+              : parseTimestampSeconds(duration)
+          } catch {
+            return undefined
+          }
+        })()
       }
     })
     .filter((x): x is FootageAsset => !!x)
 }
 
-export async function archiveVideos(query: string, limit = 6): Promise<FootageAsset[]> {
-  const u = `https://archive.org/advancedsearch.php?q=${encodeURIComponent(query + ' AND mediatype:(movies)')}&fl[]=identifier&fl[]=title&fl[]=year&rows=${limit}&output=json`
+export async function archiveVideos(
+  query: string,
+  limit = 6
+): Promise<FootageAsset[]> {
+  const u = `https://archive.org/advancedsearch.php?q=${encodeURIComponent(query + ' AND mediatype:(movies)')}&fl[]=identifier&fl[]=title&fl[]=year&fl[]=creator&fl[]=rights&fl[]=licenseurl&rows=${limit}&output=json`
   const r = await fetch(u, { headers: UA })
   if (!r.ok) throw new Error(`Internet Archive ${r.status}`)
   const d = await r.json()
-  return (d.response?.docs || []).map((doc: any): FootageAsset => ({
-    kind: 'video',
-    identifier: doc.identifier,
-    src: '',
-    needsResolve: true,
-    title: doc.title || doc.identifier,
-    thumb: `https://archive.org/services/img/${doc.identifier}`,
-    credit: `${doc.title || doc.identifier}${doc.year ? ' (' + doc.year + ')' : ''} — Internet Archive`,
-    url: `https://archive.org/details/${doc.identifier}`,
-    source: 'Internet Archive'
-  }))
+  return (d.response?.docs || []).map(
+    (doc: any): FootageAsset => ({
+      kind: 'video',
+      identifier: doc.identifier,
+      src: '',
+      needsResolve: true,
+      title: doc.title || doc.identifier,
+      thumb: `https://archive.org/services/img/${doc.identifier}`,
+      credit: `${doc.title || doc.identifier}${doc.year ? ' (' + doc.year + ')' : ''} — Internet Archive`,
+      url: `https://archive.org/details/${doc.identifier}`,
+      source: 'Internet Archive',
+      licenseText: [doc.rights, doc.licenseurl].filter(Boolean).join(' '),
+      creator: Array.isArray(doc.creator)
+        ? doc.creator.join(', ')
+        : doc.creator,
+      institution: 'Internet Archive'
+    })
+  )
 }
 
-export async function archiveResolveFile(a: FootageAsset): Promise<FootageAsset | null> {
-  if (!a.identifier) return a
-  const r = await fetch(`https://archive.org/metadata/${a.identifier}`, { headers: UA })
+export async function archiveResolveFile(
+  a: FootageAsset
+): Promise<FootageAsset | null> {
+  // Only Internet Archive candidates carry an identifier this endpoint can look up.
+  // A web-search video result (e.g. from kakkaoMedia) also arrives with
+  // needsResolve:true but no identifier — its `src` is a watch/page URL, not a
+  // direct video file, so returning it unchanged here would hand OffthreadVideo
+  // something it can't play (rendering as a black shot). Fail to resolve instead so
+  // the caller skips to the next candidate.
+  if (!a.identifier) return null
+  const r = await fetch(`https://archive.org/metadata/${a.identifier}`, {
+    headers: UA
+  })
   if (!r.ok) return null
   const d = await r.json()
   const files: any[] = d.files || []
@@ -104,11 +180,29 @@ export async function archiveResolveFile(a: FootageAsset): Promise<FootageAsset 
   return {
     ...a,
     src: `https://archive.org/download/${a.identifier}/${encodeURIComponent(pick.name)}`,
-    needsResolve: false
+    needsResolve: false,
+    licenseText: [a.licenseText, d.metadata?.rights, d.metadata?.licenseurl]
+      .filter(Boolean)
+      .join(' '),
+    creator: a.creator || d.metadata?.creator,
+    institution: 'Internet Archive',
+    mimeType: pick.mime ?? pick.mimetype,
+    sourceDuration: (() => {
+      try {
+        const duration = pick.length ?? d.metadata?.duration
+        return duration == null ? undefined : parseTimestampSeconds(duration)
+      } catch {
+        return undefined
+      }
+    })()
   }
 }
 
-export async function naraMedia(query: string, key: string, limit = 8): Promise<FootageAsset[]> {
+export async function naraMedia(
+  query: string,
+  key: string,
+  limit = 8
+): Promise<FootageAsset[]> {
   if (!key) return []
   const u = `https://catalog.archives.gov/api/v2/records/search?q=${encodeURIComponent(query)}&limit=${limit}&availableOnline=true`
   const r = await fetch(u, { headers: { ...UA, 'x-api-key': key } })
@@ -117,7 +211,13 @@ export async function naraMedia(query: string, key: string, limit = 8): Promise<
   const hits = d.body?.hits?.hits || d.hits?.hits || d.hits || []
   const out: FootageAsset[] = []
   for (const h of hits) {
-    const rec = h.fields?.record || h.fields || h._source?.record || h._source || h.record || {}
+    const rec =
+      h.fields?.record ||
+      h.fields ||
+      h._source?.record ||
+      h._source ||
+      h.record ||
+      {}
     const objs = rec.digitalObjects || rec.record?.digitalObjects || []
     const title = rec.title || rec.record?.title || 'National Archives record'
     const naId = rec.naId || rec.record?.naId || h._id
@@ -137,8 +237,18 @@ export async function naraMedia(query: string, key: string, limit = 8): Promise<
         thumb: o.thumbnailUrl || o.thumbnail || url,
         title,
         credit: `${title} — U.S. National Archives${naId ? ' (NAID ' + naId + ')' : ''}`,
-        url: naId ? `https://catalog.archives.gov/id/${naId}` : 'https://catalog.archives.gov',
-        source: 'U.S. National Archives'
+        url: naId
+          ? `https://catalog.archives.gov/id/${naId}`
+          : 'https://catalog.archives.gov',
+        source: 'U.S. National Archives',
+        licenseText: [
+          rec.useRestriction?.status,
+          rec.useRestriction?.specificRecordsType,
+          rec.rights
+        ]
+          .filter(Boolean)
+          .join(' '),
+        institution: 'U.S. National Archives'
       })
       break
     }
@@ -151,7 +261,10 @@ export async function naraMedia(query: string, key: string, limit = 8): Promise<
 // it also draws on whatever provider kakkao is configured with (Tavily/Exa/Brave/
 // Firecrawl/SearXNG), reusing their image + video results as extra candidates. We import
 // the provider factory lazily so this engine module stays usable outside the Next runtime.
-export async function kakkaoMedia(query: string, limit = 8): Promise<FootageAsset[]> {
+export async function kakkaoMedia(
+  query: string,
+  limit = 8
+): Promise<FootageAsset[]> {
   const q = String(query || '').trim()
   if (!q) return []
   let createSearchProvider: (typeof import('@/lib/tools/search/providers'))['createSearchProvider']
@@ -169,8 +282,9 @@ export async function kakkaoMedia(query: string, limit = 8): Promise<FootageAsse
   } catch {
     return []
   }
-  const providerLabel = (process.env.SEARCH_API || 'tavily')
-    .replace(/^\w/, c => c.toUpperCase())
+  const providerLabel = (process.env.SEARCH_API || 'tavily').replace(/^\w/, c =>
+    c.toUpperCase()
+  )
   const out: FootageAsset[] = []
 
   // Video results (Serper-shaped: link is the watch/page URL, imageUrl is the thumbnail).
@@ -184,8 +298,18 @@ export async function kakkaoMedia(query: string, limit = 8): Promise<FootageAsse
       title: v.title || 'Web video',
       credit: `${v.title || 'Web video'}${v.channel || v.source ? ' — ' + (v.channel || v.source) : ''}, via ${providerLabel} search`,
       url: link,
-      source: `Web (${providerLabel})`,
-      needsResolve: true
+      source: /(?:youtube\.com|youtu\.be)/i.test(link)
+        ? 'YouTube'
+        : `Web (${providerLabel})`,
+      needsResolve: true,
+      providerMetadata: /(?:youtube\.com|youtu\.be)/i.test(link)
+        ? {
+            youtubeLicense:
+              (v as any).license === 'creativeCommon'
+                ? 'creativeCommon'
+                : 'youtube'
+          }
+        : undefined
     })
   }
 
@@ -223,7 +347,10 @@ export async function sourceCandidates(
   const q0 = qs[0]
   const q1 = qs[1] || qs[0]
   const qterms = queryTerms(qs.join(' '))
-  const jobs: Promise<FootageAsset[]>[] = [wikimediaMedia(q0, 8), archiveVideos(q0, 6)]
+  const jobs: Promise<FootageAsset[]>[] = [
+    wikimediaMedia(q0, 8),
+    archiveVideos(q0, 6)
+  ]
   if (q1 !== q0) jobs.push(wikimediaMedia(q1, 6))
   if (naraKey) jobs.push(naraMedia(q0, naraKey, 8))
   // Hybrid: fold in kakkao's configured web search provider (image + video) so the
@@ -245,7 +372,9 @@ export async function sourceCandidates(
 export async function geminiPickAsset(
   candidates: FootageAsset[],
   intent: string,
-  key = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
+  key = process.env.GEMINI_API_KEY ||
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+    ''
 ): Promise<number> {
   if (!key) throw new Error('no Gemini key')
   const withThumbs: { i: number; mime: string; data: string }[] = []
@@ -274,15 +403,25 @@ export async function geminiPickAsset(
   })
   const body = {
     contents: [{ parts }],
-    generationConfig: { temperature: 0.1, maxOutputTokens: 200, responseMimeType: 'application/json' }
+    generationConfig: {
+      temperature: 0.1,
+      maxOutputTokens: 200,
+      responseMimeType: 'application/json'
+    }
   }
   const resp = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
-    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }
   )
   const d = await resp.json().catch(() => ({}) as any)
   if (!resp.ok) throw new Error(d.error?.message || `Gemini ${resp.status}`)
-  const text = (d.candidates?.[0]?.content?.parts || []).map((p: any) => p.text || '').join('')
+  const text = (d.candidates?.[0]?.content?.parts || [])
+    .map((p: any) => p.text || '')
+    .join('')
   const out = JSON.parse(text)
   const k = typeof out.best === 'number' ? out.best : -1
   if (k < 0 || k >= withThumbs.length) return -1
@@ -293,8 +432,12 @@ export async function geminiPickAsset(
 export async function sourceFootage(
   queries: string[],
   intent: string,
-  { limit = 8 } = {}
-): Promise<{ candidates: FootageAsset[]; best: FootageAsset | null; visionVerified: boolean }> {
+  { limit = 8, minimumDuration = 0 } = {}
+): Promise<{
+  candidates: FootageAsset[]
+  best: FootageAsset | null
+  visionVerified: boolean
+}> {
   const pool = await sourceCandidates(queries, { limit })
   if (!pool.length) return { candidates: [], best: null, visionVerified: false }
   let order = pool.map((_, i) => i)
@@ -307,13 +450,36 @@ export async function sourceFootage(
   } catch {
     /* no Gemini key or vision failure → term ranking */
   }
+  const best = await selectPlayableFootage(pool, order, minimumDuration)
+  return { candidates: pool, best, visionVerified }
+}
+
+export async function selectPlayableFootage(
+  candidates: FootageAsset[],
+  order: number[],
+  minimumDuration: number
+): Promise<FootageAsset | null> {
   for (const i of order.slice(0, 6)) {
-    const cand = pool[i]
-    if (!cand.needsResolve) return { candidates: pool, best: cand, visionVerified }
+    const cand = candidates[i]
+    if (
+      cand.kind === 'video' &&
+      cand.sourceDuration !== undefined &&
+      cand.sourceDuration < minimumDuration
+    ) {
+      continue
+    }
+    if (!cand.needsResolve) return cand
     try {
       const resolved = await archiveResolveFile(cand)
-      if (resolved) return { candidates: pool, best: resolved, visionVerified }
+      if (
+        resolved?.kind === 'video' &&
+        resolved.sourceDuration !== undefined &&
+        resolved.sourceDuration < minimumDuration
+      ) {
+        continue
+      }
+      if (resolved) return resolved
     } catch {}
   }
-  return { candidates: pool, best: null, visionVerified }
+  return null
 }

@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,8 +22,13 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
+    "types": [
+      "@testing-library/jest-dom"
+    ],
     "target": "ES2017"
   },
   "include": [
@@ -32,7 +41,12 @@
     "components/**/*.tsx",
     "hooks/**/*.ts",
     "hooks/**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "**/node_modules", ".next"]
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    ".next"
+  ]
 }

@@ -1,7 +1,10 @@
 import { tool } from 'ai'
 import { z } from 'zod'
 
-import { DEFAULT_THUMBNAIL_MODEL, generateImage } from '@/lib/engine/image'
+import {
+  generateImageModelArk,
+  MODELARK_DEFAULT_THUMBNAIL_MODEL
+} from '@/lib/engine/image'
 
 const thumbnailSchema = z.object({
   concept: z
@@ -13,7 +16,7 @@ const thumbnailSchema = z.object({
     .string()
     .optional()
     .describe(
-      'Short bold text to render ON the thumbnail (a few words max). nano-banana-pro renders text crisply — keep it 2–5 impactful words.'
+      'Short bold text to render ON the thumbnail (a few words max) — keep it 2–5 impactful words.'
     ),
   referenceImageUrl: z
     .string()
@@ -23,9 +26,7 @@ const thumbnailSchema = z.object({
     )
 })
 
-// Build a click-optimized YouTube thumbnail prompt, then render it with nano-banana-pro
-// (Google Gemini 3 Pro Image) via AI33 at 16:9. nano-banana-pro is strong at legible
-// overlay text and honoring a reference image.
+// Build a click-optimized YouTube thumbnail prompt, rendered with ModelArk (Seedream).
 function buildThumbnailPrompt(concept: string, titleText?: string): string {
   const parts = [
     'YouTube thumbnail, 16:9, ultra high contrast, bold saturated colors, dramatic rim lighting,',
@@ -43,17 +44,16 @@ function buildThumbnailPrompt(concept: string, titleText?: string): string {
 export function createGenerateThumbnailTool() {
   return tool({
     description:
-      'Generate a click-optimized YouTube thumbnail (16:9) with nano-banana-pro (Google Gemini 3 Pro Image, via AI33). Excellent at rendering bold, correctly-spelled overlay text and at honoring a reference image (a face, subject or logo). Returns a hosted image URL.',
+      "Generate a click-optimized YouTube thumbnail (16:9) from a text prompt using ModelArk (Seedream). Returns a hosted image URL you can pass as composeRender's thumbnail. Honors an optional reference image (a face, subject or logo) for consistency.",
     inputSchema: thumbnailSchema,
     execute: async (
       { concept, titleText, referenceImageUrl },
       { abortSignal }
     ) => {
-      const img = await generateImage(
+      const img = await generateImageModelArk(
         buildThumbnailPrompt(concept, titleText),
         {
-          model: DEFAULT_THUMBNAIL_MODEL,
-          aspectRatio: '16:9',
+          model: MODELARK_DEFAULT_THUMBNAIL_MODEL,
           referenceImages: referenceImageUrl ? [referenceImageUrl] : undefined,
           abortSignal
         }

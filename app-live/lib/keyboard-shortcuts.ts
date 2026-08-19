@@ -77,6 +77,7 @@ export function matchesShortcut(
 ): boolean {
   if (event.repeat) return false
   if (event.altKey) return false
+  if (!event.key) return false
   const shiftMatch = shortcut.ignoreShift
     ? true
     : event.shiftKey === shortcut.shift

@@ -1,0 +1,767 @@
+- generic [ref=e3]:
+  - generic [ref=e8]:
+    - link "VidRush Home" [ref=e10] [cursor=pointer]:
+      - /url: ./
+    - generic [ref=e14] [cursor=pointer]
+  - generic [ref=e17]:
+    - generic [ref=e26] [cursor=pointer]:
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e32]:
+            - list [ref=e34]:
+              - listitem [ref=e35]:
+                - paragraph [ref=e48]: Trusted by 100K+ creators
+              - listitem [ref=e49]:
+                - paragraph [ref=e53]: 24/7 customer support
+              - listitem [ref=e54]:
+                - paragraph [ref=e57]: Ready to publish <1h
+              - listitem [ref=e58]:
+                - paragraph [ref=e71]: Trusted by 100K+ creators
+              - listitem [ref=e72]:
+                - paragraph [ref=e76]: 24/7 customer support
+              - listitem [ref=e77]:
+                - paragraph [ref=e80]: Ready to publish <1h
+              - listitem [ref=e81]:
+                - paragraph [ref=e94]: Trusted by 100K+ creators
+              - listitem [ref=e95]:
+                - paragraph [ref=e99]: 24/7 customer support
+              - listitem [ref=e100]:
+                - paragraph [ref=e103]: Ready to publish <1h
+              - listitem [ref=e104]:
+                - paragraph [ref=e117]: Trusted by 100K+ creators
+              - listitem [ref=e118]:
+                - paragraph [ref=e122]: 24/7 customer support
+              - listitem [ref=e123]:
+                - paragraph [ref=e126]: Ready to publish <1h
+            - group "Slideshow pagination controls"
+          - generic [ref=e128]:
+            - heading [level=1] [ref=e130]:
+              - strong [ref=e132]: One brief in. Publish-ready long-form video out. Under an hour
+            - paragraph [ref=e134]: It's like having a senior editor, motion designer, and scriptwriter on demand ready when you brief them, not when their calendar opens.
+        - generic [ref=e135]:
+          - link [ref=e137]:
+            - /url: http://app.vidrush.ai/login
+            - paragraph [ref=e139]: Get started
+          - paragraph [ref=e144]: Watch demo
+      - generic [ref=e146]:
+        - textbox "Generate a nature wildlife video..." [ref=e150]
+        - paragraph [ref=e158]: Deep video v1 mini
+    - generic [ref=e224] [cursor=pointer]:
+      - list [ref=e226]:
+        - listitem [ref=e227]
+        - listitem [ref=e232]
+        - listitem [ref=e237]
+        - listitem [ref=e242]
+        - listitem [ref=e247]
+        - listitem [ref=e252]
+        - listitem [ref=e257]
+      - list [ref=e263]:
+        - listitem [ref=e264]
+        - listitem [ref=e269]
+        - listitem [ref=e274]
+        - listitem [ref=e279]
+        - listitem [ref=e284]
+        - listitem [ref=e289]
+    - generic [ref=e295]:
+      - generic [ref=e300] [cursor=pointer]:
+        - paragraph [ref=e306]:
+          - generic [ref=e307]: How it works
+        - heading "Less production. More publishing." [level=2] [ref=e309]
+      - generic [ref=e311]:
+        - generic [ref=e316]:
+          - generic [ref=e317]:
+            - generic [ref=e320]:
+              - paragraph [ref=e322]: Build me a WW2 documentary in 10 minutes, use my historical brand profile with archival war footage visuals, dramatic pacing, dark atmosphere, vintage textures, emotional storytelling, cinematic transitions, and premium historical documentary aesthetics. Include strong cinematic A roll narration throughout the video.
+              - paragraph [ref=e326]: Documentary
+              - paragraph [ref=e332]: A-roll
+              - paragraph [ref=e337]: historical
+            - paragraph [ref=e345]: Deep video v1 mini
+          - generic [ref=e358]:
+            - paragraph [ref=e368]: Custom Script
+            - paragraph [ref=e378]: Custom Audio
+        - generic [ref=e381]:
+          - generic [ref=e386]:
+            - paragraph [ref=e388]: Build me a WW2 documentary in 10 minutes, use my historical brand profile with archival war footage visuals, dramatic pacing, dark atmosphere, vintage textures, emotional storytelling, cinematic transitions, and premium historical documentary aesthetics. Include strong cinematic A roll narration throughout the video.
+            - paragraph [ref=e392]: Documentary
+            - paragraph [ref=e398]: A-roll
+            - paragraph [ref=e403]: historical
+          - generic [ref=e417]:
+            - list [ref=e419]:
+              - listitem [ref=e420]:
+                - paragraph [ref=e424]: Extracting visual identity patterns
+              - listitem [ref=e425]:
+                - paragraph [ref=e429]: Detecting pacing and rhythm structure
+              - listitem [ref=e430]:
+                - paragraph [ref=e435]: Mapping scene transition behavior
+              - listitem [ref=e436]:
+                - paragraph [ref=e441]: Analyzing typography hierarchy
+              - listitem [ref=e442]:
+                - paragraph [ref=e447]: Scanning thumbnail composition language
+              - listitem [ref=e448]:
+                - paragraph [ref=e453]: Classifying editing cadence and cuts
+              - listitem [ref=e454]:
+                - paragraph [ref=e458]: Extracting visual identity patterns
+              - listitem [ref=e459]:
+                - paragraph [ref=e463]: Detecting pacing and rhythm structure
+              - listitem [ref=e464]:
+                - paragraph [ref=e469]: Mapping scene transition behavior
+              - listitem [ref=e470]:
+                - paragraph [ref=e475]: Analyzing typography hierarchy
+              - listitem [ref=e476]:
+                - paragraph [ref=e481]: Scanning thumbnail composition language
+              - listitem [ref=e482]:
+                - paragraph [ref=e487]: Classifying editing cadence and cuts
+              - listitem [ref=e488]:
+                - paragraph [ref=e492]: Extracting visual identity patterns
+              - listitem [ref=e493]:
+                - paragraph [ref=e497]: Detecting pacing and rhythm structure
+              - listitem [ref=e498]:
+                - paragraph [ref=e503]: Mapping scene transition behavior
+              - listitem [ref=e504]:
+                - paragraph [ref=e509]: Analyzing typography hierarchy
+              - listitem [ref=e510]:
+                - paragraph [ref=e515]: Scanning thumbnail composition language
+              - listitem [ref=e516]:
+                - paragraph [ref=e521]: Classifying editing cadence and cuts
+              - listitem [ref=e522]:
+                - paragraph [ref=e526]: Extracting visual identity patterns
+              - listitem [ref=e527]:
+                - paragraph [ref=e531]: Detecting pacing and rhythm structure
+              - listitem [ref=e532]:
+                - paragraph [ref=e537]: Mapping scene transition behavior
+              - listitem [ref=e538]:
+                - paragraph [ref=e543]: Analyzing typography hierarchy
+              - listitem [ref=e544]:
+                - paragraph [ref=e549]: Scanning thumbnail composition language
+              - listitem [ref=e550]:
+                - paragraph [ref=e555]: Classifying editing cadence and cuts
+            - group "Slideshow pagination controls"
+          - list [ref=e560]:
+            - listitem [ref=e561]
+            - listitem [ref=e570]
+            - listitem [ref=e579]
+            - listitem [ref=e588]
+        - generic [ref=e601]:
+          - generic [ref=e602]:
+            - generic [ref=e606]:
+              - paragraph [ref=e608]: Build me a WW2 documentary in 10 minutes, use my historical brand profile with archival war footage visuals, dramatic pacing, dark atmosphere, vintage textures, emotional storytelling, cinematic transitions, and premium historical documentary aesthetics. Include strong cinematic A roll narration throughout the video.
+              - paragraph [ref=e612]: Documentary
+              - paragraph [ref=e618]: A-roll
+              - paragraph [ref=e623]: historical
+            - paragraph [ref=e633]: Deep video v1 mini
+          - generic [ref=e647]:
+            - list [ref=e649]:
+              - listitem [ref=e650]:
+                - paragraph [ref=e654]: Extracting visual identity patterns
+              - listitem [ref=e655]:
+                - paragraph [ref=e659]: Detecting pacing and rhythm structure
+              - listitem [ref=e660]:
+                - paragraph [ref=e665]: Mapping scene transition behavior
+              - listitem [ref=e666]:
+                - paragraph [ref=e671]: Analyzing typography hierarchy
+              - listitem [ref=e672]:
+                - paragraph [ref=e677]: Scanning thumbnail composition language
+              - listitem [ref=e678]:
+                - paragraph [ref=e683]: Classifying editing cadence and cuts
+              - listitem [ref=e684]:
+                - paragraph [ref=e688]: Extracting visual identity patterns
+              - listitem [ref=e689]:
+                - paragraph [ref=e693]: Detecting pacing and rhythm structure
+              - listitem [ref=e694]:
+                - paragraph [ref=e699]: Mapping scene transition behavior
+              - listitem [ref=e700]:
+                - paragraph [ref=e705]: Analyzing typography hierarchy
+              - listitem [ref=e706]:
+                - paragraph [ref=e711]: Scanning thumbnail composition language
+              - listitem [ref=e712]:
+                - paragraph [ref=e717]: Classifying editing cadence and cuts
+              - listitem [ref=e718]:
+                - paragraph [ref=e722]: Extracting visual identity patterns
+              - listitem [ref=e723]:
+                - paragraph [ref=e727]: Detecting pacing and rhythm structure
+              - listitem [ref=e728]:
+                - paragraph [ref=e733]: Mapping scene transition behavior
+              - listitem [ref=e734]:
+                - paragraph [ref=e739]: Analyzing typography hierarchy
+              - listitem [ref=e740]:
+                - paragraph [ref=e745]: Scanning thumbnail composition language
+              - listitem [ref=e746]:
+                - paragraph [ref=e751]: Classifying editing cadence and cuts
+              - listitem [ref=e752]:
+                - paragraph [ref=e756]: Extracting visual identity patterns
+              - listitem [ref=e757]:
+                - paragraph [ref=e761]: Detecting pacing and rhythm structure
+              - listitem [ref=e762]:
+                - paragraph [ref=e767]: Mapping scene transition behavior
+              - listitem [ref=e768]:
+                - paragraph [ref=e773]: Analyzing typography hierarchy
+              - listitem [ref=e774]:
+                - paragraph [ref=e779]: Scanning thumbnail composition language
+              - listitem [ref=e780]:
+                - paragraph [ref=e785]: Classifying editing cadence and cuts
+            - group "Slideshow pagination controls"
+          - list [ref=e790]:
+            - listitem [ref=e791]
+            - listitem [ref=e799]
+            - listitem [ref=e807]
+            - listitem [ref=e815]
+          - generic [ref=e825]:
+            - generic [ref=e828]:
+              - paragraph [ref=e889]: Industrial revolution
+              - paragraph [ref=e904]: Render video
+            - generic [ref=e913]:
+              - generic [ref=e915]:
+                - paragraph [ref=e944]: 00:00:00 / 00:15:22
+                - paragraph [ref=e947]: 1x
+              - generic [ref=e990]:
+                - paragraph [ref=e992]: 0s
+                - paragraph [ref=e998]: 1s
+                - paragraph [ref=e1004]: 2s
+                - paragraph [ref=e1010]: 3s
+                - paragraph [ref=e1016]: 4s
+                - paragraph [ref=e1022]: 5s
+                - paragraph [ref=e1028]: 6s
+                - paragraph [ref=e1034]: 7s
+                - paragraph [ref=e1040]: 8s
+                - paragraph [ref=e1046]: 9s
+                - paragraph [ref=e1052]: 10s
+                - paragraph [ref=e1058]: 11s
+            - generic [ref=e1182]:
+              - paragraph [ref=e1187]: Rush Agent
+              - generic [ref=e1202]:
+                - paragraph [ref=e1205]: Now
+                - paragraph [ref=e1208]: Re edit the first 30 seconds with a faster pace and suitable B roll of your choice.
+                - paragraph [ref=e1225]: Planning next moves
+              - generic [ref=e1227]:
+                - paragraph [ref=e1229]:
+                  - generic [ref=e1230]: Re
+                  - generic [ref=e1231]: edit
+                  - generic [ref=e1232]: the
+                  - generic [ref=e1233]: first
+                  - generic [ref=e1234]: "30"
+                  - generic [ref=e1235]: seconds
+                  - generic [ref=e1236]: with
+                  - generic [ref=e1237]: a
+                  - generic [ref=e1238]: faster
+                  - generic [ref=e1239]: pace
+                  - generic [ref=e1240]: and
+                  - generic [ref=e1241]: suitable
+                  - generic [ref=e1242]: B
+                  - generic [ref=e1243]: roll
+                  - generic [ref=e1244]: of
+                  - generic [ref=e1245]: your
+                  - generic [ref=e1246]: choice.
+                - paragraph [ref=e1248]: Ask Rush Agent to edit your video...
+                - paragraph [ref=e1252]: Agent
+        - generic [ref=e1266]:
+          - paragraph [ref=e1272]: Step 01
+          - generic [ref=e1273]:
+            - heading "Brief." [level=3] [ref=e1276]
+            - heading "A paragraph, a full script, raw footage, a voiceover, or all of it. Brief in plain English and VidRush takes it from there." [level=6] [ref=e1279]
+        - generic [ref=e1280]:
+          - paragraph [ref=e1286]: Step 02
+          - generic [ref=e1287]:
+            - heading "Sit back." [level=3] [ref=e1290]
+            - heading "Researcher, scriptwriter, motion designer, editor, sound designer — five specialists working in parallel on your brief, in under an hour. Each one with the same skills and tools as a human crew." [level=6] [ref=e1293]
+        - generic [ref=e1294]:
+          - generic [ref=e1295]:
+            - paragraph [ref=e1301]: Step 03
+            - paragraph [ref=e1306]:
+              - generic [ref=e1307]: Coming soon
+          - heading "Watch the V1. Tell Rush Agent what to change in plain English — shorter intro, different B-roll, swap the music. Or open the timeline and do it yourself. Render when it's right." [level=6] [ref=e1311]
+    - generic [ref=e1313]:
+      - generic [ref=e1317] [cursor=pointer]:
+        - paragraph [ref=e1322]:
+          - generic [ref=e1323]: Usecases
+        - heading "Less production. More publishing." [level=2] [ref=e1325]
+      - generic [ref=e1329]:
+        - generic [ref=e1330]:
+          - heading "Documentary" [level=5] [ref=e1332]
+          - generic [ref=e1333]:
+            - paragraph [ref=e1335]: History, psychology, true stories, disasters — long-form deep dives researched from primary sources, paced for retention.
+            - link [ref=e1337] [cursor=pointer]:
+              - /url: http://app.vidrush.ai/login
+              - paragraph [ref=e1339]: Get started
+        - generic [ref=e1341]:
+          - heading "Explainer" [level=5] [ref=e1343]
+          - generic [ref=e1344]:
+            - paragraph [ref=e1346]: Finance, business, science, tech — complex topics walked through with charts, on-screen text, and the pacing that holds viewers to the payoff.
+            - link [ref=e1348] [cursor=pointer]:
+              - /url: http://app.vidrush.ai/login
+              - paragraph [ref=e1350]: Get started
+        - generic [ref=e1352]:
+          - heading "Breakdown" [level=5] [ref=e1354]
+          - generic [ref=e1355]:
+            - paragraph [ref=e1357]: Automotive specs, product reviews, restoration walkthroughs, market analyses — with technical b-roll and on-screen stats per item.
+            - link [ref=e1359] [cursor=pointer]:
+              - /url: http://app.vidrush.ai/login
+              - paragraph [ref=e1361]: Get started
+        - generic [ref=e1363]:
+          - heading "Listicle / Top 10" [level=5] [ref=e1365]
+          - generic [ref=e1366]:
+            - paragraph [ref=e1368]: "Ranked roundups, \"best of\" videos, comparison breakdowns — fast pacing, clear payoffs, designed to hold viewers from #10 to #1."
+            - link [ref=e1370] [cursor=pointer]:
+              - /url: http://app.vidrush.ai/login
+              - paragraph [ref=e1372]: Get started
+    - generic [ref=e1486]:
+      - generic [ref=e1489] [cursor=pointer]:
+        - heading "AI tools generate. VidRush produces." [level=2] [ref=e1491]
+        - paragraph [ref=e1493]: Generation is only the beginning. VidRush turns ideas into polished content with a workflow built for creators.
+      - generic [ref=e1494]:
+        - generic [ref=e1495]:
+          - generic [ref=e1497]:
+            - generic [ref=e1498]:
+              - heading "Composed, not generated." [level=3] [ref=e1500]
+              - paragraph [ref=e1502]: Every video gets its own identity. VidRush crafts original music and motion graphics tailored to your script, pacing, and topic.
+            - generic [ref=e1507]:
+              - list [ref=e1509]:
+                - listitem [ref=e1510]
+                - listitem [ref=e1520]
+                - listitem [ref=e1530]
+                - listitem [ref=e1540]
+                - listitem [ref=e1550]
+                - listitem [ref=e1560]
+                - listitem [ref=e1570]
+              - group "Slideshow pagination controls"
+            - generic [ref=e1587]:
+              - list [ref=e1589]:
+                - listitem [ref=e1590]:
+                  - paragraph [ref=e1594]: Modern, minimal, balanced
+                - listitem [ref=e1595]:
+                  - paragraph [ref=e1599]: Confident, bold, sharp
+                - listitem [ref=e1600]:
+                  - paragraph [ref=e1604]: Calm, minimal, soft
+                - listitem [ref=e1605]:
+                  - paragraph [ref=e1609]: Energetic, high contrast
+                - listitem [ref=e1610]:
+                  - paragraph [ref=e1614]: Modern, minimal, balanced
+                - listitem [ref=e1615]:
+                  - paragraph [ref=e1619]: Confident, bold, sharp
+                - listitem [ref=e1620]:
+                  - paragraph [ref=e1624]: Calm, minimal, soft
+                - listitem [ref=e1625]:
+                  - paragraph [ref=e1629]: Energetic, high contrast
+                - listitem [ref=e1630]:
+                  - paragraph [ref=e1634]: Modern, minimal, balanced
+                - listitem [ref=e1635]:
+                  - paragraph [ref=e1639]: Confident, bold, sharp
+                - listitem [ref=e1640]:
+                  - paragraph [ref=e1644]: Calm, minimal, soft
+                - listitem [ref=e1645]:
+                  - paragraph [ref=e1649]: Energetic, high contrast
+                - listitem [ref=e1650]:
+                  - paragraph [ref=e1654]: Modern, minimal, balanced
+                - listitem [ref=e1655]:
+                  - paragraph [ref=e1659]: Confident, bold, sharp
+                - listitem [ref=e1660]:
+                  - paragraph [ref=e1664]: Calm, minimal, soft
+                - listitem [ref=e1665]:
+                  - paragraph [ref=e1669]: Energetic, high contrast
+              - group "Slideshow pagination controls"
+            - paragraph [ref=e1683]: You
+          - generic [ref=e1696]:
+            - generic [ref=e1698]:
+              - generic [ref=e1703]:
+                - list [ref=e1705]:
+                  - listitem [ref=e1706]:
+                    - paragraph [ref=e1710]: Extracting visual identity patterns
+                  - listitem [ref=e1711]:
+                    - paragraph [ref=e1715]: Detecting pacing and rhythm structure
+                  - listitem [ref=e1716]:
+                    - paragraph [ref=e1721]: Mapping scene transition behavior
+                  - listitem [ref=e1722]:
+                    - paragraph [ref=e1727]: Analyzing typography hierarchy
+                  - listitem [ref=e1728]:
+                    - paragraph [ref=e1733]: Scanning thumbnail composition language
+                  - listitem [ref=e1734]:
+                    - paragraph [ref=e1739]: Classifying editing cadence and cuts
+                  - listitem [ref=e1740]:
+                    - paragraph [ref=e1744]: Extracting visual identity patterns
+                  - listitem [ref=e1745]:
+                    - paragraph [ref=e1749]: Detecting pacing and rhythm structure
+                  - listitem [ref=e1750]:
+                    - paragraph [ref=e1755]: Mapping scene transition behavior
+                  - listitem [ref=e1756]:
+                    - paragraph [ref=e1761]: Analyzing typography hierarchy
+                  - listitem [ref=e1762]:
+                    - paragraph [ref=e1767]: Scanning thumbnail composition language
+                  - listitem [ref=e1768]:
+                    - paragraph [ref=e1773]: Classifying editing cadence and cuts
+                  - listitem [ref=e1774]:
+                    - paragraph [ref=e1778]: Extracting visual identity patterns
+                  - listitem [ref=e1779]:
+                    - paragraph [ref=e1783]: Detecting pacing and rhythm structure
+                  - listitem [ref=e1784]:
+                    - paragraph [ref=e1789]: Mapping scene transition behavior
+                  - listitem [ref=e1790]:
+                    - paragraph [ref=e1795]: Analyzing typography hierarchy
+                  - listitem [ref=e1796]:
+                    - paragraph [ref=e1801]: Scanning thumbnail composition language
+                  - listitem [ref=e1802]:
+                    - paragraph [ref=e1807]: Classifying editing cadence and cuts
+                  - listitem [ref=e1808]:
+                    - paragraph [ref=e1812]: Extracting visual identity patterns
+                  - listitem [ref=e1813]:
+                    - paragraph [ref=e1817]: Detecting pacing and rhythm structure
+                  - listitem [ref=e1818]:
+                    - paragraph [ref=e1823]: Mapping scene transition behavior
+                  - listitem [ref=e1824]:
+                    - paragraph [ref=e1829]: Analyzing typography hierarchy
+                  - listitem [ref=e1830]:
+                    - paragraph [ref=e1835]: Scanning thumbnail composition language
+                  - listitem [ref=e1836]:
+                    - paragraph [ref=e1841]: Classifying editing cadence and cuts
+                - group "Slideshow pagination controls"
+              - generic [ref=e1843]:
+                - paragraph [ref=e1859]: https://www.youtube.com/
+                - generic [ref=e1876]:
+                  - paragraph [ref=e1879]: Your Channel
+                  - paragraph [ref=e1883]: 56K Subscribers
+            - generic [ref=e1884]:
+              - heading "Modeled on your channel." [level=4] [ref=e1886]
+              - paragraph [ref=e1891]:
+                - generic [ref=e1892]: Coming soon
+            - paragraph [ref=e1894]: Point VidRush at your channel. It studies the pacing, type, motion, and editing rhythm that make your videos yours.
+          - generic [ref=e1896]:
+            - heading "You decide what gets made. Before it gets made." [level=4] [ref=e1898]
+            - paragraph [ref=e1900]: Before VidRush generates a single frame, you see the full plan - script, footage choices, voice, style, estimated cost. Approve it, adjust it, or rewrite the brief.
+            - generic [ref=e1902]:
+              - paragraph [ref=e1909]: Settings & Details
+              - paragraph [ref=e1985]: Creative Setup
+              - paragraph [ref=e2061]: Compliance & Sourcing
+              - paragraph [ref=e2137]: Estimated Cost
+              - paragraph [ref=e2213]: Settings & Details
+        - generic [ref=e2285]:
+          - generic [ref=e2287]:
+            - heading "Cut, replace, retime without regenerating." [level=4] [ref=e2289]
+            - paragraph [ref=e2291]: AI when you want it, full control when you need it. Edit through chat or dive into a real timeline and fine tune every detail without starting over.
+            - generic [ref=e2293]:
+              - paragraph [ref=e2369]: Render video
+              - generic [ref=e2378]:
+                - generic [ref=e2380]:
+                  - paragraph [ref=e2409]: 00:00:00 / 00:15:22
+                  - paragraph [ref=e2412]: 1x
+                - generic [ref=e2455]:
+                  - paragraph [ref=e2457]: 0s
+                  - paragraph [ref=e2463]: 1s
+                  - paragraph [ref=e2469]: 2s
+                  - paragraph [ref=e2475]: 3s
+                  - paragraph [ref=e2481]: 4s
+                  - paragraph [ref=e2487]: 5s
+                  - paragraph [ref=e2493]: 6s
+                  - paragraph [ref=e2499]: 7s
+                  - paragraph [ref=e2505]: 8s
+                  - paragraph [ref=e2511]: 9s
+                  - paragraph [ref=e2517]: 10s
+                  - paragraph [ref=e2523]: 11s
+              - paragraph [ref=e2636]: You
+          - generic [ref=e2638]:
+            - list [ref=e2641]:
+              - listitem [ref=e2642]:
+                - generic [ref=e2643]:
+                  - paragraph [ref=e2648]: Morning Coffee Run Downtown.mp4
+                  - generic [ref=e2649]:
+                    - paragraph [ref=e2651]: 01:24s
+                    - paragraph [ref=e2655]: Public Domain
+              - listitem [ref=e2656]:
+                - generic [ref=e2657]:
+                  - paragraph [ref=e2662]: Behind The Scenes Editing Session
+                  - generic [ref=e2663]:
+                    - paragraph [ref=e2665]: 02:11s
+                    - paragraph [ref=e2669]: General Web Crawling
+              - listitem [ref=e2670]:
+                - generic [ref=e2671]:
+                  - paragraph [ref=e2676]: Sunset Drive And Daily Thoughts
+                  - generic [ref=e2677]:
+                    - paragraph [ref=e2679]: 00:48s
+                    - paragraph [ref=e2683]: Commercial Stock
+              - listitem [ref=e2684]:
+                - generic [ref=e2685]:
+                  - paragraph [ref=e2690]: Grocery Shopping & Night Routine
+                  - generic [ref=e2691]:
+                    - paragraph [ref=e2693]: 02:11s
+                    - paragraph [ref=e2697]: General Web Crawling
+            - heading "Choose where the footage comes from, Every video." [level=4] [ref=e2699]
+            - paragraph [ref=e2701]: Stay in control of your content. Choose exactly where footage comes from with trusted, licensed and public domain sources, so every video is safe.
+            - generic [ref=e2722]:
+              - generic [ref=e2723]:
+                - paragraph [ref=e2727]: CC & Public Domain Only
+                - generic [ref=e2729] [cursor=pointer]
+              - generic [ref=e2735]:
+                - paragraph [ref=e2739]: Commercial Stock
+                - generic [ref=e2741] [cursor=pointer]
+              - generic [ref=e2747]:
+                - paragraph [ref=e2751]: General Web Crawling
+                - generic [ref=e2753] [cursor=pointer]
+    - generic [ref=e2766]:
+      - generic [ref=e2769] [cursor=pointer]:
+        - paragraph [ref=e2775]:
+          - generic [ref=e2776]: Testimonials
+        - heading "The creators already winning with VidRush." [level=2] [ref=e2778]
+        - paragraph [ref=e2780]: From multi-channel operators to first-time documentary makers. Creators using vidrush are shipping every week with amazing outcomes.
+        - generic [ref=e2781]:
+          - generic [ref=e2782]:
+            - paragraph [ref=e2784]: 3 Billion
+            - paragraph [ref=e2786]: long form views
+          - generic [ref=e2790]:
+            - paragraph [ref=e2792]: 50%
+            - paragraph [ref=e2794]: Average retention
+          - generic [ref=e2798]:
+            - paragraph [ref=e2800]: 40,000+
+            - paragraph [ref=e2802]: videos produced
+      - generic [ref=e2804]:
+        - generic [ref=e2805]:
+          - generic [ref=e2807]:
+            - generic [ref=e2808]:
+              - paragraph [ref=e2814]: Riz
+              - generic [ref=e2815]:
+                - paragraph [ref=e2817]: April … waiting for yesterday’s update. Own script, VidRush editing
+                - generic:
+                  - paragraph
+            - generic [ref=e2818]:
+              - img "Analytics dashboard showing YouTube channel growth with 483K views and $5K estimated revenue, alongside text mentioning custom scripting and VidRush editing." [ref=e2821]
+              - generic [ref=e2822]:
+                - generic [ref=e2824]:
+                  - paragraph [ref=e2826]: 🔥
+                  - paragraph [ref=e2828]: "124"
+                - generic [ref=e2830]:
+                  - paragraph [ref=e2832]: ❤️
+                  - paragraph [ref=e2834]: "298"
+          - generic [ref=e2836]:
+            - img [ref=e2837] [cursor=pointer]
+            - button "Play" [ref=e2838] [cursor=pointer]
+          - generic [ref=e2843]:
+            - generic [ref=e2844]:
+              - paragraph [ref=e2850]: bettersubstance
+              - generic [ref=e2851]:
+                - paragraph [ref=e2853]: First full month on VidRush.
+                - paragraph [ref=e2855]: Around $1K in costs, minimal re editing, and already seeing strong results. VidRush isn’t perfect yet, but it’s already good enough to win.
+            - generic [ref=e2856]:
+              - img "Earnings overview showing monthly revenue growth, with over $5.5K earned in March and additional revenue continuing into April after previous months showed little or no earnings." [ref=e2859]
+              - generic [ref=e2860]:
+                - generic [ref=e2862]:
+                  - paragraph [ref=e2864]: 🔥
+                  - paragraph [ref=e2866]: "245"
+                - generic [ref=e2868]:
+                  - paragraph [ref=e2870]: ❤️
+                  - paragraph [ref=e2872]: "28"
+          - generic [ref=e2874]:
+            - generic [ref=e2875]:
+              - paragraph [ref=e2881]: ContentJack
+              - generic [ref=e2882]:
+                - paragraph [ref=e2884]: We switched an existing channel from human edited videos to VidRush around February.
+                - paragraph [ref=e2886]: The results have been consistently strong. Production costs dropped from about $150 per video to around $30, while engagement and comments stayed just as strong. Most videos only needed minimal edits outside of VidRush.
+            - generic [ref=e2887]:
+              - img "Revenue analytics graph showing over $61K in estimated revenue with consistent earnings trends across multiple months." [ref=e2890]
+              - generic [ref=e2891]:
+                - generic [ref=e2893]:
+                  - paragraph [ref=e2895]: 🔥
+                  - paragraph [ref=e2897]: "54"
+                - generic [ref=e2899]:
+                  - paragraph [ref=e2901]: 🚀
+                  - paragraph [ref=e2903]: "45"
+                - generic [ref=e2905]:
+                  - paragraph [ref=e2907]: 🤯
+                  - paragraph [ref=e2909]: "12"
+                - generic [ref=e2911]:
+                  - paragraph [ref=e2913]: 👍🏻
+                  - paragraph [ref=e2915]: "3"
+          - generic [ref=e2918]:
+            - paragraph [ref=e2924]: maya_runs
+            - generic [ref=e2925]:
+              - paragraph [ref=e2927]: I tested Vidrush on my branded channel,
+              - paragraph [ref=e2929]: actually crazy to see that this tool is better than my editing team! 43% AVD…. Not a single negative comment about the change in style…
+        - generic [ref=e2930]:
+          - generic [ref=e2932]:
+            - img [ref=e2933] [cursor=pointer]
+            - button "Play" [ref=e2934] [cursor=pointer]
+          - generic [ref=e2939]:
+            - generic [ref=e2940]:
+              - paragraph [ref=e2946]: Maus
+              - generic [ref=e2947]:
+                - paragraph [ref=e2949]: I tested Vidrush on my branded channel,
+                - paragraph [ref=e2951]: actually crazy to see that this tool is better than my editing team! 43% AVD…. Not a single negative comment about the change in style…
+            - generic [ref=e2952]:
+              - img "Audience retention graph showing viewer watch percentage over a 24 minute video, with retention staying above the typical range throughout most of the timeline." [ref=e2955]
+              - generic [ref=e2956]:
+                - generic [ref=e2958]:
+                  - paragraph [ref=e2960]: 🎉
+                  - paragraph [ref=e2962]: "20"
+                - generic [ref=e2964]:
+                  - paragraph [ref=e2966]: ❤️
+                  - paragraph [ref=e2968]: "191"
+          - generic [ref=e2970]:
+            - generic [ref=e2971]:
+              - paragraph [ref=e2977]: maya_runs
+              - generic [ref=e2978]:
+                - paragraph [ref=e2980]: 4 VidRush channels • 3 months in
+                - generic:
+                  - paragraph
+            - generic [ref=e2984]:
+              - generic [ref=e2986]:
+                - paragraph [ref=e2988]: 👑
+                - paragraph [ref=e2990]: "217"
+              - generic [ref=e2992]:
+                - paragraph [ref=e2994]: ❤️
+                - paragraph [ref=e2996]: "123"
+          - generic [ref=e2998]:
+            - img [ref=e2999] [cursor=pointer]
+            - button "Play" [ref=e3000] [cursor=pointer]
+          - generic [ref=e3005]:
+            - generic [ref=e3006]:
+              - paragraph [ref=e3012]: maya_runs
+              - generic [ref=e3013]:
+                - paragraph [ref=e3015]: I tested Vidrush on my branded channel,
+                - paragraph [ref=e3017]: actually crazy to see that this tool is better than my editing team! 43% AVD…. Not a single negative comment about the change in style…
+            - generic [ref=e3021]:
+              - generic [ref=e3023]:
+                - paragraph [ref=e3025]: 🔥
+                - paragraph [ref=e3027]: "124"
+              - generic [ref=e3029]:
+                - paragraph [ref=e3031]: ❤️
+                - paragraph [ref=e3033]: "298"
+          - generic [ref=e3035]:
+            - generic [ref=e3036]:
+              - paragraph [ref=e3042]: Murray Frost
+              - generic [ref=e3043]:
+                - paragraph [ref=e3045]: VidRush Videos
+                - generic:
+                  - paragraph
+            - generic [ref=e3046]:
+              - img "Revenue analytics chart showing estimated earnings growing to $1K over a one month period, with a sharp upward trend near the end of March." [ref=e3049]
+              - generic [ref=e3050]:
+                - generic [ref=e3052]:
+                  - paragraph [ref=e3054]: 🔥
+                  - paragraph [ref=e3056]: "124"
+                - generic [ref=e3058]:
+                  - paragraph [ref=e3060]: ❤️
+                  - paragraph [ref=e3062]: "298"
+    - generic [ref=e3066]:
+      - generic [ref=e3069] [cursor=pointer]:
+        - generic [ref=e3070]:
+          - paragraph [ref=e3076]:
+            - generic [ref=e3077]: Enterprise ( Coming soon )
+          - heading "Introducing VidRush Atlas" [level=2] [ref=e3079]
+          - paragraph [ref=e3081]: Turn your footage archive into finished videos
+        - paragraph [ref=e3086]: Request enterprise access
+      - generic [ref=e3089]:
+        - img "Swirling abstract pattern of green foliage and blue sky" [ref=e3091]
+        - img "AI video editor interface showing a speaker video preview, timeline based editing workspace, and an AI powered replacement panel for generating or swapping B roll footage." [ref=e3095]
+        - generic [ref=e3096]:
+          - generic [ref=e3103]:
+            - paragraph [ref=e3107]: Your licensed video database
+            - generic [ref=e3108]:
+              - paragraph [ref=e3112]: Secure
+              - paragraph [ref=e3116]: Private
+              - paragraph [ref=e3120]: Fully Licensed
+          - list [ref=e3122]:
+            - listitem [ref=e3123]:
+              - generic [ref=e3134]:
+                - paragraph [ref=e3138]: shared_video_library_access.mov
+                - generic [ref=e3139]:
+                  - paragraph [ref=e3141]: 12:44s
+                  - paragraph [ref=e3145]: Public Domain
+            - listitem [ref=e3146]:
+              - generic [ref=e3147]:
+                - img "a man holding a microphone" [ref=e3150]
+                - generic [ref=e3157]:
+                  - paragraph [ref=e3161]: television_broadcast_preview.mp4
+                  - generic [ref=e3162]:
+                    - paragraph [ref=e3164]: 21:00s
+                    - paragraph [ref=e3168]: Public Domain
+            - listitem [ref=e3169]:
+              - generic [ref=e3170]:
+                - img "a computer screen with a phone and a tablet" [ref=e3173]
+                - generic [ref=e3180]:
+                  - paragraph [ref=e3184]: audit_trail_activity_log_capture.mov
+                  - generic [ref=e3185]:
+                    - paragraph [ref=e3187]: 01:24s
+                    - paragraph [ref=e3191]: Public Domain
+            - listitem [ref=e3192]:
+              - generic [ref=e3193]:
+                - img "graphs of performance analytics on a laptop screen" [ref=e3196]
+                - generic [ref=e3203]:
+                  - paragraph [ref=e3207]: operations_dashboard_recording.mov
+                  - generic [ref=e3208]:
+                    - paragraph [ref=e3210]: 01:24s
+                    - paragraph [ref=e3214]: Public Domain
+        - generic [ref=e3215]:
+          - paragraph [ref=e3219]: Understand brief
+          - paragraph [ref=e3223]: Find relevant footage
+          - paragraph [ref=e3227]: AI edit & assemble
+      - generic [ref=e3233]:
+        - generic [ref=e3234]:
+          - paragraph [ref=e3236]: "Your organization's footage archive is its biggest production asset, but repurposing it into new content sourcing, editing, polishing takes editorial hours that don't scale. vidrush Atlas connects directly to your own archive and turns it into polished long-form video in your house style: documentaries, explainers, breakdowns, compilations, and social repurposing. The full production pipeline, without growing headcount."
+          - generic [ref=e3238]:
+            - paragraph [ref=e3243]: SOC 2
+            - paragraph [ref=e3250]: Tenant isolated workspaces
+            - paragraph [ref=e3255]: Full asset rights and audit trails
+        - generic [ref=e3261]:
+          - heading "Built for" [level=2] [ref=e3263]
+          - paragraph [ref=e3267]: Newsrooms
+          - paragraph [ref=e3271]: Broadcasters
+          - paragraph [ref=e3275]: Sports rights holders
+          - paragraph [ref=e3279]: Archive licensors
+          - paragraph [ref=e3283]: Creator networks operating at scale
+    - generic [ref=e3290]:
+      - heading "The fastest way from idea to published video" [level=2] [ref=e3293]
+      - generic [ref=e3296]:
+        - textbox "Generate a nature wildlife video..." [ref=e3300]
+        - paragraph [ref=e3308]: Deep video v1 mini
+      - link [ref=e3317] [cursor=pointer]:
+        - /url: http://app.vidrush.ai/login
+        - paragraph [ref=e3319]: Get started
+    - generic [ref=e3340]:
+      - heading "Got questions? We’ve got answers" [level=3] [ref=e3344]
+      - generic [ref=e3345]:
+        - paragraph [ref=e3352] [cursor=pointer]: Will the output actually look professional, or like AI slop?
+        - paragraph [ref=e3364] [cursor=pointer]: How can i get support from vidrush?
+        - paragraph [ref=e3376] [cursor=pointer]: How much does a video cost?
+        - paragraph [ref=e3388] [cursor=pointer]: What formats and niches does VidRush work for?
+        - paragraph [ref=e3400] [cursor=pointer]: Can I edit the video if I don't like the output?
+        - paragraph [ref=e3412] [cursor=pointer]: Can I use my own script, voiceover, or footage?
+  - generic [ref=e3572]:
+    - generic [ref=e3574]:
+      - link "VidRush Home" [ref=e3576] [cursor=pointer]:
+        - /url: ./
+      - generic [ref=e3579]:
+        - paragraph [ref=e3580]: "The #1 AI tool for producing"
+        - paragraph [ref=e3581]: long-form videos
+      - link [ref=e3583] [cursor=pointer]:
+        - /url: http://app.vidrush.ai/login
+        - paragraph [ref=e3585]: Get started
+      - paragraph [ref=e3588]: © Copyright 2026, All Rights Reserved by Vidrush AI Studios - VIDRUSH AI STUDIOS LLP
+    - generic [ref=e3589]:
+      - generic [ref=e3590]:
+        - generic [ref=e3591]:
+          - link [ref=e3593] [cursor=pointer]:
+            - /url: ./privacy-policy
+            - paragraph [ref=e3595]: Privacy Policy
+          - link [ref=e3597] [cursor=pointer]:
+            - /url: ./cookie-policy
+            - paragraph [ref=e3599]: Cookie Policy
+          - link [ref=e3601] [cursor=pointer]:
+            - /url: ./terms-conditions
+            - paragraph [ref=e3603]: Terms & Conditions
+        - generic [ref=e3604]:
+          - link [ref=e3606] [cursor=pointer]:
+            - /url: ./blog
+            - paragraph [ref=e3608]: Blog
+          - link [ref=e3610] [cursor=pointer]:
+            - /url: ./pricing
+            - paragraph [ref=e3612]: Pricing
+          - link [ref=e3614] [cursor=pointer]:
+            - /url: ./ashby
+            - paragraph [ref=e3616]: Careers
+        - generic [ref=e3617]:
+          - link "VidRush on X" [ref=e3619] [cursor=pointer]:
+            - /url: https://x.com/VidrushAI?s=20
+          - link "VidRush on LinkedIn" [ref=e3622] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/vidrush/posts/?feedView=all
+      - generic [ref=e3624]:
+        - generic [ref=e3625]:
+          - heading "Subscribe to Our Newsletter" [level=6] [ref=e3627]
+          - paragraph [ref=e3629]: Receive product updates, feature releases, and industry insights straight to your inbox.
+        - generic [ref=e3632]:
+          - textbox "name@email.com" [ref=e3633]
+          - button "Subscribe" [ref=e3635] [cursor=pointer]

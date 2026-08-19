@@ -1,9 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // The engine streams shots via `streamObject` and resolves models through the registry;
-// both are stubbed so these tests exercise our own segmentation logic only.
+// both are stubbed so these tests exercise our own segmentation logic only. `generateText`
+// backs the plain-generation fallback used when streaming yields nothing usable.
 const streamObject = vi.hoisted(() => vi.fn())
-vi.mock('ai', () => ({ streamObject }))
+const generateText = vi.hoisted(() => vi.fn())
+vi.mock('ai', async importOriginal => ({
+  ...(await importOriginal<typeof import('ai')>()),
+  streamObject,
+  generateText
+}))
 vi.mock('@/lib/utils/registry', () => ({ getModel: (m: string) => m }))
 
 import { bindVoiceTimings, cutScriptIntoBeats } from '../beats'
@@ -39,6 +45,7 @@ const shot = (narration: string): Shot => ({
 describe('cutScriptIntoBeats', () => {
   beforeEach(() => {
     streamObject.mockReset()
+    generateText.mockReset()
     vi.spyOn(console, 'warn').mockImplementation(() => {})
   })
 
@@ -80,16 +87,94 @@ describe('cutScriptIntoBeats', () => {
     expect(sb.shots.map(s => s.narration)).toEqual(['One', 'Two'])
   })
 
-  it('rethrows only when the stream yields nothing usable', async () => {
-    mockStream([shot('One')], 0)
-    await expect(
-      cutScriptIntoBeats('google:gemini-2.5-flash', { script: 'One' })
-    ).rejects.toThrow('stream died mid-generation')
-
+  it('throws only when both streaming and the plain-generation fallback produce nothing', async () => {
+    // Stream completes cleanly but produces nothing usable, and the plain-generation
+    // fallback also comes up empty — only then should this throw.
     mockStream([{ narration: '   ' }, { narration: '' }])
+    generateText.mockResolvedValue({ text: '[]' })
     await expect(
       cutScriptIntoBeats('google:gemini-2.5-flash', { script: 'One' })
     ).rejects.toThrow('produced no shots')
+  })
+
+  // The ModelArk bugs: some OpenAI-compatible providers stream zero elements for
+  // schema-constrained array output without throwing, even though the same model
+  // returns correct JSON via a plain (non-streaming) generation; others reject the
+  // request outright (e.g. Ark 400s response_format:'json_object' unless the literal
+  // word "json" appears in the prompt) before any element ever streams. Both must fall
+  // back to the plain generation rather than failing the whole request.
+  it('falls back to a plain generation when streaming yields nothing usable', async () => {
+    mockStream([{ narration: '' }])
+    generateText.mockResolvedValue({
+      text: JSON.stringify([
+        {
+          narration: 'Recovered beat',
+          kind: 'video',
+          visualQuery: 'recovered query',
+          visualIntent: 'show recovered beat'
+        }
+      ])
+    })
+
+    const sb = await cutScriptIntoBeats(
+      'modelark:deepseek-v4-flash-ga-260731',
+      {
+        script: 'Recovered beat'
+      }
+    )
+
+    expect(sb.shots).toHaveLength(1)
+    expect(sb.shots[0].narration).toBe('Recovered beat')
+  })
+
+  it('uses forced tool output for ModelArk instead of structured streaming', async () => {
+    generateText.mockResolvedValue({
+      toolCalls: [
+        {
+          toolName: 'submit_shots',
+          input: {
+            shots: [
+              {
+                narration: 'Recovered through tool output',
+                kind: 'video',
+                visualQuery: 'La-5 fighter archival footage',
+                visualIntent: 'Show the fighter crossing frame.'
+              }
+            ]
+          }
+        }
+      ]
+    })
+
+    const sb = await cutScriptIntoBeats(
+      'modelark:deepseek-v4-flash-ga-260731',
+      { script: 'Recovered through tool output' }
+    )
+
+    expect(sb.shots).toHaveLength(1)
+    expect(sb.shots[0].narration).toBe('Recovered through tool output')
+    expect(streamObject).not.toHaveBeenCalled()
+  })
+
+  it('falls back to a plain generation when streaming throws before yielding anything', async () => {
+    mockStream([shot('One')], 0) // throws on the very first element
+    generateText.mockResolvedValue({
+      text: JSON.stringify([
+        {
+          narration: 'Recovered from throw',
+          kind: 'video',
+          visualQuery: 'recovered query',
+          visualIntent: 'show recovered beat'
+        }
+      ])
+    })
+
+    const sb = await cutScriptIntoBeats('google:gemini-2.5-flash', {
+      script: 'One'
+    })
+
+    expect(sb.shots).toHaveLength(1)
+    expect(sb.shots[0].narration).toBe('Recovered from throw')
   })
 
   it('reports progress as each shot lands', async () => {
@@ -143,6 +228,76 @@ describe('cutScriptIntoBeats', () => {
     // Shot 2 begins at its first spoken word; the pause folds into shot 1.
     expect(sb.shots[1].start).toBeCloseTo(1.2, 3)
     expect(sb.totalSeconds).toBeCloseTo(2.4, 2)
+  })
+
+  it.each([
+    {
+      name: 'documentary profile',
+      profile: {
+        niche: 'ww1_ww2' as const,
+        format: 'documentary' as const,
+        presetVersion: 1 as const
+      },
+      expectedShots: 2
+    },
+    { name: 'ordinary script', profile: undefined, expectedShots: 4 }
+  ])(
+    'normalizes timed cuts only for a $name',
+    async ({ profile, expectedShots }) => {
+      const narrations = [
+        'Soviet defenders held ruined factories beside the Volga',
+        'German infantry advanced through rubble under artillery fire',
+        'Winter closed the steppe while reserves assembled outside',
+        'Operation Uranus trapped the attacking army inside Stalingrad'
+      ]
+      mockStream(narrations.map(shot))
+      const voiceWords = narrations
+        .flatMap(narration => narration.split(/\s+/))
+        .map((word, index) => ({
+          word,
+          start: index * 0.625,
+          end: (index + 1) * 0.625
+        }))
+
+      const storyboard = await cutScriptIntoBeats('google:gemini-2.5-flash', {
+        script: narrations.join(' '),
+        voiceWords,
+        ...(profile ? { profile } : {})
+      })
+
+      expect(storyboard.shots).toHaveLength(expectedShots)
+      expect(storyboard.totalSeconds).toBe(20)
+      expect(storyboard.shots.flatMap(beat => beat.words)).toEqual(voiceWords)
+    }
+  )
+
+  it('adds documentary pacing guidance only to documentary model calls', async () => {
+    const narration =
+      'One two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen'
+
+    mockStream([shot(narration)])
+    await cutScriptIntoBeats('google:gemini-2.5-flash', {
+      script: narration
+    })
+    const ordinarySystem = streamObject.mock.calls[0][0].system as string
+
+    mockStream([shot(narration)])
+    await cutScriptIntoBeats('google:gemini-2.5-flash', {
+      script: narration,
+      profile: {
+        niche: 'ww1_ww2',
+        format: 'documentary',
+        presetVersion: 1
+      }
+    })
+    const documentarySystem = streamObject.mock.calls[1][0].system as string
+
+    expect(ordinarySystem).not.toContain(
+      'at least 15 narrated words and at least 10 seconds'
+    )
+    expect(documentarySystem).toContain(
+      'at least 15 narrated words and at least 10 seconds'
+    )
   })
 })
 

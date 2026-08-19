@@ -18,6 +18,7 @@
     "chat": "bun run scripts/chat-cli.ts",
     "remotion:studio": "remotion studio",
     "remotion:render": "remotion render Storyboard out/video.mp4",
+    "verify:documentary-render": "node scripts/verify-documentary-render.mjs",
     "remotion:lambda:fn": "remotion lambda functions deploy",
     "remotion:lambda:site": "remotion lambda sites create remotion/index.ts --site-name=kakkao",
     "remotion:lambda:deploy": "remotion lambda functions deploy && remotion lambda sites create remotion/index.ts --site-name=kakkao"

@@ -1,4 +1,6 @@
 import { generateText } from 'ai'
+
+import { search } from '@/lib/tools/search'
 import { getModel } from '@/lib/utils/registry'
 
 
@@ -454,9 +456,53 @@ function getBestAvailableModel() {
   return getModel('google:gemini-2.0-flash')
 }
 
+// generateText below has no search tools attached, so the model cannot actually
+// browse Reddit/news/trends live — asking it to "research" produces plausible-sounding
+// fabrication. This runs real Tavily searches (already required for the app's default
+// search provider) up front and hands the model real, current results to reason over
+// instead, so "researchSupport" claims are grounded rather than invented.
+async function gatherLiveResearch(channelData: ChannelDataPayload): Promise<string> {
+  const channelName = channelData.metadata?.channel_name?.trim() || ''
+  const topTitles = (channelData.videos || [])
+    .slice(0, 3)
+    .map(v => v.title)
+    .filter(Boolean)
+
+  const queries = [
+    channelName && `${channelName} youtube channel reddit discussion`,
+    topTitles[0] && `${topTitles[0]} reaction discussion`,
+    channelName && `${channelName} youtube trending news`
+  ].filter((q): q is string => Boolean(q))
+
+  if (!queries.length) {
+    return '(No channel name/titles to search on — reason from the source data alone and say so explicitly rather than inventing sources.)'
+  }
+
+  const results = await Promise.allSettled(queries.map(q => search(q, 5, 'basic')))
+
+  const blocks = results
+    .map((res, i) => {
+      if (res.status !== 'fulfilled') return null
+      const items = (res.value.results || []).slice(0, 5)
+      if (!items.length) return null
+      return (
+        `Query: "${queries[i]}"\n` +
+        items
+          .map(r => `- ${r.title} (${r.url})\n  ${r.content.slice(0, 300).replace(/\s+/g, ' ')}`)
+          .join('\n')
+      )
+    })
+    .filter((b): b is string => Boolean(b))
+
+  return blocks.length
+    ? blocks.join('\n\n')
+    : '(Live search returned no usable results — reason from the source data alone and say so explicitly rather than inventing sources.)'
+}
+
 /** Execute Blue Ocean Niche Bending analysis using AI model with robust fallback */
 export async function performNicheBending(channelData: ChannelDataPayload): Promise<BendingAnalysis> {
   const todayDate = new Date().toISOString().split('T')[0]
+  const liveResearch = await gatherLiveResearch(channelData)
 
   const prompt = `You are my YouTube ideation partner. Today’s date is: ${todayDate}.
 
@@ -465,19 +511,23 @@ I attached winning channel data (titles, transcripts, outlier/view notes). That 
 SOURCE DATA JSON:
 ${JSON.stringify(channelData, null, 2)}
 
+LIVE WEB SEARCH RESULTS (real, fetched just now — this is your ONLY source for research claims;
+do not cite Reddit threads, news, or trends that are not actually present below):
+${liveResearch}
+
 Your job:
 1) Extract the ENGINE behind why these videos get rewarded
-2) Use live research to find what this SAME audience wants RIGHT NOW
+2) Use the live search results above to find what this SAME audience wants RIGHT NOW
 3) Invent ADJACENT ideas in unsaturated gaps
 4) Rank ideas by evidence, not creativity
 
-You are NOT allowed to just make educated guesses.
-If you are unsure, RESEARCH before you ideate.
+You are NOT allowed to just make educated guesses or invent sources.
+If the live search results above don't cover something, say so explicitly instead of fabricating a claim.
 
 ========================
 RESEARCH RULES (MANDATORY)
 ========================
-Search & Analyze:
+Ground every claim in either the SOURCE DATA JSON or the LIVE WEB SEARCH RESULTS above:
 - Current competing videos + what’s ranking now
 - Subreddits & forums this audience actually uses for repeated questions, complaints, myths, debates
 - Current trends / news / cultural moments relevant to THIS audience as of today’s date

@@ -384,6 +384,34 @@ export async function fetchOpenAICompatibleModels(): Promise<Model[]> {
   }
 }
 
+export async function fetchModelArkModels(): Promise<Model[]> {
+  if (!isProviderEnabled('modelark')) {
+    return []
+  }
+
+  // Ark's model-listing endpoint doesn't follow the standard /v1/models
+  // shape, so — like OPENAI_COMPATIBLE_MODELS — this is a static allowlist
+  // rather than a live probe. Defaults to the ids BytePlus documents today.
+  const staticList =
+    process.env.MODELARK_MODELS ||
+    'deepseek-v4-flash-ga-260731,deepseek-v3-2-251201'
+
+  return sortModels(
+    dedupeModels(
+      staticList
+        .split(',')
+        .map(id => id.trim())
+        .filter(Boolean)
+        .map(id => ({
+          id,
+          name: id,
+          provider: 'ModelArk',
+          providerId: 'modelark'
+        }))
+    )
+  )
+}
+
 export async function fetchOllamaModels(): Promise<Model[]> {
   if (!isProviderEnabled('ollama')) {
     return []
@@ -493,16 +521,25 @@ export async function fetchAvailableModels(options?: {
     return modelsCache.value
   }
 
-  const [openai, anthropic, google, agentrouter, openaiCompatible, ollama, gateway] =
-    await Promise.all([
-      fetchOpenAIModels(),
-      fetchAnthropicModels(),
-      fetchGoogleModels(),
-      fetchAgentRouterModels(),
-      fetchOpenAICompatibleModels(),
-      fetchOllamaModels(),
-      fetchGatewayModels()
-    ])
+  const [
+    openai,
+    anthropic,
+    google,
+    agentrouter,
+    openaiCompatible,
+    modelark,
+    ollama,
+    gateway
+  ] = await Promise.all([
+    fetchOpenAIModels(),
+    fetchAnthropicModels(),
+    fetchGoogleModels(),
+    fetchAgentRouterModels(),
+    fetchOpenAICompatibleModels(),
+    fetchModelArkModels(),
+    fetchOllamaModels(),
+    fetchGatewayModels()
+  ])
 
   const grouped = groupByProvider(
     dedupeModels([
@@ -511,6 +548,7 @@ export async function fetchAvailableModels(options?: {
       ...google,
       ...agentrouter,
       ...openaiCompatible,
+      ...modelark,
       ...ollama,
       ...gateway
     ])

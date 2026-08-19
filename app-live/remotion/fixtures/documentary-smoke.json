@@ -1,0 +1,246 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "brand": {
+    "channel": "Kakkao History",
+    "accent": "#B6924A"
+  },
+  "shots": [
+    {
+      "id": "smoke-date",
+      "kind": "photo",
+      "start": 0,
+      "duration": 3,
+      "narration": "By June 1942, the struggle for the Pacific had reached Midway.",
+      "transitionOut": { "type": "film-burn", "duration": 0.3 },
+      "documentary": {
+        "beatType": "archival-photo",
+        "chapterId": "chapter-1",
+        "claimIds": ["claim-1"],
+        "entityIds": [],
+        "locationIds": ["midway"],
+        "dateLabel": "June 1942",
+        "reconstruction": false,
+        "graphic": {
+          "type": "date-location",
+          "date": "JUNE 4, 1942",
+          "location": "MIDWAY ATOLL",
+          "theatre": "CENTRAL PACIFIC",
+          "operation": "OPERATION MI",
+          "coordinates": [-177.3761, 28.2072],
+          "backgroundId": "bg1"
+        }
+      }
+    },
+    {
+      "id": "smoke-map",
+      "kind": "photo",
+      "start": 3,
+      "duration": 4,
+      "narration": "Three American carriers waited northeast of the atoll as the Japanese force approached.",
+      "transitionOut": { "type": "crossfade", "duration": 0.25 },
+      "documentary": {
+        "beatType": "battle-map",
+        "chapterId": "chapter-2",
+        "claimIds": ["claim-2"],
+        "entityIds": ["us-carriers", "japanese-carriers"],
+        "locationIds": ["midway"],
+        "dateLabel": "June 4, 1942",
+        "reconstruction": false,
+        "graphic": {
+          "type": "battle-map",
+          "theatre": "BATTLE OF MIDWAY",
+          "dateLabel": "JUNE 4, 1942 · 04:30–10:25",
+          "units": [
+            {
+              "id": "us-carriers",
+              "name": "TASK FORCES 16 & 17",
+              "allegiance": "allied",
+              "unitType": "carrier force",
+              "strengthLabel": "3 carriers",
+              "position": [28, 65],
+              "claimIds": ["claim-2"]
+            },
+            {
+              "id": "japanese-carriers",
+              "name": "FIRST AIR FLEET",
+              "allegiance": "axis",
+              "unitType": "carrier force",
+              "strengthLabel": "4 carriers",
+              "position": [74, 34],
+              "claimIds": ["claim-2"]
+            }
+          ],
+          "routes": [
+            {
+              "id": "japanese-approach",
+              "label": "JAPANESE APPROACH",
+              "kind": "attack",
+              "points": [
+                [92, 18],
+                [76, 31],
+                [59, 48]
+              ],
+              "allegiance": "axis",
+              "claimIds": ["claim-2"]
+            }
+          ],
+          "frontLines": [],
+          "objectives": [
+            {
+              "id": "midway-objective",
+              "label": "MIDWAY ATOLL",
+              "position": [54, 53],
+              "allegiance": "allied",
+              "claimIds": ["claim-2"]
+            }
+          ],
+          "annotations": ["Carrier positions shown schematically"],
+          "backgroundId": "bg4"
+        }
+      }
+    },
+    {
+      "id": "smoke-evidence",
+      "kind": "photo",
+      "start": 7,
+      "duration": 3,
+      "narration": "Station HYPO's intelligence gave Admiral Nimitz the decisive warning.",
+      "transitionOut": { "type": "whip-pan", "duration": 0.25 },
+      "documentary": {
+        "beatType": "evidence-card",
+        "chapterId": "chapter-2",
+        "claimIds": ["claim-3"],
+        "entityIds": ["station-hypo"],
+        "locationIds": ["pearl-harbor"],
+        "reconstruction": false,
+        "graphic": {
+          "type": "evidence-card",
+          "documentTitle": "THE TARGET WAS AF",
+          "institution": "NAVAL HISTORY AND HERITAGE COMMAND",
+          "date": "MAY 1942",
+          "excerpt": "A staged report of a water shortage helped confirm that AF referred to Midway.",
+          "citationId": "citation-1",
+          "sourceUrl": "https://www.history.navy.mil/research/library/online-reading-room/title-list-alphabetically/b/battle-of-midway-4-7-june-1942.html",
+          "backgroundId": "bg2"
+        }
+      }
+    },
+    {
+      "id": "smoke-archive",
+      "kind": "photo",
+      "src": "/documentary/fixtures/archival-smoke.jpg",
+      "start": 10,
+      "duration": 3,
+      "narration": "The result changed the strategic direction of the Pacific War.",
+      "documentary": {
+        "beatType": "archival-photo",
+        "chapterId": "chapter-3",
+        "claimIds": ["claim-4"],
+        "entityIds": [],
+        "locationIds": ["midway"],
+        "reconstruction": false,
+        "filmTreatmentBackgroundId": "bg3"
+      }
+    }
+  ],
+  "music": "/audio/music/silentvoice-abstract-piano-392339.mp3",
+  "musicVolume": 0.12,
+  "musicCredit": {
+    "title": "Abstract Piano",
+    "creator": "Silentvoice",
+    "source": "pixabay",
+    "sourceUrl": "https://pixabay.com/music/modern-classical-abstract-piano-392339/",
+    "license": "Pixabay Content License",
+    "licenseUrl": "https://pixabay.com/service/license-summary/",
+    "contentIdRegistered": false
+  },
+  "audioCues": [
+    {
+      "id": "midway-ambience",
+      "kind": "ambient",
+      "src": "/audio/ambient/audiopapkin-forest-ambience-296528.mp3",
+      "start": 0,
+      "duration": 13,
+      "volume": 0.035,
+      "loop": true,
+      "fadeIn": 1,
+      "fadeOut": 1
+    },
+    {
+      "id": "map-transition",
+      "kind": "sfx",
+      "src": "/audio/sfx/dragon-studio-whoosh-effect-382717.mp3",
+      "start": 2.85,
+      "duration": 0.575,
+      "volume": 0.3,
+      "loop": false,
+      "fadeIn": 0,
+      "fadeOut": 0.1
+    }
+  ],
+  "transitionSfxVolume": 0.18,
+  "showCaptions": false,
+  "showSubscribeCta": false,
+  "documentaryProject": {
+    "id": "documentary-smoke",
+    "chapters": [
+      {
+        "id": "chapter-1",
+        "title": "The Trap",
+        "act": "cold-open",
+        "startNarrationOffset": 0,
+        "endNarrationOffset": 75,
+        "dateRange": "June 1942",
+        "locationIds": ["midway"],
+        "claimIds": ["claim-1"],
+        "entityIds": [],
+        "emotionalObjective": "Establish the date and stakes.",
+        "retentionHook": "Reveal the forces converging on Midway."
+      },
+      {
+        "id": "chapter-2",
+        "title": "Intelligence and Position",
+        "act": "build-up",
+        "startNarrationOffset": 76,
+        "endNarrationOffset": 240,
+        "dateRange": "May–June 1942",
+        "locationIds": ["midway", "pearl-harbor"],
+        "claimIds": ["claim-2", "claim-3"],
+        "entityIds": ["station-hypo"],
+        "emotionalObjective": "Explain the operational advantage.",
+        "retentionHook": "Show how the warning shaped the ambush."
+      },
+      {
+        "id": "chapter-3",
+        "title": "The Strategic Turn",
+        "act": "epilogue",
+        "startNarrationOffset": 241,
+        "endNarrationOffset": 320,
+        "dateRange": "After June 4, 1942",
+        "locationIds": ["midway"],
+        "claimIds": ["claim-4"],
+        "entityIds": [],
+        "emotionalObjective": "Land the consequence.",
+        "retentionHook": "Connect one day to the wider Pacific War."
+      }
+    ],
+    "citations": [
+      {
+        "id": "citation-1",
+        "title": "Battle of Midway historical overview",
+        "url": "https://www.history.navy.mil/research/library/online-reading-room/title-list-alphabetically/b/battle-of-midway-4-7-june-1942.html",
+        "authorOrInstitution": "Naval History and Heritage Command",
+        "accessedAt": "2026-08-14T00:00:00.000Z",
+        "sourceClass": "institutional",
+        "supportingNote": "Supports the Midway chronology and intelligence context.",
+        "reliability": "high"
+      }
+    ],
+    "qa": {
+      "publishReady": true,
+      "issues": []
+    }
+  }
+}

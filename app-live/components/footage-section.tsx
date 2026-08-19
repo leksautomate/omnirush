@@ -27,14 +27,35 @@ interface FootageSectionProps {
 }
 
 type FootageAsset = {
-  kind: 'video' | 'photo'
-  src: string
-  thumb: string
+  kind: 'video' | 'photo' | 'map' | 'reconstruction' | 'document' | 'audio'
+  src?: string
+  thumb?: string
   title: string
-  credit: string
-  url: string
-  source: string
+  credit?: string
+  url?: string
+  source?: string
   score?: number
+  needsResolve?: boolean
+  rights?: {
+    provider: string
+    sourceUrl?: string
+  }
+}
+
+function fullResolutionPhotoSrc(src?: string) {
+  if (!src) return undefined
+  try {
+    const url = new URL(src)
+    const match = url.pathname.match(
+      /^\/wikipedia\/commons\/thumb\/([^/]+\/[^/]+\/[^/]+)\/[^/]+$/u
+    )
+    if (url.hostname === 'upload.wikimedia.org' && match) {
+      return `${url.origin}/wikipedia/commons/${match[1]}`
+    }
+  } catch {
+    return src
+  }
+  return src
 }
 
 function AssetCard({
@@ -44,41 +65,65 @@ function AssetCard({
   asset: FootageAsset
   isBest?: boolean
 }) {
+  const href = asset.url || asset.src || asset.rights?.sourceUrl || '#'
+  const canPlayVideo =
+    asset.kind === 'video' && Boolean(asset.src) && !asset.needsResolve
+  const imageSrc = isBest
+    ? fullResolutionPhotoSrc(asset.src) || asset.thumb
+    : asset.thumb || asset.src
+
   return (
-    <a
-      href={asset.url || asset.src}
-      target="_blank"
-      rel="noreferrer"
+    <div
       className={cn(
         'group relative block overflow-hidden rounded-md border bg-muted/40',
         isBest ? 'border-green-500 ring-1 ring-green-500' : 'border-border'
       )}
-      title={asset.credit}
+      title={asset.credit || asset.title}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={asset.thumb || asset.src}
-        alt={asset.title}
-        loading="lazy"
-        className="aspect-video w-full object-cover"
-      />
+      {canPlayVideo ? (
+        <video
+          src={asset.src}
+          poster={asset.thumb}
+          controls
+          muted
+          preload="metadata"
+          className="aspect-video w-full bg-black object-cover"
+        />
+      ) : imageSrc ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={imageSrc}
+          alt={asset.title}
+          loading="lazy"
+          className="aspect-video w-full object-cover"
+        />
+      ) : (
+        <div className="flex aspect-video items-center justify-center bg-zinc-900 text-xs text-zinc-400">
+          Grounded reconstruction
+        </div>
+      )}
       <span className="absolute left-1 top-1 flex items-center gap-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
         {asset.kind === 'video' ? (
           <Video className="h-3 w-3" />
         ) : (
           <Photo className="h-3 w-3" />
         )}
-        {asset.source}
+        {asset.source || asset.rights?.provider || asset.kind}
       </span>
       {isBest && (
         <span className="absolute right-1 top-1 rounded bg-green-500 px-1.5 py-0.5 text-[10px] font-medium text-white">
           Pick
         </span>
       )}
-      <span className="block truncate px-2 py-1 text-[11px] text-muted-foreground">
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="block truncate px-2 py-1 text-[11px] text-muted-foreground hover:text-foreground"
+      >
         {asset.title}
-      </span>
-    </a>
+      </a>
+    </div>
   )
 }
 

@@ -40,11 +40,7 @@ export default async function ChatPage(props: {
 
   const chat = await loadChat(id, userId)
 
-  if (!chat) {
-    notFound()
-  }
-
-  const messages: UIMessage[] = chat.messages
+  const messages: UIMessage[] = chat?.messages ?? []
   const isCloudDeployment = process.env.KAKKAO_CLOUD_DEPLOYMENT === 'true'
   const modelSelectorData = await getModelSelectorData()
 

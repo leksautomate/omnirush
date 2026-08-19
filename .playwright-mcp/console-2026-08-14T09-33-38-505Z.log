@@ -1,0 +1,47 @@
+[    2442ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[    2505ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[    6963ms] [WARNING] EncodingError: The source image cannot be decoded. @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[    6963ms] [WARNING] EncodingError: The source image cannot be decoded. @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[    6965ms] [WARNING] Could not load image with source https://images.unsplash.com/photo-1517976487545-56064f7b233a?auto=format&fit=crop&w=1280&q=80, retrying again in 1000ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[    6966ms] [WARNING] Could not load image with source https://images.unsplash.com/photo-1517976487545-56064f7b233a?auto=format&fit=crop&w=1280&q=80, retrying again in 1000ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[    6994ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[    8147ms] [WARNING] Could not load image with source https://images.unsplash.com/photo-1517976487545-56064f7b233a?auto=format&fit=crop&w=1280&q=80, retrying again in 2000ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[    8148ms] [WARNING] Could not load image with source https://images.unsplash.com/photo-1517976487545-56064f7b233a?auto=format&fit=crop&w=1280&q=80, retrying again in 2000ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[   10024ms] [LOG] [Fast Refresh] done in 3143ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[   10129ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[   10303ms] [LOG] [Fast Refresh] done in 276ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[   41698ms] [WARNING] EncodingError: The source image cannot be decoded. @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[   41809ms] [WARNING] EncodingError: The source image cannot be decoded. @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  115711ms] [WARNING] EncodingError: The source image cannot be decoded. @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  134312ms] [WARNING] EncodingError: The source image cannot be decoded. @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  214089ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  214454ms] [LOG] [Fast Refresh] done in 479ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  219177ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://api.maptiler.com/maps/satellite/static/auto/1280x720@2x.png?path=stroke%3A0xff2d55%7Cwidth%3A3%7C-0.12776535004377365%2C51.507445738516466%7C51.345926485955715%2C25.119474407898323&key=jOZjE6OFCG3Pubui9GcI:0
+[  311556ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  311899ms] [LOG] [Fast Refresh] done in 421ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  312004ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  312402ms] [LOG] [Fast Refresh] done in 499ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  312536ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  313024ms] [LOG] [Fast Refresh] done in 596ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  324180ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  324350ms] [LOG] [Fast Refresh] done in 277ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  349611ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  349968ms] [LOG] [Fast Refresh] done in 437ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  350069ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  350454ms] [LOG] [Fast Refresh] done in 485ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  350579ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  350968ms] [LOG] [Fast Refresh] done in 490ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  357541ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  357714ms] [LOG] [Fast Refresh] done in 287ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  373138ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  373427ms] [LOG] [Fast Refresh] done in 386ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  373648ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  374084ms] [LOG] [Fast Refresh] done in 543ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  374211ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  374691ms] [LOG] [Fast Refresh] done in 591ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  393452ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  393816ms] [LOG] [Fast Refresh] done in 361ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  393922ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  394391ms] [LOG] [Fast Refresh] done in 571ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  394526ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477
+[  394972ms] [LOG] [Fast Refresh] done in 559ms @ http://localhost:3000/_next/static/chunks/0~h5_next_dist_0wgao6p._.js:2477

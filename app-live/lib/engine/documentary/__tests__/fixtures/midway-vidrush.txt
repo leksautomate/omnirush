@@ -1,0 +1,33 @@
+🎥 What the Video Is About By June 1942, Japan's carrier fleet had not lost a major battle in six months of war. This video covers how American codebreakers, a three-day repair job, and six decisive minutes changed the Pacific War.
+
+🗣️ Style of Talking Conversational documentary narrator. Grounded, escalating tension built through specific numbers and named people rather than adjectives.
+
+🎯 Who This Video Is For Viewers of WWII and military history content who prefer decisions, evidence, and consequences rather than a list of dates.
+
+📌 Key Facts Covered
+
+Six months of Japanese victories following Pearl Harbor
+The Battle of the Coral Sea leaves Shokaku and Zuikaku unavailable
+Station HYPO confirms the Japanese target AF is Midway
+Yorktown is repaired in roughly seventy-two hours
+American dive bombers strike on June 4, 1942
+Japan loses four fleet carriers and the strategic initiative
+
+By the summer of 1942, the Imperial Japanese Navy had not lost a single major fleet engagement in six months of war. Its carriers had helped sink battleships at Pearl Harbor and covered Japanese expansion across the Pacific. On June 4, four of those carriers were near Midway Atoll. Within minutes, three were burning. How did the most feared navy in the Pacific lose four aircraft carriers in a single day?
+
+The Battle of the Coral Sea had already removed Shokaku and Zuikaku from the coming operation. At Pearl Harbor, Commander Joseph Rochefort's Station HYPO team read enough of JN-25 to identify a target called AF. A staged radio message about a water shortage confirmed that AF meant Midway.
+
+Admiral Chester Nimitz also needed the damaged carrier Yorktown. Engineers estimated months of repairs, but workers at Pearl Harbor made her ready in roughly seventy-two hours. Three American carriers would face four Japanese carriers, with advance knowledge of where and when the attack would come.
+
+On the morning of June 4, American torpedo squadrons attacked and suffered catastrophic losses. Their attacks pulled Japanese fighter cover down toward sea level. Dive bombers from Enterprise and Yorktown then arrived while the Japanese carriers were refuelling and rearming aircraft. Akagi, Kaga, and Soryu were left burning; Hiryu was destroyed later that day.
+
+Japan lost four fleet carriers, hundreds of aircraft, and experienced aircrew and mechanics. The United States lost Yorktown, but seized the strategic initiative. Midway did not end the Pacific War, but it changed its direction.
+
+If you want another evidence-led naval history documentary, let me know in the comments.
+
+🔄 Rotation Log
+
+Slot 1 (Context Bridge): 1A
+Slot 2 (Rehooks used): 2H, 2N, 2C
+Slot 3 (Post-Mid-CTA): 3C
+Slot 8 (Outro Closer): 8H

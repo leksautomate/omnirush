@@ -22,7 +22,7 @@ interface MusicSectionProps {
   isLast?: boolean
 }
 
-// Renders the generateMusic tool: an audio player for the Suno background bed.
+// Renders the generateMusic tool: a locally curated Pixabay background bed.
 export function MusicSection({
   tool,
   isOpen,
@@ -36,8 +36,9 @@ export function MusicSection({
   const output = tool.state === 'output-available' ? tool.output : undefined
   const failed = tool.state === 'output-error'
   const error = failed
-    ? toPublicErrorPayload(tool.errorText, { fallbackMessage: 'Music generation failed' })
-        .error
+    ? toPublicErrorPayload(tool.errorText, {
+        fallbackMessage: 'Music selection failed'
+      }).error
     : undefined
 
   const header = (
@@ -64,7 +65,7 @@ export function MusicSection({
             <span>{error}</span>
           </>
         ) : (
-          <span className="animate-pulse">Composing (Suno)…</span>
+          <span className="animate-pulse">Selecting from catalogue…</span>
         )
       }
     />
@@ -74,11 +75,20 @@ export function MusicSection({
     <div className="relative">
       {borderless && (
         <>
-          {!isFirst && <div className="absolute left-[19.5px] top-0 h-2 w-px bg-border" />}
-          {!isLast && <div className="absolute bottom-0 left-[19.5px] h-2 w-px bg-border" />}
+          {!isFirst && (
+            <div className="absolute left-[19.5px] top-0 h-2 w-px bg-border" />
+          )}
+          {!isLast && (
+            <div className="absolute bottom-0 left-[19.5px] h-2 w-px bg-border" />
+          )}
         </>
       )}
-      <div className={cn('rounded-lg', !borderless && 'border border-border bg-card')}>
+      <div
+        className={cn(
+          'rounded-lg',
+          !borderless && 'border border-border bg-card'
+        )}
+      >
         <div
           className="flex cursor-pointer select-none items-center gap-2 p-3"
           onClick={() => output && onOpenChange(!isOpen)}
@@ -94,8 +104,35 @@ export function MusicSection({
           )}
         </div>
         {output && isOpen && output.audioUrl && (
-          <div className="px-4 pb-4">
-            <audio controls preload="metadata" src={output.audioUrl} className="w-full" />
+          <div className="space-y-2 px-4 pb-4">
+            <audio
+              controls
+              preload="metadata"
+              src={output.audioUrl}
+              className="w-full"
+            />
+            {output.musicCredit && (
+              <p className="text-xs text-muted-foreground">
+                {output.musicCredit.title} by {output.musicCredit.creator} ·{' '}
+                <a
+                  className="underline underline-offset-2"
+                  href={output.musicCredit.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Pixabay source
+                </a>{' '}
+                ·{' '}
+                <a
+                  className="underline underline-offset-2"
+                  href={output.musicCredit.licenseUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  licence
+                </a>
+              </p>
+            )}
           </div>
         )}
       </div>

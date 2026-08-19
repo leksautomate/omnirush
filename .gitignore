@@ -7,3 +7,6 @@ hook/node_modules/
 app-live/node_modules/
 app-live/.next/
 .vercel
+.env*.local
+.env
+*.env

@@ -78,6 +78,13 @@ export async function createChatStreamResponse(
       if (initialChat.userId === 'anonymous-user') {
         await claimAnonymousChat(chatId, userId)
         initialChat = { ...initialChat, userId }
+      } else if (process.env.ENABLE_AUTH === 'false') {
+        // Auth is disabled: every request already collapses to one shared
+        // local identity (getCurrentUserId), so there is no real ownership
+        // to enforce here either — otherwise a chat created under a
+        // different id (e.g. before ENABLE_AUTH was toggled off) locks the
+        // single local user out of their own history.
+        initialChat = { ...initialChat, userId }
       } else {
         return new Response('You are not allowed to access this chat', {
           status: 403,

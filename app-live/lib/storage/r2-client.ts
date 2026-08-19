@@ -46,10 +46,20 @@ export function getR2Client(): S3Client {
     )
   }
 
+  // Path-style (endpoint/bucket/key) is the right default for R2 and most generic
+  // S3-compatible hosts, but some providers (e.g. Tencent COS) only support
+  // virtual-hosted-style (bucket.endpoint/key) at a region-level endpoint. Override with
+  // S3_FORCE_PATH_STYLE=false for those. S3_REGION matters for SigV4 signing on hosts
+  // that check it (R2 ignores it, hence the 'auto' default).
+  const forcePathStyle =
+    process.env.S3_FORCE_PATH_STYLE != null
+      ? process.env.S3_FORCE_PATH_STYLE === 'true'
+      : !!s3Endpoint
+
   _r2Client = new S3Client({
-    region: 'auto',
+    region: process.env.S3_REGION || 'auto',
     endpoint: s3Endpoint || `https://${accountId}.r2.cloudflarestorage.com`,
-    forcePathStyle: !!s3Endpoint,
+    forcePathStyle,
     credentials: {
       accessKeyId,
       secretAccessKey

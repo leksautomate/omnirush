@@ -7,7 +7,6 @@ import { fetchTool } from '../tools/fetch'
 import { createQuestionTool } from '../tools/question'
 import { createSearchTool } from '../tools/search'
 import { createTodoTools } from '../tools/todo'
-import { createCloneVoiceTool } from '../tools/video/clone-voice'
 import { createComposeRenderTool } from '../tools/video/compose-render'
 import { createCutBeatsTool } from '../tools/video/cut-beats'
 import { createGenerateAvatarTool } from '../tools/video/generate-avatar'
@@ -16,7 +15,8 @@ import { createGenerateMusicTool } from '../tools/video/generate-music'
 import { createGenerateThumbnailTool } from '../tools/video/generate-thumbnail'
 import { createGenerateVoiceoverTool } from '../tools/video/generate-voiceover'
 import { createLearnFromVideoTool } from '../tools/video/learn-from-video'
-import { createListVoicesTool } from '../tools/video/list-voices'
+import { createPrepareDocumentaryTool } from '../tools/video/prepare-documentary'
+import { createSourceAudioTool } from '../tools/video/source-audio'
 import { createSourceFootageTool } from '../tools/video/source-footage'
 import { createWriteScriptTool } from '../tools/video/write-script'
 import { SearchMode } from '../types/search'
@@ -32,11 +32,19 @@ export interface CreateResearcherOptions {
   relatedEnabled?: boolean
 }
 
+// 10 (this fork's inherited default from the plain search-app it started as) is nowhere
+// near enough for the video pipeline: writeScript, generateVoiceover, cutBeats, then
+// sourceFootage/generateImage PER SHOT, a thumbnail, and composeRender easily exceeds it
+// on any real multi-shot video — observed firsthand: a 30s/6-shot video ran out of steps
+// (finishReason: 'tool-calls', no error) right before composeRender ever ran. Override
+// with RESEARCHER_MAX_STEPS if a deployment needs a different ceiling.
+const DEFAULT_MAX_STEPS = Number(process.env.RESEARCHER_MAX_STEPS) || 40
+
 export function createResearcher({
   model,
   searchMode = 'quick',
   parentTraceId,
-  maxSteps = 10,
+  maxSteps = DEFAULT_MAX_STEPS,
   modelConfig
 }: CreateResearcherOptions): ToolLoopAgent<never, ResearcherTools, never> {
   try {
@@ -50,7 +58,16 @@ Core Philosophy:
 - Write scripts meant for spoken narration (concise, high hook retention, punchy sentences, zero fluff).
 - Ground every narrative in real facts, numbers, and compelling storytelling.
 - Be proactive: when the user gives an idea, draft a complete action plan or script directly.
-- Maintain high discipline: plain spoken text without raw markdown symbols in narration outputs.`
+- Maintain high discipline: plain spoken text without raw markdown symbols in narration outputs.
+- Complete the sound design when appropriate: use curated music plus sourceAudio ambience and selective SFX, then pass every returned cue to composeRender.
+
+WW1/WW2 documentary workflow:
+1. Gather primary or institutional sources for the central claims.
+2. Call prepareDocumentary in topic mode for an idea, or script mode when the user supplies a script. Preserve supplied narration and begin the opening scene with its date.
+3. Call cutBeats with the returned documentaryId so chapters, claims, maps, evidence cards, statistics, timelines, and overlays stay connected.
+4. Source final footage with sourceFootage finalRender=true. Keep every returned footageId; never substitute its thumb or source-page URL. Treat ordinary YouTube watch pages as references only; use only reusable media with retained rights metadata in the final video.
+5. Use a grounded AI reconstruction only when suitable historical footage or archival imagery cannot carry the beat. Never place an AI label inside the rendered scene.
+6. Use curated local music and sourceAudio for ambience/SFX, then call composeRender with the cutBeats beatsId, the same documentaryId, and the sourceFootage footageId for each resolved shot. This preserves playable clips and full-resolution images.`
 
     // Individual tools
     const searchTool = createSearchTool(searchMode)
@@ -61,12 +78,12 @@ Core Philosophy:
     const cutBeatsTool = createCutBeatsTool(model)
     const composeRenderTool = createComposeRenderTool()
     const generateVoiceoverTool = createGenerateVoiceoverTool()
-    const listVoicesTool = createListVoicesTool()
-    const cloneVoiceTool = createCloneVoiceTool()
     const generateMusicTool = createGenerateMusicTool()
+    const sourceAudioTool = createSourceAudioTool()
     const generateImageTool = createGenerateImageTool()
     const generateThumbnailTool = createGenerateThumbnailTool()
     const learnFromVideoTool = createLearnFromVideoTool()
+    const prepareDocumentaryTool = createPrepareDocumentaryTool(model)
     const generateAvatarTool = createGenerateAvatarTool()
 
     // The tool map must always carry every key of ResearcherTools: `activeTools`
@@ -80,13 +97,13 @@ Core Philosophy:
       writeScript: writeScriptTool,
       sourceFootage: sourceFootageTool,
       cutBeats: cutBeatsTool,
-      listVoices: listVoicesTool,
       generateVoiceover: generateVoiceoverTool,
-      cloneVoice: cloneVoiceTool,
       generateMusic: generateMusicTool,
+      sourceAudio: sourceAudioTool,
       generateImage: generateImageTool,
       generateThumbnail: generateThumbnailTool,
       learnFromVideo: learnFromVideoTool,
+      prepareDocumentary: prepareDocumentaryTool,
       generateAvatar: generateAvatarTool,
       composeRender: composeRenderTool,
       ...todoTools
@@ -107,6 +124,11 @@ Core Philosophy:
       tools,
       activeTools: activeToolsList,
       stopWhen: stepCountIs(maxSteps),
+      // A composeRender call for a long storyboard (40+ shots, each with narration text
+      // and a footage URL) can run to several thousand tokens of tool-call JSON. With no
+      // explicit cap the provider's own default applies, which truncated a real call
+      // mid-string ("Unterminated string in JSON") and failed the whole compose step.
+      maxOutputTokens: 16000,
       experimental_telemetry: {
         isEnabled: isTracingEnabled(),
         functionId: 'research-agent',

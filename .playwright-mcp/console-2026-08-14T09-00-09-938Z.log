@@ -1,0 +1,7 @@
+[     899ms] [WARNING] Unrecognized feature: 'presentation'. @ https://vidrush.ai/:442
+[    2846ms] [LOG] Setting the cdnUrl @ https://assets.cookieconfirm.com/js/consent.js:0
+[    2846ms] [LOG] https://assets.cookieconfirm.com @ https://assets.cookieconfirm.com/js/consent.js:0
+[    6128ms] [LOG] [Framer On-Page Editing] Unavailable because not on a `framer.app` subdomain and access status is no-auth @ https://app.framerstatic.com/editorbar.YEZQ3TWG.mjs:0
+[ 1672784ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://z.clarity.ms/collect:0
+[ 1697124ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://z.clarity.ms/collect:0
+[ 1697125ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://z.clarity.ms/collect:0

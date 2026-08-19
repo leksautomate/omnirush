@@ -5,7 +5,6 @@ import { fetchTool } from '@/lib/tools/fetch'
 import { askQuestionTool } from '@/lib/tools/question'
 import { searchTool } from '@/lib/tools/search'
 import { createTodoTools, type TodoItem } from '@/lib/tools/todo'
-import { createCloneVoiceTool } from '@/lib/tools/video/clone-voice'
 import { createComposeRenderTool } from '@/lib/tools/video/compose-render'
 import { createCutBeatsTool } from '@/lib/tools/video/cut-beats'
 import { createGenerateAvatarTool } from '@/lib/tools/video/generate-avatar'
@@ -14,7 +13,8 @@ import { createGenerateMusicTool } from '@/lib/tools/video/generate-music'
 import { createGenerateThumbnailTool } from '@/lib/tools/video/generate-thumbnail'
 import { createGenerateVoiceoverTool } from '@/lib/tools/video/generate-voiceover'
 import { createLearnFromVideoTool } from '@/lib/tools/video/learn-from-video'
-import { createListVoicesTool } from '@/lib/tools/video/list-voices'
+import { createPrepareDocumentaryTool } from '@/lib/tools/video/prepare-documentary'
+import { createSourceAudioTool } from '@/lib/tools/video/source-audio'
 import { createSourceFootageTool } from '@/lib/tools/video/source-footage'
 import { createWriteScriptTool } from '@/lib/tools/video/write-script'
 import type { SearchMode } from '@/lib/types/search'
@@ -53,12 +53,14 @@ const sourceFootageTool = createSourceFootageTool()
 const cutBeatsTool = createCutBeatsTool('agentrouter:claude-opus-4-6')
 const composeRenderTool = createComposeRenderTool()
 const generateVoiceoverTool = createGenerateVoiceoverTool()
-const listVoicesTool = createListVoicesTool()
-const cloneVoiceTool = createCloneVoiceTool()
 const generateMusicTool = createGenerateMusicTool()
+const sourceAudioTool = createSourceAudioTool()
 const generateImageTool = createGenerateImageTool()
 const generateThumbnailTool = createGenerateThumbnailTool()
 const learnFromVideoTool = createLearnFromVideoTool()
+const prepareDocumentaryTool = createPrepareDocumentaryTool(
+  'agentrouter:claude-opus-4-6'
+)
 const generateAvatarTool = createGenerateAvatarTool()
 
 export type UITools = {
@@ -70,12 +72,12 @@ export type UITools = {
   sourceFootage: InferUITool<typeof sourceFootageTool>
   cutBeats: InferUITool<typeof cutBeatsTool>
   generateVoiceover: InferUITool<typeof generateVoiceoverTool>
-  listVoices: InferUITool<typeof listVoicesTool>
-  cloneVoice: InferUITool<typeof cloneVoiceTool>
   generateMusic: InferUITool<typeof generateMusicTool>
+  sourceAudio: InferUITool<typeof sourceAudioTool>
   generateImage: InferUITool<typeof generateImageTool>
   generateThumbnail: InferUITool<typeof generateThumbnailTool>
   learnFromVideo: InferUITool<typeof learnFromVideoTool>
+  prepareDocumentary: InferUITool<typeof prepareDocumentaryTool>
   generateAvatar: InferUITool<typeof generateAvatarTool>
   composeRender: InferUITool<typeof composeRenderTool>
   // Dynamic tools will be added at runtime

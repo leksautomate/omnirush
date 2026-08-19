@@ -6,7 +6,7 @@ import type { ToolPart, UIDataTypes, UIMessage, UITools } from '@/lib/types/ai'
 
 import AvatarSection from './avatar-section'
 import BeatsSection from './beats-section'
-import CloneSection from './clone-section'
+import DocumentarySection from './documentary-section'
 import FetchSection from './fetch-section'
 import FootageSection from './footage-section'
 import ImageSection from './image-section'
@@ -16,9 +16,9 @@ import { QuestionConfirmation } from './question-confirmation'
 import RenderSection from './render-section'
 import ScriptSection from './script-section'
 import { SearchSection } from './search-section'
+import SourceAudioSection from './source-audio-section'
 import { ToolTodoDisplay } from './tool-todo-display'
 import VoiceoverSection from './voiceover-section'
-import VoicesSection from './voices-section'
 
 interface ToolSectionProps {
   tool: ToolPart
@@ -148,32 +148,32 @@ export function ToolSection({
           isLast={isLast}
         />
       )
-    case 'tool-listVoices':
-      return (
-        <VoicesSection
-          tool={tool as ToolPart<'listVoices'>}
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          borderless={borderless}
-          isFirst={isFirst}
-          isLast={isLast}
-        />
-      )
-    case 'tool-cloneVoice':
-      return (
-        <CloneSection
-          tool={tool as ToolPart<'cloneVoice'>}
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          borderless={borderless}
-          isFirst={isFirst}
-          isLast={isLast}
-        />
-      )
     case 'tool-generateMusic':
       return (
         <MusicSection
           tool={tool as ToolPart<'generateMusic'>}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          borderless={borderless}
+          isFirst={isFirst}
+          isLast={isLast}
+        />
+      )
+    case 'tool-prepareDocumentary':
+      return (
+        <DocumentarySection
+          tool={tool as ToolPart<'prepareDocumentary'>}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          borderless={borderless}
+          isFirst={isFirst}
+          isLast={isLast}
+        />
+      )
+    case 'tool-sourceAudio':
+      return (
+        <SourceAudioSection
+          tool={tool as ToolPart<'sourceAudio'>}
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           borderless={borderless}

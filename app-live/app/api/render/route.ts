@@ -22,7 +22,8 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          'Remotion Lambda is not configured. Set REMOTION_SERVE_URL + AWS credentials (see docs/REMOTION_LAMBDA.md).'
+          'Remotion Lambda is not configured. Set REMOTION_SERVE_URL + AWS credentials (see docs/REMOTION_LAMBDA.md).',
+        lambdaConfigured: false
       },
       { status: 400 }
     )
@@ -42,6 +43,18 @@ export async function POST(req: Request) {
       { status: 404 }
     )
   }
+  if (
+    inputProps.documentaryProject &&
+    !inputProps.documentaryProject.qa.publishReady
+  ) {
+    return NextResponse.json(
+      {
+        error: 'documentary is not publish-ready',
+        issues: inputProps.documentaryProject.qa.issues
+      },
+      { status: 409 }
+    )
+  }
   try {
     const handle = await startLambdaRender(inputProps)
     return NextResponse.json(handle)
@@ -55,7 +68,9 @@ export async function POST(req: Request) {
 
 // GET /api/render?renderId=…&bucketName=…  → poll render progress.
 export async function GET(req: Request) {
-  const cleanUrl = (req.url || '').replace(/^[\uFEFF\u200B\s]+|[\uFEFF\u200B\s]+$/g, '').trim()
+  const cleanUrl = (req.url || '')
+    .replace(/^[\uFEFF\u200B\s]+|[\uFEFF\u200B\s]+$/g, '')
+    .trim()
   const { searchParams } = new URL(cleanUrl || 'http://localhost/api/render')
   const renderId = searchParams.get('renderId')
   const bucketName = searchParams.get('bucketName')

@@ -1,0 +1,31 @@
+{
+  "width": 640,
+  "height": 360,
+  "fps": 30,
+  "brand": { "channel": "Kakkao", "accent": "#ff6b00" },
+  "shots": [
+    {
+      "kind": "photo",
+      "start": 0,
+      "duration": 1.5,
+      "transitionOut": { "type": "whip-pan", "duration": 0.3 }
+    },
+    { "kind": "photo", "start": 1.5, "duration": 1.5 }
+  ],
+  "transitionSfxVolume": 0.3,
+  "audioCues": [
+    {
+      "id": "forest-smoke",
+      "kind": "ambient",
+      "src": "/audio/ambient/audiopapkin-forest-ambience-296528.mp3",
+      "start": 0,
+      "duration": 3,
+      "volume": 0.08,
+      "loop": true,
+      "fadeIn": 0.25,
+      "fadeOut": 0.25
+    }
+  ],
+  "showCaptions": false,
+  "showSubscribeCta": false
+}

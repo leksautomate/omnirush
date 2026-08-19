@@ -23,7 +23,7 @@ interface ImageSectionProps {
   isLast?: boolean
 }
 
-// Renders the generateImage / generateThumbnail tools: a preview of the AI33-generated
+// Renders the generateImage / generateThumbnail tools: a preview of the ModelArk-generated
 // still, with the model name and a link to the hosted image.
 export function ImageSection({
   tool,

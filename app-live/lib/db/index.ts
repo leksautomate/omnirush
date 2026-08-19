@@ -41,7 +41,15 @@ const sslConfig =
 const client = postgres(connectionString, {
   ssl: sslConfig,
   prepare: false,
-  max: 20 // Max 20 connections
+  max: 20, // Max 20 connections
+  // Neon (and similar serverless/scale-to-zero Postgres) silently kills idle connections
+  // when its compute suspends, without telling this pool — the next query on that
+  // connection then fails with ECONNRESET instead of transparently reconnecting.
+  // Proactively closing connections before Neon does (idle_timeout) and periodically
+  // cycling even active ones (max_lifetime) keeps the pool holding only fresh
+  // connections, so a suspend/resume is far less likely to surface as a request error.
+  idle_timeout: 20,
+  max_lifetime: 60 * 30
 })
 
 export const db = drizzle(client, {

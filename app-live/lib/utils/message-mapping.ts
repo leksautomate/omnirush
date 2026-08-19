@@ -325,6 +325,33 @@ export function mapUIMessagePartsToDBParts(
           }
         }
 
+        // Any other fully-typed `tool-<name>` part (AI SDK v5's native shape for tools
+        // defined via the `tool()` helper — e.g. every video-pipeline tool: composeRender,
+        // generateThumbnail, writeScript, cutBeats, sourceFootage, generateVoiceover,
+        // generateImage, generateAvatar, generateMusic, learnFromVideo, …) has no
+        // dedicated DB columns. Falling through to raw data_*
+        // storage below left `tool_tool_call_id`/`tool_state` NULL, which violates the
+        // `tool_fields_required` check constraint on the `parts` table and silently failed
+        // the WHOLE message's insert — the message (and any reply after it) never saved and
+        // vanished on reload. Route through the generic tool_dynamic_* columns instead,
+        // tagged 'named' so mapDBPartToUIMessagePart can rebuild the exact original type.
+        if (part.type.startsWith('tool-') && isExtendedToolPart(part)) {
+          const toolName = part.type.slice('tool-'.length)
+          return {
+            ...basePart,
+            type: 'tool-dynamic',
+            tool_toolCallId: part.toolCallId || generateId(),
+            tool_state: part.state || ('input-available' as ToolState),
+            tool_dynamic_name: toolName,
+            tool_dynamic_type: 'named',
+            tool_dynamic_input: part.input,
+            tool_dynamic_output:
+              part.state === 'output-available' ? part.output : undefined,
+            tool_errorText:
+              part.state === 'output-error' ? part.errorText : undefined
+          } as DBMessagePart
+        }
+
         // Unknown part type - store as data
         return {
           ...basePart,
@@ -399,6 +426,42 @@ export function mapDBPartToUIMessagePart(
 
         // Special handling for dynamic tools
         if (toolName === 'dynamic') {
+          // 'named' marks a fully-typed `tool-<name>` part that was routed through these
+          // generic columns because it has no dedicated ones (see
+          // mapUIMessagePartsToDBParts) — rebuild its exact original shape rather than a
+          // generic dynamic-tool part, so tool-specific UI (e.g. the composeRender /
+          // generateThumbnail cards) renders as it originally did.
+          if (part.tool_dynamic_type === 'named' && part.tool_dynamic_name) {
+            const originalType = `tool-${part.tool_dynamic_name}`
+            if (
+              part.tool_state === 'input-available' ||
+              part.tool_state === 'input-streaming'
+            ) {
+              return {
+                type: originalType,
+                state: part.tool_state,
+                toolCallId: part.tool_toolCallId || '',
+                input: part.tool_dynamic_input
+              } as any
+            }
+            if (part.tool_state === 'output-error') {
+              return {
+                type: originalType,
+                state: 'output-error',
+                toolCallId: part.tool_toolCallId || '',
+                input: part.tool_dynamic_input,
+                errorText: part.tool_errorText
+              } as any
+            }
+            return {
+              type: originalType,
+              state: 'output-available',
+              toolCallId: part.tool_toolCallId || '',
+              input: part.tool_dynamic_input,
+              output: part.tool_dynamic_output
+            } as any
+          }
+
           return {
             type: 'dynamic-tool',
             toolCallId: part.tool_toolCallId || '',

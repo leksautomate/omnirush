@@ -2,7 +2,7 @@ import { tool } from 'ai'
 import { z } from 'zod'
 
 import { kvSetJSON } from '@/lib/engine/kv'
-import { generateVoiceover, type VoiceWord } from '@/lib/engine/voice'
+import { generateVoiceoverSpeechify, type VoiceWord } from '@/lib/engine/voice'
 
 const voiceoverSchema = z.object({
   script: z
@@ -14,7 +14,7 @@ const voiceoverSchema = z.object({
     .string()
     .optional()
     .describe(
-      'AI33 provider-prefixed voice id, e.g. "elevenlabs_21m00Tcm4TlvDq8ikWAM", "minimax_Calm_Woman", or a "clone_…" id (defaults to the configured/house voice)'
+      'A Speechify voice id (a UUID). Omit to use the default house voice.'
     ),
   voiceName: z
     .string()
@@ -30,20 +30,18 @@ export interface VoiceoverHandle {
   voiceId: string
 }
 
-// Generate a voiceover for the script and return a small handle. The audio + word timings
-// are produced by AI33 (ElevenLabs/MiniMax/Fish/cloned voices), which hosts the mp3 so its
-// URL is playable directly (Remotion streams it in at render time). The bulky word-timings
-// array is stored in KV under voiceoverId so cutBeats can lock the storyboard to real
-// speech and composeRender can pull the audio URL — without the model ever carrying it.
+// Generate a voiceover for the script via Speechify and return a small handle. The
+// resulting audio is hosted on R2/S3 (or a local file in dev — see
+// lib/engine/voice.ts). The bulky word-timings array is stored in KV under voiceoverId
+// so cutBeats can lock the storyboard to real speech and composeRender can pull the
+// audio URL — without the model ever carrying it.
 export function createGenerateVoiceoverTool() {
   return tool({
     description:
-      'Generate a spoken voiceover (TTS) for a narration script, with real word-level timings. Returns a voiceoverId plus the audio URL and duration. Pass the voiceoverId to cutBeats (so shots lock to actual speech) and to composeRender (so it mixes in the narration). Run after writeScript.',
+      "Generate a spoken voiceover (TTS) for a narration script via Speechify. Pass the FULL script verbatim — do not trim or shorten it for length; long scripts are automatically split into chunks at sentence boundaries and stitched into one audio file, so there is no practical length limit here. Returns a voiceoverId plus the audio URL and duration. Pass the voiceoverId to cutBeats (so shots lock to actual speech) and to composeRender (so it mixes in the narration). Run after writeScript.",
     inputSchema: voiceoverSchema,
     execute: async ({ script, voiceId, voiceName }, { abortSignal }) => {
-      // AI33 hosts the audio, so we get a playable URL that Remotion streams in at render
-      // time (compose) and the Player preview plays directly.
-      const vo = await generateVoiceover(script, { voiceId, abortSignal })
+      const vo = await generateVoiceoverSpeechify(script, { voiceId, abortSignal })
       const handle: VoiceoverHandle = {
         audioUrl: vo.audioUrl,
         words: vo.words,

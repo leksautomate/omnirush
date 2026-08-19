@@ -1,0 +1,297 @@
+- generic [active] [ref=f12e1]:
+  - generic [ref=f12e4]:
+    - banner [ref=f12e5]:
+      - generic [ref=f12e6]:
+        - link "Pixabay" [ref=f12e8] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f12e15]:
+          - button "Search Pixabay" [ref=f12e16] [cursor=pointer]:
+            - img "Search" [ref=f12e17]
+          - searchbox "Search Pixabay" [ref=f12e21]
+          - button "Sound Effects" [ref=f12e24] [cursor=pointer]
+        - generic [ref=f12e25]:
+          - button "Explore" [ref=f12e29] [cursor=pointer]
+          - button "Log in" [ref=f12e31] [cursor=pointer]
+          - button "Join" [ref=f12e32] [cursor=pointer]
+          - button "Upload" [ref=f12e34] [cursor=pointer]
+    - generic [ref=f12e35]:
+      - generic [ref=f12e36]:
+        - generic [ref=f12e39]:
+          - generic [ref=f12e49]:
+            - generic [ref=f12e50]: Cinematic Impact
+            - link "lucadialessandro" [ref=f12e51] [cursor=pointer]:
+              - /url: /users/lucadialessandro-25927643/
+          - generic [ref=f12e52]:
+            - generic [ref=f12e53]: 0:00
+            - slider [ref=f12e55] [cursor=pointer]
+            - generic [ref=f12e60]: 0:05
+          - button "paused" [ref=f12e63] [cursor=pointer]:
+            - img "Play" [ref=f12e64]
+          - generic [ref=f12e68]:
+            - button "volume" [ref=f12e69] [cursor=pointer]:
+              - img "Volume" [ref=f12e70]
+            - slider "volume" [ref=f12e77]: "1"
+        - generic [ref=f12e78]:
+          - generic [ref=f12e80]:
+            - heading "Impact, Cinematic impact, Drop sound effect. Free for use." [level=1] [ref=f12e81]
+            - generic [ref=f12e83]: A powerful cinematic impact sound effect, perfect for movie trailers, YouTube transitions, or adding dramatic emphasis to TikTok videos.
+          - generic [ref=f12e84]:
+            - generic [ref=f12e85]: Comments
+            - generic [ref=f12e86]:
+              - img "CommentFilled" [ref=f12e87]
+              - generic [ref=f12e90]: The community are waiting to hear from you!
+              - generic [ref=f12e91]: Log in or Join Pixabay to view comments
+              - generic [ref=f12e92]:
+                - button "Log in" [ref=f12e93] [cursor=pointer]
+                - button "Join Pixabay" [ref=f12e94] [cursor=pointer]
+          - generic [ref=f12e95]:
+            - link "Impact" [ref=f12e96] [cursor=pointer]:
+              - /url: /sound-effects/search/impact/
+            - link "Cinematic Impact" [ref=f12e98] [cursor=pointer]:
+              - /url: /sound-effects/search/cinematic%20impact/
+            - link "Drop" [ref=f12e100] [cursor=pointer]:
+              - /url: /sound-effects/search/drop/
+            - link "Explosion" [ref=f12e102] [cursor=pointer]:
+              - /url: /sound-effects/search/explosion/
+            - link "Cinematic" [ref=f12e104] [cursor=pointer]:
+              - /url: /sound-effects/search/cinematic/
+            - link "Riser" [ref=f12e106] [cursor=pointer]:
+              - /url: /sound-effects/search/riser/
+            - link "Splash" [ref=f12e108] [cursor=pointer]:
+              - /url: /sound-effects/search/splash/
+            - link "Effects" [ref=f12e110] [cursor=pointer]:
+              - /url: /sound-effects/search/effects/
+            - link "Sound Fx" [ref=f12e112] [cursor=pointer]:
+              - /url: /sound-effects/search/sound%20fx/
+            - link "Cinematic Fx" [ref=f12e114] [cursor=pointer]:
+              - /url: /sound-effects/search/cinematic%20fx/
+            - link "Cinematic Sound" [ref=f12e116] [cursor=pointer]:
+              - /url: /sound-effects/search/cinematic%20sound/
+            - link "Impact Fx" [ref=f12e118] [cursor=pointer]:
+              - /url: /sound-effects/search/impact%20fx/
+            - link "Impact Sound" [ref=f12e120] [cursor=pointer]:
+              - /url: /sound-effects/search/impact%20sound/
+            - link "Impacts" [ref=f12e122] [cursor=pointer]:
+              - /url: /sound-effects/search/impacts/
+            - link "Whoosh" [ref=f12e124] [cursor=pointer]:
+              - /url: /sound-effects/search/whoosh/
+            - link "Hit" [ref=f12e126] [cursor=pointer]:
+              - /url: /sound-effects/search/hit/
+            - link "Free Sound Fx" [ref=f12e128] [cursor=pointer]:
+              - /url: /sound-effects/search/free%20sound%20fx/
+            - link "Free Impact Fx" [ref=f12e130] [cursor=pointer]:
+              - /url: /sound-effects/search/free%20impact%20fx/
+            - link "Free Cinematic Fx" [ref=f12e132] [cursor=pointer]:
+              - /url: /sound-effects/search/free%20cinematic%20fx/
+        - generic [ref=f12e136]:
+          - heading "Related free music" [level=2] [ref=f12e137]
+          - generic [ref=f12e139]:
+            - generic [ref=f12e140]:
+              - generic [ref=f12e141]:
+                - button [ref=f12e142] [cursor=pointer]:
+                  - button [ref=f12e145]:
+                    - img "Play" [ref=f12e146]
+                - generic [ref=f12e149]:
+                  - link "Powerful Percussion Version 6" [ref=f12e150] [cursor=pointer]:
+                    - /url: /sound-effects/musical-powerful-percussion-version-6-551819/
+                  - link "BombinSound" [ref=f12e151] [cursor=pointer]:
+                    - /url: /users/bombinsound-54782632/
+              - generic [ref=f12e152]:
+                - text: ", ,"
+                - generic [ref=f12e153]:
+                  - button "Download" [ref=f12e154] [cursor=pointer]:
+                    - generic:
+                      - img "Download"
+                  - button "Dots" [ref=f12e155] [cursor=pointer]:
+                    - generic:
+                      - img "Dots"
+            - generic [ref=f12e156]:
+              - generic [ref=f12e157]:
+                - button [ref=f12e158] [cursor=pointer]:
+                  - button [ref=f12e161]:
+                    - img "Play" [ref=f12e162]
+                - generic [ref=f12e165]:
+                  - link "Vlog - Future Bass Version 6" [ref=f12e166] [cursor=pointer]:
+                    - /url: /sound-effects/musical-vlog-future-bass-version-6-547225/
+                  - link "BombinSound" [ref=f12e167] [cursor=pointer]:
+                    - /url: /users/bombinsound-54782632/
+              - generic [ref=f12e168]:
+                - text: ","
+                - generic [ref=f12e169]:
+                  - button "Download" [ref=f12e170] [cursor=pointer]:
+                    - generic:
+                      - img "Download"
+                  - button "Dots" [ref=f12e171] [cursor=pointer]:
+                    - generic:
+                      - img "Dots"
+            - generic [ref=f12e172]:
+              - generic [ref=f12e173]:
+                - button [ref=f12e174] [cursor=pointer]:
+                  - button [ref=f12e177]:
+                    - img "Play" [ref=f12e178]
+                - generic [ref=f12e181]:
+                  - link "Summer Pop Dance" [ref=f12e182] [cursor=pointer]:
+                    - /url: /sound-effects/musical-summer-pop-dance-569731/
+                  - link "JonasBlakewood" [ref=f12e183] [cursor=pointer]:
+                    - /url: /users/jonasblakewood-48502311/
+              - generic [ref=f12e184]:
+                - text: ","
+                - generic [ref=f12e185]:
+                  - button "Download" [ref=f12e186] [cursor=pointer]:
+                    - generic:
+                      - img "Download"
+                  - button "Dots" [ref=f12e187] [cursor=pointer]:
+                    - generic:
+                      - img "Dots"
+          - button "Load more" [ref=f12e189] [cursor=pointer]
+      - generic [ref=f12e192]:
+        - generic [ref=f12e193]:
+          - generic [ref=f12e194]:
+            - generic [ref=f12e195]:
+              - img "Check" [ref=f12e197]
+              - generic [ref=f12e200]:
+                - text: Free for use under the Pixabay
+                - link "Content License" [ref=f12e201] [cursor=pointer]:
+                  - /url: /service/license-summary/
+            - generic [ref=f12e204]:
+              - button "Free download" [ref=f12e205] [cursor=pointer]
+              - button [ref=f12e206] [cursor=pointer]
+          - separator [ref=f12e207]
+          - generic [ref=f12e208]:
+            - generic [ref=f12e209]:
+              - button "HeartOutline 264" [ref=f12e211] [cursor=pointer]:
+                - generic:
+                  - img "HeartOutline"
+                - generic: "264"
+              - button "Save" [ref=f12e213] [cursor=pointer]
+              - button "CommentOutline" [ref=f12e214] [cursor=pointer]:
+                - generic:
+                  - img "CommentOutline"
+              - button "Share" [ref=f12e215] [cursor=pointer]:
+                - generic:
+                  - img "Share"
+              - button "Flag" [ref=f12e217] [cursor=pointer]:
+                - generic:
+                  - img "Flag"
+            - generic [ref=f12e219]:
+              - generic [ref=f12e220]:
+                - generic [ref=f12e221]: Plays
+                - generic [ref=f12e222]: 241,351
+              - generic [ref=f12e223]:
+                - generic [ref=f12e224]: Downloads
+                - generic [ref=f12e225]: 26,339
+              - button "Show details ChevronDown" [ref=f12e226] [cursor=pointer]:
+                - generic [ref=f12e227]: Show details
+                - img "ChevronDown" [ref=f12e229]
+          - separator [ref=f12e232]
+          - generic [ref=f12e235]:
+            - generic [ref=f12e236]:
+              - link [ref=f12e239] [cursor=pointer]:
+                - /url: /users/lucadialessandro-25927643/
+                - img "lucadialessandro" [ref=f12e240]
+              - generic [ref=f12e241]:
+                - link "lucadialessandro" [ref=f12e243] [cursor=pointer]:
+                  - /url: /users/lucadialessandro-25927643/
+                - generic [ref=f12e244]: 413 followers
+              - button "Follow" [ref=f12e245] [cursor=pointer]
+            - generic [ref=f12e246]:
+              - paragraph [ref=f12e248]: Hello, I am a sound designer and I am passionate about creating original and quality sounds for different projects. I invite you to download my sounds for free and use them in your own productions. If you want to support my work, you can make a voluntary donation through PayPal. Thank you very much for your attention.
+              - button "Show more ChevronDown" [ref=f12e250] [cursor=pointer]:
+                - generic [ref=f12e251]: Show more
+                - img "ChevronDown" [ref=f12e253]
+            - button "Donate" [ref=f12e257] [cursor=pointer]
+        - link [ref=f12e259] [cursor=pointer]:
+          - /url: https://www.canva.com/video-editor/?utm_medium=partner&utm_source=pixabay&utm_campaign=canva_brand&utm_term=70.2
+          - heading "Split and splice your videos" [level=3] [ref=f12e264]
+          - button "Explore video editor" [ref=f12e266]
+    - contentinfo [ref=f12e267]:
+      - generic [ref=f12e268]:
+        - generic [ref=f12e269]:
+          - generic [ref=f12e274]: Over 6.2 million+ high quality stock images, videos and music shared by our talented community.
+          - generic [ref=f12e275]:
+            - link "Instagram" [ref=f12e276] [cursor=pointer]:
+              - /url: https://www.instagram.com/pixabay/
+              - img "Instagram" [ref=f12e277]
+            - link "Facebook" [ref=f12e280] [cursor=pointer]:
+              - /url: https://www.facebook.com/pixabay
+              - img "Facebook" [ref=f12e281]
+            - link "TikTok" [ref=f12e284] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@pixabaymedia
+              - img "TikTokBrand" [ref=f12e285]
+            - link "Twitter" [ref=f12e296] [cursor=pointer]:
+              - /url: https://x.com/pixabay
+              - img "TwitterX" [ref=f12e297]
+            - link "LinkedIn" [ref=f12e303] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/pixabay/
+              - img "Linkedin" [ref=f12e304]
+            - link "YouTube" [ref=f12e307] [cursor=pointer]:
+              - /url: https://www.youtube.com/@pixabaymedia
+              - img "Youtube" [ref=f12e308]
+            - link "Pinterest" [ref=f12e311] [cursor=pointer]:
+              - /url: https://pinterest.com/pixabay/
+              - img "Pinterest" [ref=f12e312]
+        - generic [ref=f12e315]:
+          - generic [ref=f12e316]: Discover
+          - generic [ref=f12e317]:
+            - link "Editor's Choice" [ref=f12e318] [cursor=pointer]:
+              - /url: /editors_choice/
+            - link "Curated Collections" [ref=f12e320] [cursor=pointer]:
+              - /url: /collections/
+            - link "Pixabay Radio" [ref=f12e322] [cursor=pointer]:
+              - /url: /playlists/
+            - link "Popular Images" [ref=f12e324] [cursor=pointer]:
+              - /url: /images/search/
+            - link "Popular Videos" [ref=f12e326] [cursor=pointer]:
+              - /url: /videos/search/
+            - link "Popular Music" [ref=f12e328] [cursor=pointer]:
+              - /url: /music/search/
+            - link "Popular Searches" [ref=f12e330] [cursor=pointer]:
+              - /url: /popular-searches/
+        - generic [ref=f12e332]:
+          - generic [ref=f12e333]: Community
+          - generic [ref=f12e334]:
+            - link "Contests Live" [ref=f12e335] [cursor=pointer]:
+              - /url: /contests/
+              - generic [ref=f12e336]: Contests
+              - generic [ref=f12e337]: Live
+            - link "Creators" [ref=f12e340] [cursor=pointer]:
+              - /url: /users/
+            - link "Ambassadors New" [ref=f12e342] [cursor=pointer]:
+              - /url: /service/ambassador/
+              - generic [ref=f12e343]: Ambassadors
+              - generic [ref=f12e344]: New
+            - link "Forum" [ref=f12e346] [cursor=pointer]:
+              - /url: /forum/
+            - link "Blog" [ref=f12e348] [cursor=pointer]:
+              - /url: /blog/
+        - generic [ref=f12e350]:
+          - generic [ref=f12e351]: About
+          - generic [ref=f12e352]:
+            - link "About Us" [ref=f12e353] [cursor=pointer]:
+              - /url: /service/about/
+            - link "FAQ" [ref=f12e355] [cursor=pointer]:
+              - /url: /service/faq/
+            - link "License Summary" [ref=f12e357] [cursor=pointer]:
+              - /url: /service/license-summary/
+            - link "Terms of Service" [ref=f12e359] [cursor=pointer]:
+              - /url: /service/terms/
+            - link "Privacy Policy" [ref=f12e361] [cursor=pointer]:
+              - /url: /service/privacy/
+            - link "Cookies Policy" [ref=f12e363] [cursor=pointer]:
+              - /url: /service/cookies/
+            - link "Digital Services Act" [ref=f12e365] [cursor=pointer]:
+              - /url: /service/digital-services-act/
+            - link "Report Content" [ref=f12e367] [cursor=pointer]:
+              - /url: /content-reports/
+            - link "API" [ref=f12e369] [cursor=pointer]:
+              - /url: /service/about/api/
+  - generic:
+    - dialog "Privacy" [ref=f12e372]:
+      - generic [ref=f12e374]:
+        - generic [ref=f12e375]: By clicking “Accept All Cookies”, you agree to the storing of cookies on your device to enhance site navigation, analyze site usage, and assist in our marketing efforts.
+        - generic [ref=f12e379]:
+          - button "Cookies Settings, Opens the preference center dialog" [ref=f12e380] [cursor=pointer]: Cookies Settings
+          - button "Reject All" [ref=f12e381] [cursor=pointer]
+          - button "Accept All Cookies" [ref=f12e382] [cursor=pointer]
+      - button "Close" [ref=f12e384] [cursor=pointer]
+    - text: Cookies Settings

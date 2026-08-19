@@ -10,7 +10,6 @@ import type { fetchTool } from '../tools/fetch'
 import type { createQuestionTool } from '../tools/question'
 import type { createSearchTool } from '../tools/search'
 import type { createTodoTools } from '../tools/todo'
-import type { createCloneVoiceTool } from '../tools/video/clone-voice'
 import type { createComposeRenderTool } from '../tools/video/compose-render'
 import type { createCutBeatsTool } from '../tools/video/cut-beats'
 import type { createGenerateAvatarTool } from '../tools/video/generate-avatar'
@@ -19,7 +18,8 @@ import type { createGenerateMusicTool } from '../tools/video/generate-music'
 import type { createGenerateThumbnailTool } from '../tools/video/generate-thumbnail'
 import type { createGenerateVoiceoverTool } from '../tools/video/generate-voiceover'
 import type { createLearnFromVideoTool } from '../tools/video/learn-from-video'
-import type { createListVoicesTool } from '../tools/video/list-voices'
+import type { createPrepareDocumentaryTool } from '../tools/video/prepare-documentary'
+import type { createSourceAudioTool } from '../tools/video/source-audio'
 import type { createSourceFootageTool } from '../tools/video/source-footage'
 import type { createWriteScriptTool } from '../tools/video/write-script'
 
@@ -31,13 +31,13 @@ export type ResearcherTools = {
   writeScript: ReturnType<typeof createWriteScriptTool>
   sourceFootage: ReturnType<typeof createSourceFootageTool>
   cutBeats: ReturnType<typeof createCutBeatsTool>
-  listVoices: ReturnType<typeof createListVoicesTool>
   generateVoiceover: ReturnType<typeof createGenerateVoiceoverTool>
-  cloneVoice: ReturnType<typeof createCloneVoiceTool>
   generateMusic: ReturnType<typeof createGenerateMusicTool>
+  sourceAudio: ReturnType<typeof createSourceAudioTool>
   generateImage: ReturnType<typeof createGenerateImageTool>
   generateThumbnail: ReturnType<typeof createGenerateThumbnailTool>
   learnFromVideo: ReturnType<typeof createLearnFromVideoTool>
+  prepareDocumentary: ReturnType<typeof createPrepareDocumentaryTool>
   generateAvatar: ReturnType<typeof createGenerateAvatarTool>
   composeRender: ReturnType<typeof createComposeRenderTool>
 } & ReturnType<typeof createTodoTools>
@@ -76,14 +76,11 @@ export type ComposeRenderToolInvocation = UIToolInvocation<
 export type GenerateVoiceoverToolInvocation = UIToolInvocation<
   ResearcherTools['generateVoiceover']
 >
-export type ListVoicesToolInvocation = UIToolInvocation<
-  ResearcherTools['listVoices']
->
-export type CloneVoiceToolInvocation = UIToolInvocation<
-  ResearcherTools['cloneVoice']
->
 export type GenerateMusicToolInvocation = UIToolInvocation<
   ResearcherTools['generateMusic']
+>
+export type SourceAudioToolInvocation = UIToolInvocation<
+  ResearcherTools['sourceAudio']
 >
 export type GenerateImageToolInvocation = UIToolInvocation<
   ResearcherTools['generateImage']
@@ -93,6 +90,9 @@ export type GenerateThumbnailToolInvocation = UIToolInvocation<
 >
 export type LearnFromVideoToolInvocation = UIToolInvocation<
   ResearcherTools['learnFromVideo']
+>
+export type PrepareDocumentaryToolInvocation = UIToolInvocation<
+  ResearcherTools['prepareDocumentary']
 >
 
 export type GenerateAvatarToolInvocation = UIToolInvocation<
@@ -110,12 +110,12 @@ export type ResearcherToolInvocation =
   | CutBeatsToolInvocation
   | ComposeRenderToolInvocation
   | GenerateVoiceoverToolInvocation
-  | ListVoicesToolInvocation
-  | CloneVoiceToolInvocation
   | GenerateMusicToolInvocation
+  | SourceAudioToolInvocation
   | GenerateImageToolInvocation
   | GenerateThumbnailToolInvocation
   | LearnFromVideoToolInvocation
+  | PrepareDocumentaryToolInvocation
   | GenerateAvatarToolInvocation
 
 // Helper type to extract tool names

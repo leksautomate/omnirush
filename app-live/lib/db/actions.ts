@@ -196,9 +196,11 @@ export async function loadChatWithMessages(
 
     // Private chats are readable only by their owner. Legacy chats stored
     // under 'anonymous-user' predate mandatory auth; let the signed-in user
-    // through so the chat can be claimed on first write.
+    // through so the chat can be claimed on first write. When auth is
+    // disabled entirely, every request already collapses to one shared
+    // local identity, so there is no real ownership to enforce here either.
     if (chat.visibility === 'private' && chat.userId !== userId) {
-      if (chat.userId !== 'anonymous-user') {
+      if (chat.userId !== 'anonymous-user' && process.env.ENABLE_AUTH !== 'false') {
         return null
       }
     }

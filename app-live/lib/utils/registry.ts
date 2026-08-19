@@ -20,7 +20,7 @@ function normalizeOpenAICompatibleBaseURL(raw: string): string {
 }
 
 function getAgentRouterApiKey(): string {
-  return 'sk-GRKoBCGsQlCqVWG028It7QqaBuVPGD10DpvBdN13nhLGGyu4'
+  return (process.env.AGENTROUTER_API_KEY || '').trim()
 }
 
 // Build providers object conditionally
@@ -143,6 +143,19 @@ const providers: Record<string, any> = {
     apiKey: process.env.GROQ_API_KEY,
     baseURL: 'https://api.groq.com/openai/v1'
   }),
+  // BytePlus ModelArk (Ark). Its chat-completions path is `{base}/chat/completions`
+  // with no `/v1` segment, unlike most OpenAI-compatible hosts — so it can't go
+  // through the 'openai-compatible' slot, which always forces one on (see
+  // normalizeOpenAICompatibleBaseURL above).
+  modelark: createOpenAICompatible({
+    name: 'modelark',
+    apiKey: process.env.MODELARK_API_KEY,
+    supportsStructuredOutputs: true,
+    baseURL: (
+      process.env.MODELARK_BASE_URL ||
+      'https://ark.ap-southeast.bytepluses.com/api/v3'
+    ).replace(/\/+$/, '')
+  }),
   'openai-compatible': createOpenAICompatible({
     // Keep the SDK provider key stable. OPENAI_COMPATIBLE_PROVIDER_NAME is
     // only a UI label used by the model selector.
@@ -186,10 +199,15 @@ export function getModel(model: string): LanguageModel {
       targetModel = `google:${targetModel}`
     } else if (targetModel.startsWith('deepseek')) {
       // The R1 distill is served by Groq; DeepSeek's own V4 models come from
-      // the DeepSeek API via the openai-compatible provider.
-      targetModel = targetModel.includes('deepseek-r1')
-        ? `groq:${targetModel}`
-        : `openai-compatible:${targetModel}`
+      // whichever OpenAI-compatible host is configured — ModelArk if it has a
+      // key, else the openai-compatible slot (e.g. DeepSeek's own API).
+      if (targetModel.includes('deepseek-r1')) {
+        targetModel = `groq:${targetModel}`
+      } else if (process.env.MODELARK_API_KEY) {
+        targetModel = `modelark:${targetModel}`
+      } else {
+        targetModel = `openai-compatible:${targetModel}`
+      }
     } else {
       // Default prefix
       targetModel = `agentrouter:${targetModel}`
@@ -227,10 +245,12 @@ export function getModel(model: string): LanguageModel {
   }
 
   // Provider fallback: prioritize active key
-  // (DeepSeek -> Groq -> AgentRouter -> Gemini -> OpenAI)
+  // (ModelArk -> DeepSeek -> Groq -> AgentRouter -> Gemini -> OpenAI)
   const provider = targetModel.split(':')[0]
   if (!isProviderEnabled(provider)) {
-    if (
+    if (process.env.MODELARK_API_KEY) {
+      targetModel = `modelark:${process.env.MODELARK_MODEL || 'deepseek-v4-flash-ga-260731'}`
+    } else if (
       process.env.OPENAI_COMPATIBLE_API_KEY &&
       process.env.OPENAI_COMPATIBLE_API_BASE_URL
     ) {
@@ -284,6 +304,8 @@ export function isProviderEnabled(providerId: string): boolean {
         !!process.env.OPENAI_COMPATIBLE_API_KEY &&
         !!process.env.OPENAI_COMPATIBLE_API_BASE_URL
       )
+    case 'modelark':
+      return !!process.env.MODELARK_API_KEY
     case 'gateway':
       return !!process.env.AI_GATEWAY_API_KEY
     case 'ollama':

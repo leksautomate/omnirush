@@ -4,11 +4,12 @@
 // and estimated word-level timings so the karaoke captions and the FFmpeg xfade chain
 // have a timeline to lock to. Real voiceover word timings replace the estimates later;
 // until then even/character-weighted estimates keep the whole render coherent.
-import { streamObject } from 'ai'
+import { generateText, streamObject, tool } from 'ai'
 import { z } from 'zod'
 
 import { getModel } from '@/lib/utils/registry'
 
+import { normalizeDocumentaryBeatPacing } from './beat-pacing'
 import type { VoiceWord } from './voice'
 
 const WORDS_PER_SEC = 2.4 // ~144 wpm, matching the script duration presets
@@ -21,12 +22,13 @@ export interface BeatWord {
 
 export interface BeatShot {
   narration: string
-  kind: 'photo' | 'video'
+  kind: 'photo' | 'video' | 'comparison' | 'avatar' | 'a-roll'
   visualQuery: string
   visualIntent: string
   start: number
   duration: number
   words: BeatWord[]
+  comparisonCards?: any[]
 }
 
 export interface Storyboard {
@@ -47,13 +49,18 @@ const DIMS: Record<Storyboard['format'], { width: number; height: number }> = {
   '1:1': { width: 1080, height: 1080 }
 }
 
-const SYS_BEATS = `You are a video editor segmenting a finished narration script into SHOTS for a faceless YouTube video.
+const SYS_BEATS = `You are a video editor segmenting a finished narration script into SHOTS for a faceless video.
 Return one entry per shot, in reading order, covering the ENTIRE script with no words dropped or added.
 Rules:
-- Each shot's narration is a short run of the script (roughly one sentence, 4-30 words). Long sentences may split into 2 shots; never merge unrelated ideas.
+- For historical and documentary videos, create long, atmospheric scenes (10 to 30 seconds per shot, roughly 25-50 words per shot). Do NOT split sentences into 3-4 second micro-shots.
+- For standard short-form videos, each shot's narration is roughly one sentence (4-25 words).
 - Concatenating every "narration" in order MUST reproduce the original script exactly (aside from whitespace).
 - Prefer "video" for motion/events/action, "photo" for places, objects, portraits, maps, diagrams.
-- visualQuery must be specific and literal enough to match real archival/stock footage — no abstract concepts.`
+- visualQuery must be specific and literal enough to match real archival/stock footage — no abstract concepts.
+- For key historical beats (dates, battle locations, troop movements, equipment specs, stats, headlines), request a motion graphic overlayType ('animated-map', 'newspaper', 'equipment-spec', 'battle-map', 'evidence-card', 'number-counter').`
+
+const DOCUMENTARY_BEAT_GUIDANCE =
+  '- For documentary narration, request atmospheric beats of at least 15 narrated words and at least 10 seconds (up to 30s) at the expected speaking pace. Do NOT output fast 3-4s micro-shots.'
 
 const shotSchema = z.object({
   narration: z
@@ -69,10 +76,68 @@ const shotSchema = z.object({
     ),
   visualIntent: z
     .string()
-    .describe('One plain sentence describing what the shot must SHOW')
+    .describe('One plain sentence describing what the shot must SHOW'),
+  overlayType: z
+    .enum([
+      'none',
+      'animated-map',
+      'newspaper',
+      'number-counter',
+      'bar-chart',
+      'typewriter',
+      'film-burn',
+      'camera-shake',
+      'equipment-spec',
+      'battle-map',
+      'evidence-card',
+      'force-comparison',
+      'date-location'
+    ])
+    .optional()
+    .describe('Optional motion graphic overlay type for historical dates, maps, evidence boards, or stats'),
+  overlayTitle: z
+    .string()
+    .optional()
+    .describe('Headline, label, location name, or stat metric for the overlay')
 })
+const shotListSchema = z.object({ shots: z.array(shotSchema).min(1) })
 
 type ShotCore = Omit<BeatShot, 'start' | 'duration' | 'words'>
+
+async function segmentViaToolGeneration(
+  model: string,
+  script: string,
+  topic: string | undefined,
+  signal: AbortSignal,
+  system: string
+): Promise<ShotCore[]> {
+  try {
+    const result = await generateText({
+      model: getModel(model),
+      system: `${system}\n\nSubmit the ordered shots with the required tool.`,
+      prompt: `Segment this narration script into shots. Topic: ${topic || 'n/a'}.\n\nSCRIPT:\n${script}`,
+      abortSignal: signal,
+      maxRetries: 1,
+      maxOutputTokens: 12_000,
+      tools: {
+        submit_shots: tool({
+          description: 'Submit the ordered storyboard shots.',
+          inputSchema: shotListSchema
+        })
+      },
+      toolChoice: { type: 'tool', toolName: 'submit_shots' }
+    })
+    const call = result.toolCalls.find(item => item.toolName === 'submit_shots')
+    if (!call) return []
+    const shotsInput = (call.input as { shots?: unknown[] })?.shots
+    if (!Array.isArray(shotsInput)) return []
+    return shotsInput
+      .map((shot: unknown) => sanitizeCore(shot as any, topic || ''))
+      .filter((shot): shot is ShotCore => shot !== null)
+  } catch {
+    return []
+  }
+}
 
 // Segmentation is the step users watch spin. It used to be a single blocking generateText
 // with no output cap and no deadline: on a long script the model would run for minutes, and
@@ -94,12 +159,60 @@ function sanitizeCore(b: unknown, fallbackQuery: string): ShotCore | null {
   }
 }
 
+// Fallback path for cutScriptIntoBeats — see call site. Plain generation + hand-rolled
+// JSON parsing, same schema, no streaming.
+async function segmentViaPlainGeneration(
+  model: string,
+  script: string,
+  topic: string | undefined,
+  signal: AbortSignal,
+  system: string
+): Promise<ShotCore[]> {
+  let text: string
+  try {
+    const result = await generateText({
+      model: getModel(model),
+      system: `${system}\n\nRespond with ONLY a JSON array of shot objects, no prose, no markdown fences.`,
+      prompt: `Segment this narration script into shots. Topic: ${topic || 'n/a'}.\n\nSCRIPT:\n${script}`,
+      abortSignal: signal,
+      maxRetries: 1
+    })
+    text = result.text
+  } catch {
+    return []
+  }
+
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/)
+  const raw = fenced ? fenced[1] : text
+  const start = raw.indexOf('[')
+  const end = raw.lastIndexOf(']')
+  if (start < 0 || end < start) return []
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(raw.slice(start, end + 1))
+  } catch {
+    return []
+  }
+  if (!Array.isArray(parsed)) return []
+
+  return parsed
+    .map(el => sanitizeCore(el, topic || ''))
+    .filter((c): c is ShotCore => c !== null)
+}
+
 // Distribute a shot's duration across its words, weighting by word length so long
 // words get more time — good enough for karaoke fill until real TTS timings arrive.
-function timeWords(narration: string, start: number, duration: number): BeatWord[] {
+function timeWords(
+  narration: string,
+  start: number,
+  duration: number
+): BeatWord[] {
   const tokens = narration.split(/\s+/).filter(Boolean)
   if (!tokens.length) return []
-  const weights = tokens.map(w => Math.max(1, w.replace(/[^a-z0-9]/gi, '').length))
+  const weights = tokens.map(w =>
+    Math.max(1, w.replace(/[^a-z0-9]/gi, '').length)
+  )
   const total = weights.reduce((a, b) => a + b, 0)
   let t = start
   return tokens.map((word, i) => {
@@ -117,6 +230,14 @@ export interface CutBeatsInput {
   fps?: number
   channel?: string
   accent?: string
+  /** Enables documentary pacing without changing the aspect-ratio format. */
+  profile?: {
+    niche?: 'ww1_ww2'
+    format: 'documentary'
+    presetVersion?: number
+  }
+  /** Semantic planners normalize only after enriching the timed cuts with metadata. */
+  deferDocumentaryPacing?: boolean
   /** Real word timings from a voiceover; when present, shots lock to actual speech. */
   voiceWords?: VoiceWord[]
 }
@@ -152,7 +273,9 @@ export function bindVoiceTimings(
   boundaries[n] = audioEnd
   return shots.map((s, i) => {
     const start = +boundaries[i].toFixed(3)
-    const duration = +Math.max(0.3, boundaries[i + 1] - boundaries[i]).toFixed(3)
+    const duration = +Math.max(0.3, boundaries[i + 1] - boundaries[i]).toFixed(
+      3
+    )
     return { ...s, start, duration, words: perShot[i] }
   })
 }
@@ -173,6 +296,10 @@ export async function cutScriptIntoBeats(
   const format = input.format || '16:9'
   const fps = input.fps || 30
   const { width, height } = DIMS[format]
+  const system =
+    input.profile?.format === 'documentary'
+      ? `${SYS_BEATS}\n${DOCUMENTARY_BEAT_GUIDANCE}`
+      : SYS_BEATS
 
   // Fold the caller's signal together with a hard deadline so a stalled generation can
   // never hang the tool call indefinitely.
@@ -181,34 +308,80 @@ export async function cutScriptIntoBeats(
     ? AbortSignal.any([abortSignal, deadline])
     : deadline
 
-  const cores: ShotCore[] = []
-  try {
-    const { elementStream } = streamObject({
-      model: getModel(model),
-      output: 'array',
-      schema: shotSchema,
-      system: SYS_BEATS,
-      prompt: `Segment this narration script into shots. Topic: ${input.topic || 'n/a'}.\n\nSCRIPT:\n${script}`,
-      abortSignal: signal,
-      maxRetries: 1
-    })
+  // The streaming attempt gets its own bounded sub-budget rather than the full
+  // deadline above. Observed with ModelArk: structured-output streaming can hang
+  // silently (no elements, no error) instead of failing fast — without this, it burns
+  // the entire BEATS_TIMEOUT_MS and the plain-generation fallback below never gets a
+  // real chance to run before `signal` is already aborted too.
+  const streamBudgetMs = Math.min(BEATS_TIMEOUT_MS / 2, 60_000)
+  const streamSignal = AbortSignal.any([
+    signal,
+    AbortSignal.timeout(streamBudgetMs)
+  ])
 
-    // Each element resolves as soon as it is complete, so shots land progressively.
-    for await (const element of elementStream) {
-      const core = sanitizeCore(element, input.topic || '')
-      if (core) {
-        cores.push(core)
-        onProgress?.(cores.length)
-      }
-    }
-  } catch (error) {
-    // A mid-stream failure (timeout, truncation, transport hiccup) keeps the shots we
-    // already have. Only a total shutout is fatal.
-    if (!cores.length) throw error
-    console.warn(
-      `[Beats] Segmentation ended early after ${cores.length} shots:`,
-      error
+  const cores: ShotCore[] = []
+  if (model.startsWith('modelark:')) {
+    const toolShots = await segmentViaToolGeneration(
+      model,
+      script,
+      input.topic,
+      signal,
+      system
     )
+    for (const shot of toolShots) {
+      cores.push(shot)
+      onProgress?.(cores.length)
+    }
+  } else {
+    try {
+      const { elementStream } = streamObject({
+        model: getModel(model),
+        output: 'array',
+        schema: shotSchema,
+        system,
+        prompt: `Segment this narration script into shots. Topic: ${input.topic || 'n/a'}.\n\nSCRIPT:\n${script}`,
+        abortSignal: streamSignal,
+        maxRetries: 1
+      })
+
+      // Each element resolves as soon as it is complete, so shots land progressively.
+      for await (const element of elementStream) {
+        const core = sanitizeCore(element, input.topic || '')
+        if (core) {
+          cores.push(core)
+          onProgress?.(cores.length)
+        }
+      }
+    } catch (error) {
+      // A mid-stream failure (timeout, truncation, transport hiccup, or an outright
+      // rejection before any element arrives — e.g. some OpenAI-compatible providers 400
+      // on response_format:'json_object' unless the literal word "json" appears in the
+      // prompt) keeps whatever shots already landed and falls through to the fallback below
+      // rather than failing the whole request immediately.
+      console.warn(
+        `[Beats] Streaming segmentation failed after ${cores.length} shots:`,
+        error
+      )
+    }
+  }
+
+  if (!cores.length) {
+    // Streaming produced nothing usable — either it threw outright or completed with zero
+    // valid elements (seen with some OpenAI-compatible providers whose structured/array-
+    // output streaming silently yields nothing even though the same model returns correct
+    // JSON via a plain generation — observed with ModelArk). One extra non-streaming call,
+    // parsed by hand, before giving up entirely.
+    const fallback = await segmentViaPlainGeneration(
+      model,
+      script,
+      input.topic,
+      signal,
+      system
+    )
+    if (fallback.length) {
+      cores.push(...fallback)
+      onProgress?.(cores.length)
+    }
   }
 
   if (!cores.length) throw new Error('beat segmentation produced no shots')
@@ -225,8 +398,26 @@ export async function cutScriptIntoBeats(
       const duration = Math.max(1.4, +(wordCount / WORDS_PER_SEC).toFixed(2))
       const start = +cursor.toFixed(3)
       cursor += duration
-      return { ...core, start, duration, words: timeWords(core.narration, start, duration) }
+      return {
+        ...core,
+        start,
+        duration,
+        words: timeWords(core.narration, start, duration)
+      }
     })
+  }
+
+  const isDocumentaryTopic =
+    input.profile?.format === 'documentary' ||
+    /history|documentary|ww2|war|battle|la-5|aircraft|luftwaffe|combat|military|historical/i.test(
+      input.topic || ''
+    ) ||
+    /history|documentary|ww2|war|battle|la-5|aircraft|luftwaffe|combat|military|historical/i.test(
+      script
+    )
+
+  if (isDocumentaryTopic && !input.deferDocumentaryPacing) {
+    shots = normalizeDocumentaryBeatPacing(shots)
   }
 
   const last = shots[shots.length - 1]

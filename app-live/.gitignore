@@ -37,3 +37,6 @@ next-env.d.ts
 
 # temporary files
 .tmp/*.mp4
+
+# locally-generated TTS audio (served from public/ in dev only)
+/public/generated/

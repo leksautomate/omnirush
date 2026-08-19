@@ -1,0 +1,304 @@
+- generic [ref=f15e1]:
+  - generic [ref=f15e2]:
+    - generic [ref=f15e4]:
+      - generic [ref=f15e5]:
+        - link "Kakkao" [ref=f15e6] [cursor=pointer]:
+          - /url: /
+        - button "Toggle Sidebar" [ref=f15e12] [cursor=pointer]
+      - generic [ref=f15e16]:
+        - list [ref=f15e17]:
+          - listitem [ref=f15e18]:
+            - link "New Video" [ref=f15e19] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f15e22]:
+            - link "Video Studio" [ref=f15e23] [cursor=pointer]:
+              - /url: /studio
+          - listitem [ref=f15e27]:
+            - link "Niche Finder" [ref=f15e28] [cursor=pointer]:
+              - /url: /niche
+          - listitem [ref=f15e33]:
+            - link "Niche Bender" [ref=f15e34] [cursor=pointer]:
+              - /url: /niche-bender
+          - listitem [ref=f15e39]:
+            - link "Avatars" [ref=f15e40] [cursor=pointer]:
+              - /url: /avatars
+        - generic [ref=f15e46]:
+          - generic [ref=f15e48]:
+            - generic [ref=f15e49]: History
+            - button "History Actions" [ref=f15e50] [cursor=pointer]
+          - list [ref=f15e497]:
+            - listitem [ref=f15e498]:
+              - 'link "Ali: The People''s Champion Today, 12:23 AM" [ref=f15e499] [cursor=pointer]':
+                - /url: /chat/lke04mmz14gnx1yrtfoaa414
+                - generic [ref=f15e500]: "Ali: The People's Champion"
+                - generic [ref=f15e501]: Today, 12:23 AM
+              - button "Chat Actions" [ref=f15e502] [cursor=pointer]
+            - listitem [ref=f15e508]:
+              - link "Ancient Greek Philosophers Explained Yesterday, 11:46 PM" [ref=f15e509] [cursor=pointer]:
+                - /url: /chat/xr94booh75m68jb3rghat6l2
+                - generic [ref=f15e510]: Ancient Greek Philosophers Explained
+                - generic [ref=f15e511]: Yesterday, 11:46 PM
+              - button "Chat Actions" [ref=f15e512] [cursor=pointer]
+      - button "Open menu" [ref=f15e76] [cursor=pointer]
+      - button "Toggle Sidebar" [ref=f15e81]
+    - generic [ref=f15e82]:
+      - banner
+      - main [ref=f15e83]:
+        - generic [ref=f15e84]:
+          - button "Toggle Sidebar" [ref=f15e86] [cursor=pointer]
+          - generic [ref=f15e92]:
+            - generic [ref=f15e93]:
+              - generic [ref=f15e94]:
+                - generic [ref=f15e95]:
+                  - generic [ref=f15e96]: V
+                  - generic [ref=f15e97]: VidRush Studio
+                - generic [ref=f15e98]: "|"
+                - generic [ref=f15e99]: 5 active shots · 22.4s
+                - generic [ref=f15e100]:
+                  - button "Undo (Ctrl + Z)" [disabled] [ref=f15e101]
+                  - button "Redo (Ctrl + Y)" [disabled] [ref=f15e105]
+              - generic [ref=f15e109]:
+                - generic [ref=f15e110]:
+                  - button "16:9" [ref=f15e111] [cursor=pointer]
+                  - button "9:16" [ref=f15e115] [cursor=pointer]
+                  - button "1:1" [ref=f15e118] [cursor=pointer]
+                - button "Transitions" [ref=f15e123] [cursor=pointer]
+              - generic [ref=f15e127]:
+                - button "Reset" [ref=f15e128] [cursor=pointer]
+                - button "Save" [ref=f15e132] [cursor=pointer]
+                - button "Render MP4" [ref=f15e133] [cursor=pointer]
+            - generic [ref=f15e138]:
+              - generic [ref=f15e139]: "Ghost Clip Alert: 2 scene(s) have solid card fallbacks. Click replace to add footage or AI stills before rendering."
+              - button "Fix First Ghost Clip" [ref=f15e143] [cursor=pointer]
+            - generic [ref=f15e144]:
+              - main [ref=f15e145]:
+                - generic [ref=f15e150]:
+                  - generic [ref=f15e522]:
+                    - generic [ref=f15e523]:
+                      - generic [ref=f15e524]: THE DAILY CHRONICLE
+                      - generic [ref=f15e525]: July 20, 1969 · Special Space Edition
+                    - generic [ref=f15e526]: HISTORIC MILESTONE
+                    - heading [level=1] [ref=f15e527]:
+                      - text: HUMANKIND
+                      - generic [ref=f15e528]: LANDS
+                      - generic [ref=f15e530]: "ON"
+                      - generic [ref=f15e532]: THE
+                      - generic [ref=f15e534]: MOON
+                      - text: IN
+                      - generic [ref=f15e536]: HISTORIC
+                      - text: GIANT
+                      - generic [ref=f15e538]: LEAP
+                    - paragraph [ref=f15e540]: Astronauts touch down successfully in the Sea of Tranquility marking humanity’s greatest technological triumph.
+                    - generic [ref=f15e541]:
+                      - generic [ref=f15e542]: By Field Correspondent · Official Record
+                      - generic [ref=f15e543]: Archival Record
+                  - generic [ref=f15e546]:
+                    - generic [ref=f15e549]:
+                      - generic [ref=f15e552]:
+                        - generic [ref=f15e553]: TACTICAL SATELLITE RECONNAISSANCE & FLIGHT PATH
+                        - generic [ref=f15e554]: LIVE OPTICAL SATELLITE RECONNAISSANCE · ZOOM 1.00x
+                      - generic [ref=f15e555]:
+                        - generic [ref=f15e556]: "ALT: 28,500 FT"
+                        - generic [ref=f15e557]: GRID 51.5074° N, 0.1278° W · HD OPTICAL
+                    - img [ref=f15e558]:
+                      - generic:
+                        - generic:
+                          - generic: LONDON (SUPREME HQ)
+                          - generic: "LOC: 51.5074° N, 0.1278° W"
+                      - generic:
+                        - generic:
+                          - generic: 🎯 NORMANDY (OPERATION OVERLORD)
+                          - generic: "TARGET LOC: 49.3361° N, 0.8844° W"
+                    - generic [ref=f15e560]:
+                      - generic [ref=f15e561]: LAT RANGE 48.2°N - 52.8°N · SCALE 1:250,000
+                      - generic [ref=f15e562]: "TRAJECTORY STATUS: ACTIVE INTERCEPT"
+                - generic [ref=f15e168]:
+                  - button "Step back 1s" [ref=f15e169] [cursor=pointer]
+                  - button "Play" [ref=f15e172] [cursor=pointer]
+                  - button "Step forward 1s" [ref=f15e175] [cursor=pointer]
+                  - generic [ref=f15e178]: "|"
+                  - generic [ref=f15e179]: 00:11.40 / 00:22.40
+              - complementary [ref=f15e180]:
+                - generic [ref=f15e181]:
+                  - button "Shot" [ref=f15e182] [cursor=pointer]
+                  - button "Audio" [ref=f15e185] [cursor=pointer]
+                  - button "Style" [ref=f15e190] [cursor=pointer]
+                  - button "Agent" [ref=f15e193] [cursor=pointer]
+                  - button "History" [ref=f15e196] [cursor=pointer]
+                - generic [ref=f15e201]:
+                  - generic [ref=f15e202]:
+                    - generic [ref=f15e203]:
+                      - generic [ref=f15e204]: "4"
+                      - generic [ref=f15e205]: "Shot #4"
+                    - generic [ref=f15e206]:
+                      - button "Hide Clip" [ref=f15e207] [cursor=pointer]
+                      - button "Seek" [ref=f15e211] [cursor=pointer]
+                  - generic [ref=f15e214]:
+                    - text: Visual Media
+                    - generic [ref=f15e215]: Solid Brand Card
+                    - button "Replace Media" [ref=f15e218] [cursor=pointer]
+                  - generic [ref=f15e222]:
+                    - generic [ref=f15e223]:
+                      - generic [ref=f15e224]: Shot Duration
+                      - generic [ref=f15e225]: 5.0s
+                    - slider [ref=f15e230]
+                  - generic [ref=f15e231]:
+                    - generic [ref=f15e232]: Spoken Narration Caption
+                    - textbox "Enter narration words for this shot..." [ref=f15e233]: Under cover of darkness, Allied reconnaissance plotted the cross-channel flight trajectory directly toward the Normandy beaches.
+                  - generic [ref=f15e234]:
+                    - generic [ref=f15e235]:
+                      - generic [ref=f15e236]: Motion Overlay
+                      - generic [ref=f15e237]: animated-map
+                    - combobox [ref=f15e238]:
+                      - option "None (Standard Shot)"
+                      - option "📰 3D Newspaper Headline (Highlight Pen)"
+                      - option "🗺️ Animated Tactical Map (Radar & Pins)" [selected]
+                      - option "📊 Vertical Bar Chart (Animated Columns)"
+                      - option "🔥 Film Burn / Light Leak (History/WW2)"
+                      - option "💥 Camera Shake (Battle Impact)"
+                      - option "⌨️ Typewriter Subtitle (Date / Quote)"
+                      - option "🔢 Number Counter (Stats / Metric)"
+                      - option "⭕ Circular Progress (Percentage)"
+                      - option "⚡ Glitch Text (Tech / Alert)"
+                    - generic [ref=f15e564]:
+                      - generic [ref=f15e565]:
+                        - text: Map Title
+                        - textbox "e.g. TACTICAL ADVANCE MAP" [ref=f15e566]: TACTICAL SATELLITE RECONNAISSANCE & FLIGHT PATH
+                      - generic [ref=f15e567]:
+                        - generic [ref=f15e568]:
+                          - text: Location Pin
+                          - textbox "e.g. Chicago, USA" [ref=f15e569]: LONDON (SUPREME HQ)
+                        - generic [ref=f15e570]:
+                          - text: Destination Pin (optional)
+                          - textbox "e.g. Normandy, France" [active] [ref=f15e571]: NORMANDY (OPERATION OVERLORD)
+                      - paragraph [ref=f15e572]: Leave Destination blank for a single-location zoom-in (biography, true-crime, “this is the place” beats) — fill both for a flight path between two points.
+                      - paragraph
+            - generic [ref=f15e240]:
+              - generic [ref=f15e241]:
+                - generic [ref=f15e242]:
+                  - generic [ref=f15e243]: 00:11.40
+                  - generic [ref=f15e244]: /
+                  - generic [ref=f15e245]: 00:22.40
+                  - generic [ref=f15e246]: 5 Active Clips
+                  - generic [ref=f15e247]: Drag ruler to scrub · Drag clip edges to trim
+                - generic [ref=f15e248]:
+                  - generic [ref=f15e249]:
+                    - button "Zoom Out" [ref=f15e250] [cursor=pointer]
+                    - button "Zoom In" [ref=f15e254] [cursor=pointer]
+                  - button "Add Clip" [ref=f15e258] [cursor=pointer]
+              - generic [ref=f15e260]:
+                - generic [ref=f15e261]:
+                  - generic [ref=f15e262]: Tracks
+                  - generic [ref=f15e263]: Visuals
+                  - generic [ref=f15e267]: Narration
+                  - generic [ref=f15e272]: Captions
+                  - generic [ref=f15e276]: Music Bed
+                - generic [ref=f15e282] [cursor=pointer]:
+                  - generic [ref=f15e283]:
+                    - generic [ref=f15e284]: 0s
+                    - generic [ref=f15e287]: 1s
+                    - generic [ref=f15e290]: 2s
+                    - generic [ref=f15e293]: 3s
+                    - generic [ref=f15e296]: 4s
+                    - generic [ref=f15e299]: 5s
+                    - generic [ref=f15e302]: 6s
+                    - generic [ref=f15e305]: 7s
+                    - generic [ref=f15e308]: 8s
+                    - generic [ref=f15e311]: 9s
+                    - generic [ref=f15e314]: 10s
+                    - generic [ref=f15e317]: 11s
+                    - generic [ref=f15e320]: 12s
+                    - generic [ref=f15e323]: 13s
+                    - generic [ref=f15e326]: 14s
+                    - generic [ref=f15e329]: 15s
+                    - generic [ref=f15e332]: 16s
+                    - generic [ref=f15e335]: 17s
+                    - generic [ref=f15e338]: 18s
+                    - generic [ref=f15e341]: 19s
+                    - generic [ref=f15e344]: 20s
+                    - generic [ref=f15e347]: 21s
+                    - generic [ref=f15e350]: 22s
+                    - generic [ref=f15e353]: 23s
+                    - generic [ref=f15e356]: 24s
+                  - generic [ref=f15e359]:
+                    - generic [ref=f15e360]:
+                      - img "Thumbnail" [ref=f15e361]
+                      - generic [ref=f15e362]:
+                        - generic [ref=f15e363]:
+                          - generic [ref=f15e364]: "#1"
+                          - generic [ref=f15e365]: 3.8s
+                        - generic [ref=f15e366]: Fifty years ago, humanity took its very first step into the deep cosmic unknown.
+                      - generic [ref=f15e367]:
+                        - button "Hide Clip" [ref=f15e368]
+                        - button "Replace Media" [ref=f15e372]
+                      - generic "Drag to trim duration" [ref=f15e375]
+                    - button "Edit Transition" [ref=f15e376]
+                    - generic [ref=f15e379]:
+                      - img "Thumbnail" [ref=f15e380]
+                      - generic [ref=f15e381]:
+                        - generic [ref=f15e382]:
+                          - generic [ref=f15e383]: "#2"
+                          - generic [ref=f15e384]: 3.6s
+                        - generic [ref=f15e385]: Aboard Apollo 11, three astronauts journeyed across 240,000 miles of vacuum.
+                      - generic [ref=f15e386]:
+                        - button "Hide Clip" [ref=f15e387]
+                        - button "Replace Media" [ref=f15e391]
+                      - generic "Drag to trim duration" [ref=f15e394]
+                    - button "Edit Transition" [ref=f15e395]
+                    - generic [ref=f15e398]:
+                      - img "Thumbnail" [ref=f15e399]
+                      - generic [ref=f15e400]:
+                        - generic [ref=f15e401]:
+                          - generic [ref=f15e402]: "#3"
+                          - generic [ref=f15e403]: 4.0s
+                        - generic [ref=f15e404]: Touching down in the Sea of Tranquility, they proved that no frontier is out of reach.
+                      - generic [ref=f15e405]:
+                        - button "Hide Clip" [ref=f15e406]
+                        - button "Replace Media" [ref=f15e410]
+                      - generic "Drag to trim duration" [ref=f15e413]
+                    - button "Edit Transition" [ref=f15e414]
+                    - generic [ref=f15e417]:
+                      - generic [ref=f15e419]: GHOST
+                      - generic [ref=f15e422]:
+                        - generic [ref=f15e423]:
+                          - generic [ref=f15e424]: "#4"
+                          - generic [ref=f15e425]: 5.0s
+                        - generic [ref=f15e426]: Under cover of darkness, Allied reconnaissance plotted the cross-channel flight trajectory directly toward the Normandy beaches.
+                      - generic [ref=f15e427]:
+                        - button "Hide Clip" [ref=f15e428]
+                        - button "Replace Media" [ref=f15e432]
+                      - generic "Drag to trim duration" [ref=f15e435]
+                    - button "Edit Transition" [ref=f15e436]
+                    - generic [ref=f15e439]:
+                      - generic [ref=f15e441]: GHOST
+                      - generic [ref=f15e444]:
+                        - generic [ref=f15e445]:
+                          - generic [ref=f15e446]: "#5"
+                          - generic [ref=f15e447]: 6.0s
+                        - generic [ref=f15e448]: Across history, prominent reformers and leaders left lasting legacies throughout Europe.
+                      - generic [ref=f15e449]:
+                        - button "Hide Clip" [ref=f15e450]
+                        - button "Replace Media" [ref=f15e454]
+                      - generic "Drag to trim duration" [ref=f15e457]
+                  - generic [ref=f15e458]:
+                    - generic [ref=f15e459]:
+                      - generic [ref=f15e460]: Fifty years ago, humanity took its very first step into the deep cosmic unknown.
+                      - generic [ref=f15e461]: 13w
+                    - generic [ref=f15e462]:
+                      - generic [ref=f15e463]: Aboard Apollo 11, three astronauts journeyed across 240,000 miles of vacuum.
+                      - generic [ref=f15e464]: 9w
+                    - generic [ref=f15e465]:
+                      - generic [ref=f15e466]: Touching down in the Sea of Tranquility, they proved that no frontier is out of reach.
+                      - generic [ref=f15e467]: 16w
+                    - generic [ref=f15e468]: Under cover of darkness, Allied reconnaissance plotted the cross-channel flight trajectory directly toward the Normandy beaches.
+                    - generic [ref=f15e470]: Across history, prominent reformers and leaders left lasting legacies throughout Europe.
+                  - generic [ref=f15e472]:
+                    - generic [ref=f15e473]: Fifty years ago, humanity took its very first step into the deep cosmic unknown.
+                    - generic [ref=f15e475]: Aboard Apollo 11, three astronauts journeyed across 240,000 miles of vacuum.
+                    - generic [ref=f15e477]: Touching down in the Sea of Tranquility, they proved that no frontier is out of reach.
+                    - generic [ref=f15e479]: Under cover of darkness, Allied reconnaissance plotted the cross-channel flight trajectory directly toward the Normandy beaches.
+                    - generic [ref=f15e481]: Across history, prominent reformers and leaders left lasting legacies throughout Europe.
+                  - generic [ref=f15e483]: ♫ Background Music Bed (Auto-Ducked)
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f15e492] [cursor=pointer]
+  - alert [ref=f15e496]

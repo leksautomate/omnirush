@@ -1,4 +1,5 @@
 import type { UIMessage } from 'ai'
+
 import { stripSpecBlocks } from '@/lib/render/strip-spec-blocks'
 
 const UI_TOOL_TYPES = new Set([
@@ -8,13 +9,13 @@ const UI_TOOL_TYPES = new Set([
   'tool-writeScript',
   'tool-sourceFootage',
   'tool-cutBeats',
-  'tool-listVoices',
   'tool-generateVoiceover',
-  'tool-cloneVoice',
   'tool-generateMusic',
+  'tool-sourceAudio',
   'tool-generateImage',
   'tool-generateThumbnail',
   'tool-learnFromVideo',
+  'tool-prepareDocumentary',
   'tool-generateAvatar',
   'tool-composeRender',
   'todoWrite'
@@ -53,11 +54,10 @@ export function sanitizeMessagesForModel(
 
   for (const msg of messages) {
     if (msg.role !== 'assistant') {
-      const text = typeof (msg as any).content === 'string' ? (msg as any).content : ''
+      const text =
+        typeof (msg as any).content === 'string' ? (msg as any).content : ''
       const parts =
-        msg.parts && msg.parts.length > 0
-          ? msg.parts
-          : [{ type: 'text', text }]
+        msg.parts && msg.parts.length > 0 ? msg.parts : [{ type: 'text', text }]
       sanitized.push({
         ...msg,
         parts: parts as any

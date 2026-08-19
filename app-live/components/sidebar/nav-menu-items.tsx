@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 
 import {
   IconCompass as Compass,
+  IconMovie as Movie,
   IconTrendingUp as TrendingUp,
   IconUser as User
 } from '@tabler/icons-react'
@@ -15,6 +16,14 @@ export function NavMenuItems() {
   const pathname = usePathname()
   return (
     <>
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild isActive={pathname?.startsWith('/studio')}>
+          <Link href="/studio" className="flex items-center gap-2">
+            <Movie className="size-4 text-primary" />
+            <span className="font-semibold text-foreground">Video Studio</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={pathname === '/niche'}>
           <Link href="/niche" className="flex items-center gap-2">
