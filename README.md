@@ -2,8 +2,6 @@
 
 > **Agentic AI Video Studio**: Research topics, write scripts, source b-roll, generate AI frames, synthesize synchronized voiceovers, cut beat-timed storyboards, and render full MP4 videos — end-to-end from a single prompt.
 
-![Omnirush Banner](./vidrush-home.png)
-
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./app-live/LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-black)](https://nextjs.org/)
 [![Remotion](https://img.shields.io/badge/Remotion-4.0-blueviolet)](https://www.remotion.dev/)
